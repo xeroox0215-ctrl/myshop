@@ -9,13 +9,13 @@
 </head>
 <body>
 
-    <!-- ФОН ДЛЯ ЛЕПЕСТКОВ -->
+    <!-- ФОН ДЛЯ ЛЕПЕСТКОВ (на весь экран) -->
     <div id="petals-bg"></div>
 
     <div class="app-container">
         
         <!-- ТОНКИЙ ПРОФИЛЬ -->
-        <header class="profile-bar">
+        <header class="profile-bar glass-panel">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">👤</div>
                 <div class="user-details">
@@ -32,11 +32,11 @@
 
         <main class="content-area">
             
-            <!-- БАННЕРЫ -->
+            <!-- КАРУСЕЛЬ (Свайп + Автопрокрутка) -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1: Твоя рамка с сакурой (с лепестками) -->
+                    <!-- Слайд 1: Рамка с сакурой -->
                     <div class="carousel-slide">
                         <img src="https://i.ibb.co/ynYDmPWG/image.jpg" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
@@ -65,37 +65,34 @@
                 </div>
             </div>
 
-            <!-- ПАНЕЛИ -->
+            <!-- ПАНЕЛИ (Магазин, НФТ, Рейтинг) -->
             <div class="menu-list">
                 
-                <!-- Панель 1: Магазин -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #4a00e0, #8e2de2);">
+                <!-- Магазин (Стив поднимает руки) -->
+                <button class="menu-card glass-panel" onclick="openPanel('shop')">
                     <div class="menu-info">
                         <span class="menu-tag">НОВОЕ</span>
                         <h3>Магазин</h3>
                     </div>
-                    <!-- Твой Стив с поднятыми руками -->
-                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Стив">
+                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Магазин">
                 </button>
                 
-                <!-- Панель 2: НФТ актеры -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #ff0844, #ffb199);">
+                <!-- НФТ (Блок травы) -->
+                <button class="menu-card glass-panel" onclick="openPanel('nft')">
                     <div class="menu-info">
                         <span class="menu-tag">ПОПУЛЯРНОЕ</span>
                         <h3>НФТ актёры</h3>
                     </div>
-                    <!-- Блок травы -->
-                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="Блок">
+                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="НФТ">
                 </button>
                 
-                <!-- Панель 3: Рейтинг -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #00c6ff, #0072ff);">
+                <!-- Рейтинг (Стив с мечом) -->
+                <button class="menu-card glass-panel" onclick="openPanel('rating')">
                     <div class="menu-info">
                         <span class="menu-tag">ТОПЫ И ПРИЗЫ</span>
                         <h3>Рейтинг</h3>
                     </div>
-                    <!-- Второй Стив -->
-                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Стив">
+                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Рейтинг">
                 </button>
 
             </div>
