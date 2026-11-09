@@ -9,7 +9,6 @@
 </head>
 <body>
 
-    <!-- ФОН ДЛЯ ЛЕПЕСТКОВ (на весь экран) -->
     <div id="petals-bg"></div>
 
     <div class="app-container">
@@ -32,14 +31,15 @@
 
         <main class="content-area">
             
-            <!-- КАРУСЕЛЬ (Свайп + Автопрокрутка) -->
+            <!-- БАННЕРЫ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1: Рамка с сакурой -->
                     <div class="carousel-slide">
-                        <img src="https://i.ibb.co/ynYDmPWG/image.jpg" class="slide-img" alt="Сакура">
+                        <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
+                        <!-- Парящий Стив в баннере -->
+                        <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" class="banner-floating steve-float" alt="Steve">
                         <div class="slide-content">
                             <h2>Добро пожаловать</h2>
                             <p>Мир сакуры</p>
@@ -47,10 +47,11 @@
                         <div class="petals-container" id="petals-1"></div>
                     </div>
                     
-                    <!-- Слайд 2: Закатный сад -->
                     <div class="carousel-slide">
-                        <img src="https://i.ibb.co/TDGJ6whb/image.jpg" class="slide-img" alt="Закат">
+                        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Закат">
                         <div class="slide-overlay"></div>
+                        <!-- Парящий Крипер в баннере -->
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Minecraft_Creeper.png/452px-Minecraft_Creeper.png" class="banner-floating creeper-float" alt="Creeper">
                         <div class="slide-content">
                             <h2>Закатный сад</h2>
                             <p>Уютные закаты</p>
@@ -65,34 +66,47 @@
                 </div>
             </div>
 
-            <!-- ПАНЕЛИ (Магазин, НФТ, Рейтинг) -->
+            <!-- ТВОИ ПАНЕЛИ -->
             <div class="menu-list">
                 
-                <!-- Магазин (Стив поднимает руки) -->
-                <button class="menu-card glass-panel" onclick="openPanel('shop')">
+                <!-- Реклама -->
+                <button class="menu-card glass-panel" onclick="openPanel('ads')">
                     <div class="menu-info">
-                        <span class="menu-tag">НОВОЕ</span>
-                        <h3>Магазин</h3>
+                        <h3>Реклама</h3>
                     </div>
-                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Магазин">
+                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="Реклама">
                 </button>
                 
-                <!-- НФТ (Блок травы) -->
-                <button class="menu-card glass-panel" onclick="openPanel('nft')">
+                <!-- Приватка -->
+                <button class="menu-card glass-panel" onclick="openPanel('private')">
                     <div class="menu-info">
-                        <span class="menu-tag">ПОПУЛЯРНОЕ</span>
-                        <h3>НФТ актёры</h3>
+                        <h3>Приватка</h3>
                     </div>
-                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="НФТ">
+                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Приватка">
                 </button>
                 
-                <!-- Рейтинг (Стив с мечом) -->
-                <button class="menu-card glass-panel" onclick="openPanel('rating')">
+                <!-- Профиль -->
+                <button class="menu-card glass-panel" onclick="openPanel('profile')">
                     <div class="menu-info">
-                        <span class="menu-tag">ТОПЫ И ПРИЗЫ</span>
-                        <h3>Рейтинг</h3>
+                        <h3>Профиль</h3>
                     </div>
-                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Рейтинг">
+                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Профиль">
+                </button>
+
+                <!-- Поддержка -->
+                <button class="menu-card glass-panel" onclick="openPanel('support')">
+                    <div class="menu-info">
+                        <h3>Поддержка</h3>
+                    </div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" class="menu-png" alt="Поддержка">
+                </button>
+
+                <!-- Админ-панель (скрыта для обычных юзеров) -->
+                <button class="menu-card glass-panel admin-only" id="admin-menu-btn" onclick="openPanel('admin')" style="display: none;">
+                    <div class="menu-info">
+                        <h3>Админ-панель</h3>
+                    </div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099153.png" class="menu-png" alt="Админка">
                 </button>
 
             </div>
@@ -106,20 +120,12 @@
                 <span class="nav-text">Главная</span>
             </button>
             <button class="nav-item">
-                <span class="nav-icon">🏆</span>
-                <span class="nav-text">Рейтинг</span>
-            </button>
-            <button class="nav-item">
-                <span class="nav-icon">🎫</span>
-                <span class="nav-text">Лотерея</span>
-            </button>
-            <button class="nav-item">
-                <span class="nav-icon">✨</span>
-                <span class="nav-text">НФТ</span>
-            </button>
-            <button class="nav-item">
                 <span class="nav-icon">👤</span>
                 <span class="nav-text">Профиль</span>
+            </button>
+            <button class="nav-item admin-only" id="admin-nav-tab" style="display: none;">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Админка</span>
             </button>
         </nav>
 
