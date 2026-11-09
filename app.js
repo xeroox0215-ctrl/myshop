@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
         }
-        const MY_ADMIN_ID = 123456789; 
+        const MY_ADMIN_ID = 1494459013; 
         if (user.id === MY_ADMIN_ID) {
             document.getElementById('admin-nav-tab').style.display = 'flex';
             document.getElementById('admin-menu-btn').style.display = 'flex';
