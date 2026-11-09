@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xero Shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Подключаем пиксельный шрифт Minecraft -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ФОН С ДЕКОРОМ -->
+    <!-- Космический фон с декором -->
     <div class="space-bg">
         <div class="nebula nebula-1"></div>
         <div class="nebula nebula-2"></div>
-        <!-- Сюда падают звезды, листья и деревья -->
         <div class="decor-layer" id="bg-decor"></div>
     </div>
 
     <div class="app-container">
         
+        <!-- Профиль (с кнопкой Пополнить) -->
         <header class="profile-bar glass-panel">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">👤</div>
@@ -27,11 +29,7 @@
                     <div class="user-tag" id="user-tag">@xeroox9</div>
                 </div>
             </div>
-            <div class="profile-stats">
-                <span>⭐ 0</span>
-                <span>⚡ 1</span>
-                <span>✈️ 0</span>
-            </div>
+            <button class="topup-btn">Пополнить +</button>
         </header>
 
         <main class="content-area">
@@ -40,29 +38,32 @@
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Баннер 1 -->
+                    <!-- Баннер 1: TGK -->
                     <div class="carousel-slide">
                         <img src="Sakyra1.png" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
-                        <!-- Летающий декор внутри баннера -->
                         <div class="decor-layer" id="banner-decor-1"></div>
                         
                         <div class="slide-content">
-                            <h2>Премиум доступ</h2>
-                            <p>Лучшие приватные аккаунты</p>
+                            <div class="capsule">
+                                <span class="mc-text">Официальный Telegram канал</span>
+                            </div>
+                            <p class="sub-text">tgk xeroox news</p>
                         </div>
                     </div>
                     
-                    <!-- Баннер 2 -->
+                    <!-- Баннер 2: Never Time -->
                     <div class="carousel-slide">
                         <img src="Sakyra2.png" class="slide-img" alt="Лес">
                         <div class="slide-overlay"></div>
-                        <!-- Летающий декор внутри 2 баннера -->
                         <div class="decor-layer" id="banner-decor-2"></div>
 
                         <div class="slide-content">
-                            <h2>Твой новый аккаунт</h2>
-                            <p>Быстрая выдача 24/7</p>
+                            <div class="capsule">
+                                <span class="mc-text">Never Time</span>
+                            </div>
+                            <p class="sub-text">ip: mc.nevertime.su</p>
+                            <p class="sub-text-small">Лучший сервер</p>
                         </div>
                     </div>
 
@@ -74,7 +75,7 @@
                 </div>
             </div>
 
-            <!-- ТОНКИЕ СТЕКЛЯННЫЕ ПАНЕЛИ -->
+            <!-- ПАНЕЛИ (с увеличенным отступом) -->
             <div class="menu-list">
                 
                 <button class="menu-card glass-panel" onclick="openPanel('ads')">
