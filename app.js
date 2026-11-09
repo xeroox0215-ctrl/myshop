@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
         }
-        
-        // ТВОЙ ID (Админка)
         const MY_ADMIN_ID = 1494459013; 
         if (user.id === MY_ADMIN_ID) {
             document.getElementById('admin-nav-tab').style.display = 'flex';
@@ -70,21 +68,31 @@ function startCarousel() {
     });
 }
 
-// --- ЛОГИКА МОДАЛЬНОГО ОКНА РЕКЛАМЫ ---
-function openAdsModal() {
-    document.getElementById('ads-modal').classList.add('active');
+// Реклама
+function openAdsModal() { document.getElementById('ads-modal').classList.add('active'); }
+function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
+
+// Поддержка
+function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
+function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
+
+// Раскрытие вопросов (работает для обоих окон)
+function toggleFaq(button) {
+    const item = button.parentElement;
+    item.classList.toggle('active');
 }
 
-function closeAdsModal() {
-    document.getElementById('ads-modal').classList.remove('active');
-}
-
-function selectAds(name, price) {
-    alert(`Вы выбрали: ${name}\nЦена: ${price} звёзд\n(Тут будет логика оплаты)`);
-}
-
-function showPinPrice() {
-    alert(`Закреп сообщения в ТГК стоит 100 звёзд.\n(Тут будет логика оплаты)`);
+// Отправка в поддержку
+function sendSupportMessage() {
+    const text = document.getElementById('support-message').value;
+    if (text.trim() === '') {
+        // Красивое уведомление вместо alert можно добавить позже
+        alert('Напишите текст сообщения!');
+        return;
+    }
+    alert('Сообщение отправлено в поддержку!');
+    document.getElementById('support-message').value = '';
+    closeSupportModal();
 }
 
 function openPanel(panelName) {
