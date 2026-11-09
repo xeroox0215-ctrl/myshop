@@ -9,11 +9,14 @@
 </head>
 <body>
 
+    <!-- Светящиеся пятна для "живого" фона -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
     <div id="petals-bg"></div>
 
     <div class="app-container">
         
-        <!-- ТОНКИЙ ПРОФИЛЬ -->
         <header class="profile-bar glass-panel">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">👤</div>
@@ -31,14 +34,12 @@
 
         <main class="content-area">
             
-            <!-- БАННЕРЫ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
                     <div class="carousel-slide">
                         <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
-                        <!-- Парящий Стив в баннере -->
                         <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" class="banner-floating steve-float" alt="Steve">
                         <div class="slide-content">
                             <h2>Добро пожаловать</h2>
@@ -48,13 +49,12 @@
                     </div>
                     
                     <div class="carousel-slide">
-                        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Закат">
+                        <img src="https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Лес">
                         <div class="slide-overlay"></div>
-                        <!-- Парящий Крипер в баннере -->
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Minecraft_Creeper.png/452px-Minecraft_Creeper.png" class="banner-floating creeper-float" alt="Creeper">
                         <div class="slide-content">
-                            <h2>Закатный сад</h2>
-                            <p>Уютные закаты</p>
+                            <h2>Ночной лес</h2>
+                            <p>Тайны Minecraft</p>
                         </div>
                     </div>
 
@@ -66,46 +66,30 @@
                 </div>
             </div>
 
-            <!-- ТВОИ ПАНЕЛИ -->
             <div class="menu-list">
                 
-                <!-- Реклама -->
                 <button class="menu-card glass-panel" onclick="openPanel('ads')">
-                    <div class="menu-info">
-                        <h3>Реклама</h3>
-                    </div>
-                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="Реклама">
+                    <div class="menu-info"><h3>Реклама</h3></div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/6941/6941697.png" class="menu-png" alt="Реклама">
                 </button>
                 
-                <!-- Приватка -->
                 <button class="menu-card glass-panel" onclick="openPanel('private')">
-                    <div class="menu-info">
-                        <h3>Приватка</h3>
-                    </div>
-                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Приватка">
+                    <div class="menu-info"><h3>Приватка</h3></div>
+                    <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" class="menu-png" alt="Приватка">
                 </button>
                 
-                <!-- Профиль -->
                 <button class="menu-card glass-panel" onclick="openPanel('profile')">
-                    <div class="menu-info">
-                        <h3>Профиль</h3>
-                    </div>
-                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Профиль">
+                    <div class="menu-info"><h3>Профиль</h3></div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Minecraft_Creeper.png/452px-Minecraft_Creeper.png" class="menu-png" alt="Профиль">
                 </button>
 
-                <!-- Поддержка -->
                 <button class="menu-card glass-panel" onclick="openPanel('support')">
-                    <div class="menu-info">
-                        <h3>Поддержка</h3>
-                    </div>
+                    <div class="menu-info"><h3>Поддержка</h3></div>
                     <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" class="menu-png" alt="Поддержка">
                 </button>
 
-                <!-- Админ-панель (скрыта для обычных юзеров) -->
                 <button class="menu-card glass-panel admin-only" id="admin-menu-btn" onclick="openPanel('admin')" style="display: none;">
-                    <div class="menu-info">
-                        <h3>Админ-панель</h3>
-                    </div>
+                    <div class="menu-info"><h3>Админ-панель</h3></div>
                     <img src="https://cdn-icons-png.flaticon.com/512/2099/2099153.png" class="menu-png" alt="Админка">
                 </button>
 
@@ -113,7 +97,6 @@
 
         </main>
 
-        <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <button class="nav-item active">
                 <span class="nav-icon">🏠</span>
