@@ -1,9 +1,11 @@
 /* Базовые переменные */
 :root {
-    --tg-bg: #0f0c29;
     --tg-text: #ffffff;
-    --tg-hint: #8e8e93;
-    --border-radius: 24px;
+    --tg-hint: #a0a0a0;
+    --border-radius: 20px;
+    --glass-bg: rgba(20, 20, 30, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --neon-pink: #ff1493;
 }
 
 * {
@@ -15,10 +17,10 @@
 }
 
 body {
-    /* Черно-розовый градиент */
-    background: linear-gradient(135deg, #000000, #1a001a, #330033, #000000);
+    /* Глубокий космический градиент (черный -> фиолетовый -> розовый) */
+    background: linear-gradient(135deg, #050505, #1a0033, #330033, #050505);
     background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
+    animation: gradientBG 15s ease infinite;
     color: var(--tg-text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -31,117 +33,57 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* --- ЗАСТАВКА --- */
-#splash-screen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #0f0c29;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    z-index: 9999; 
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-    opacity: 1; visibility: visible;
-}
-
-@keyframes fadeInSplash { from { opacity: 0; } to { opacity: 1; } }
-#splash-screen { animation: fadeInSplash 0.8s ease-out forwards; }
-#splash-screen.hidden { opacity: 0; visibility: hidden; }
-
-#skip-btn {
-    position: absolute; top: 20px; right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white; padding: 8px 16px; border-radius: 20px;
-    font-size: 14px; font-weight: 600; cursor: pointer; overflow: hidden; z-index: 10000;
-}
-
-#skip-btn::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
-    animation: shine 2s infinite; pointer-events: none;
-}
-@keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-.splash-title { 
-    font-size: 28px; font-weight: 800; color: white; margin-top: 20px; 
-    letter-spacing: 4px; text-transform: uppercase;
-    text-shadow: 0 0 10px rgba(255, 20, 147, 0.8), 0 0 20px rgba(255, 20, 147, 0.4);
-    animation: pulse 1.5s infinite; 
-}
-@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.98); } }
-
-.splash-steve { 
-    width: 150px; max-height: 150px; object-fit: contain;
-    animation: bounce 2s infinite ease-in-out; 
-    mix-blend-mode: screen; 
-}
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-.splash-mc-icon { 
-    width: 80px; margin-top: 30px; animation: float 3s infinite ease-in-out; 
-    filter: drop-shadow(0 0 15px #ff1493); 
-}
-@keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
-
-/* --- ФОН С БЛОКАМИ --- */
+/* Фон с летающими блоками */
 .bg-animations {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 1; overflow: hidden;
 }
+
 .floating-block {
     position: absolute; width: 40px; height: 40px;
     background-size: contain; background-repeat: no-repeat; background-position: center;
     opacity: 0.4; animation: floatSpace 20s linear infinite;
-    filter: drop-shadow(0 5px 15px rgba(255, 20, 147, 0.4));
+    filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.5));
 }
+
 @keyframes floatSpace {
     0% { transform: translateY(110vh) rotate(0deg) scale(0.5); }
     50% { transform: translateY(50vh) rotate(180deg) scale(1); opacity: 0.6; }
     100% { transform: translateY(-10vh) rotate(360deg) scale(0.5); }
 }
 
-/* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+/* Основной контейнер */
 .app-container {
     position: relative; z-index: 2; 
     padding: 16px; padding-bottom: 100px; max-width: 500px; margin: 0 auto;
     display: flex; flex-direction: column; gap: 20px;
 }
 
+/* Эффект стекла (Glassmorphism) */
 .glass-panel {
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--glass-bg);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border-radius: var(--border-radius); 
-    border: 1px solid rgba(255, 105, 180, 0.2); 
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 20, 147, 0.1); 
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
     position: relative; overflow: hidden;
 }
 
-.glass-panel::before {
-    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: linear-gradient(45deg, transparent 40%, rgba(255, 20, 147, 0.15) 50%, transparent 60%);
-    animation: shine 5s infinite; pointer-events: none;
-}
-
 /* Профиль */
-.profile-header { 
-    padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; 
-}
-.profile-info { 
-    display: flex; flex-direction: column; align-items: center; gap: 12px; 
-}
+.profile-header { padding: 20px; display: flex; align-items: center; gap: 16px; }
 .avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
     display: flex; justify-content: center; align-items: center;
-    font-size: 36px; background-size: cover; background-position: center;
-    box-shadow: 0 0 20px rgba(255, 20, 147, 0.6); border: 2px solid rgba(255, 255, 255, 0.2);
+    font-size: 28px; background-size: cover; background-position: center;
+    box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3);
+    border: 1px solid rgba(255,255,255,0.2);
 }
-.user-name { font-size: 22px; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
+.user-details { display: flex; flex-direction: column; }
+.user-name { font-size: 20px; font-weight: 700; }
 .user-tag { font-size: 14px; color: var(--tg-hint); }
 
-/* --- КАРУСЕЛЬ --- */
+/* Карусель */
 .carousel-container {
     position: relative; width: 100%; overflow: hidden;
     border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -163,7 +105,7 @@ body {
 
 .slide-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to right, rgba(15,12,41,0.9) 0%, rgba(15,12,41,0.1) 100%);
+    background: linear-gradient(to right, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0.1) 100%);
     z-index: 1;
 }
 .slide-content {
@@ -171,46 +113,52 @@ body {
     padding: 24px; display: flex; flex-direction: column; justify-content: center;
     color: white; z-index: 2; max-width: 75%;
 }
-.slide-content h2 { font-size: 22px; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-.slide-content p { font-size: 13px; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-.banner-steve { position: absolute; right: -10px; bottom: -10px; height: 130px; z-index: 3; mix-blend-mode: screen; animation: float 4s infinite ease-in-out; }
+.slide-content h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.slide-content p { font-size: 14px; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
+/* PNG на баннере */
+.banner-png { 
+    position: absolute; right: -10px; bottom: -10px; height: 140px; z-index: 3; 
+    filter: drop-shadow(0 0 15px rgba(255, 20, 147, 0.5)); 
+    animation: float 4s infinite ease-in-out; 
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Лепестки */
 .petals-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: hidden; }
 .petal { position: absolute; background-color: #ffb7c5; border-radius: 15px 0 15px 0; opacity: 0.6; animation: fall linear infinite; }
-@keyframes fall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(200px) rotate(360deg); opacity: 0; } }
+@keyframes fall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(250px) rotate(360deg); opacity: 0; } }
 
 .carousel-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: all 0.3s; }
 .dot.active { width: 24px; border-radius: 4px; background: white; }
 
-/* Кнопки */
+/* Сетка кнопок категорий */
 .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .category-btn {
-    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 105, 180, 0.2);
-    border-radius: 20px; padding: 10px; color: var(--tg-text);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    cursor: pointer; transition: all 0.3s ease;
-    box-shadow: inset 0 0 10px rgba(255, 20, 147, 0.1);
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-radius: 20px; padding: 15px 10px; color: var(--tg-text);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);
 }
-.category-btn:active { transform: scale(0.95); background: rgba(255, 20, 147, 0.2); }
+.category-btn:active { transform: scale(0.95); background: rgba(255, 20, 147, 0.15); border-color: rgba(255, 20, 147, 0.4); }
 
 .cat-img-container {
-    width: 60px; height: 60px; border-radius: 50%;
+    width: 50px; height: 50px;
     display: flex; justify-content: center; align-items: center;
-    background: transparent; border: none; padding: 5px;
 }
-.cat-img-container img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(255, 20, 147, 0.3)); }
+.cat-img-container img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(255, 20, 147, 0.4)); }
 .cat-text { font-size: 13px; font-weight: 600; }
 
 /* Нижняя навигация */
 .bottom-nav {
     position: fixed; bottom: 0; left: 0; width: 100%;
-    background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 105, 180, 0.2);
+    background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
     display: flex; justify-content: space-around; padding: 12px 0 24px 0; z-index: 100;
 }
 .nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--tg-hint); cursor: pointer; transition: all 0.3s; width: 60px; }
-.nav-item.active { color: #ff1493; transform: translateY(-4px); }
+.nav-item.active { color: var(--neon-pink); transform: translateY(-4px); }
 .nav-icon { font-size: 24px; filter: grayscale(100%); transition: all 0.3s; }
 .nav-item.active .nav-icon { filter: grayscale(0%); transform: scale(1.1); text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
 .nav-text { font-size: 11px; font-weight: 600; }
