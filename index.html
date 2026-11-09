@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Xero Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="bg-animations" id="bg-animations"></div>
+
+    <div class="app-container">
+        
+        <header class="profile-header">
+            <div class="profile-info">
+                <div class="avatar" id="user-avatar">👤</div>
+                <div class="user-details">
+                    <div class="user-name" id="user-name">Загрузка...</div>
+                    <div class="user-tag" id="user-tag">@username</div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item"><span>⭐</span> 0</div>
+                <div class="stat-item"><span>🎟️</span> 0</div>
+                <div class="stat-item"><span>🛒</span> 0</div>
+            </div>
+        </header>
+
+        <main class="content-area" id="main-content">
+            
+            <div class="carousel-container">
+                <div class="carousel-track" id="carousel-track">
+                    <div class="carousel-slide active" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+                        <h2>Добро пожаловать!</h2>
+                        <p>Лучший магазин цифровых товаров</p>
+                    </div>
+                    <div class="carousel-slide" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
+                        <h2>Скидки на кейсы</h2>
+                        <p>Успей купить по лучшей цене</p>
+                    </div>
+                    <div class="carousel-slide" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <h2>Рулетка удачи</h2>
+                        <p>Испытай свою фортуну</p>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carousel-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+            </div>
+
+            <div class="categories-grid">
+                <button class="category-btn" onclick="openPanel('news')">
+                    <div class="cat-icon">📰</div>
+                    <div class="cat-text">Новости</div>
+                </button>
+                <button class="category-btn" onclick="openPanel('private')">
+                    <div class="cat-icon">🔒</div>
+                    <div class="cat-text">Приватка</div>
+                </button>
+                <button class="category-btn" onclick="openPanel('ads')">
+                    <div class="cat-icon">📢</div>
+                    <div class="cat-text">Реклама</div>
+                </button>
+            </div>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Главная</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile')">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">Профиль</span>
+            </button>
+            <button class="nav-item admin-only" id="admin-tab" onclick="switchTab('admin')" style="display: none;">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Админка</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
