@@ -9,109 +9,114 @@
 </head>
 <body>
 
+    <!-- Фон -->
     <div class="bg-animations" id="bg-animations"></div>
 
     <div class="app-container">
         
-        <!-- ТОНКАЯ ПАНЕЛЬ ПРОФИЛЯ -->
-        <header class="profile-bar glass-panel">
-            <div class="avatar" id="user-avatar">👤</div>
-            <div class="user-details">
-                <div class="user-name" id="user-name">Загрузка...</div>
-                <div class="user-tag" id="user-tag">@username</div>
+        <!-- ТОНКИЙ ПРОФИЛЬ (КАК НА РЕФЕРЕНСЕ) -->
+        <header class="profile-bar">
+            <div class="profile-left">
+                <div class="avatar" id="user-avatar">👤</div>
+                <div class="user-details">
+                    <div class="user-name" id="user-name">xeroox</div>
+                    <div class="user-tag" id="user-tag">@xeroox9</div>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <span>⭐ 0</span>
+                <span>⚡ 1</span>
+                <span>✈️ 0</span>
             </div>
         </header>
 
-        <main class="content-area" id="main-content">
+        <main class="content-area">
             
-            <!-- КАРУСЕЛЬ -->
+            <!-- БАННЕРЫ (Карусель) -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1: Сакура -->
+                    <!-- Баннер 1 (Зеленый как на скрине) -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=800&auto=format&fit=crop');"></div>
-                        <div class="slide-overlay"></div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #0f3d1f, #1e7a35);"></div>
                         <div class="slide-content">
-                            <h2>Сакура</h2>
-                            <p>Уютный мир</p>
-                        </div>
-                        <div class="petals-container" id="petals-1"></div>
-                    </div>
-                    
-                    <!-- Слайд 2: Закат -->
-                    <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop');"></div>
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h2>Закат</h2>
-                            <p>Красивые виды</p>
+                            <h2>РОЗЫГРЫШ 1000$</h2>
+                            <p>ДОБАВЬ БОТА К СЕБЕ В ЧАТ</p>
+                            <button class="slide-btn">создать клан →</button>
                         </div>
                     </div>
                     
-                    <!-- Слайд 3: Домик + Крипер -->
+                    <!-- Баннер 2 (Темный) -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop');"></div>
-                        <div class="slide-overlay"></div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #2b0b0b, #6b1c1c);"></div>
                         <div class="slide-content">
-                            <h2>Твой дом</h2>
-                            <p>Личный уголок</p>
+                            <h2>ШКОЛА РОМАНТИКИ</h2>
+                            <p>ИГРА ОТ ШГШ</p>
                         </div>
-                        <!-- Красивый 3D Крипер PNG без фона -->
-                        <img src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/2d/2d4a4244230323870c7d74dc3936638a29c6a4e0_full.jpg" class="banner-png" alt="Creeper" style="mix-blend-mode: screen; border-radius: 20px;">
                     </div>
 
                 </div>
-                
                 <div class="carousel-dots" id="carousel-dots">
                     <span class="dot active"></span>
-                    <span class="dot"></span>
                     <span class="dot"></span>
                 </div>
             </div>
 
-            <!-- КНОПКИ КАТЕГОРИЙ -->
-            <div class="categories-grid">
-                <button class="category-btn" onclick="openPanel('news')">
-                    <div class="cat-img-container">
-                        <!-- 3D Иконка Новостей -->
-                        <img src="https://cdn-icons-png.flaticon.com/512/2965/2965879.png" alt="Новости">
+            <!-- ДЛИННЫЕ КНОПКИ-МЕНЮ -->
+            <div class="menu-list">
+                
+                <!-- Магазин (Желтый) -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #e6b800, #ffcc00);">
+                    <div class="menu-info">
+                        <span class="menu-tag">НОВОЕ</span>
+                        <h3>Магазин</h3>
                     </div>
-                    <div class="cat-text">Новости</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3514/3514491.png" class="menu-png" alt="Магазин">
                 </button>
                 
-                <button class="category-btn" onclick="openPanel('private')">
-                    <div class="cat-img-container">
-                        <!-- 3D Иконка Замка -->
-                        <img src="https://cdn-icons-png.flaticon.com/512/2889/2889676.png" alt="Приватка">
+                <!-- НФТ актеры (Фиолетовый) -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #6a1b9a, #ab47bc);">
+                    <div class="menu-info">
+                        <span class="menu-tag">ПОПУЛЯРНОЕ</span>
+                        <h3>НФТ актёры</h3>
                     </div>
-                    <div class="cat-text">Приватка</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" class="menu-png" alt="НФТ">
                 </button>
                 
-                <button class="category-btn" onclick="openPanel('ads')">
-                    <div class="cat-img-container">
-                        <!-- 3D Иконка Рекламы -->
-                        <img src="https://cdn-icons-png.flaticon.com/512/3154/3154315.png" alt="Реклама">
+                <!-- Рейтинг (Синий) -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">
+                    <div class="menu-info">
+                        <span class="menu-tag">ТОПЫ И ПРИЗЫ</span>
+                        <h3>Рейтинг</h3>
                     </div>
-                    <div class="cat-text">Реклама</div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" class="menu-png" alt="Рейтинг">
                 </button>
+
             </div>
 
         </main>
 
         <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('home')">
+            <button class="nav-item active">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-text">Главная</span>
             </button>
-            <button class="nav-item" onclick="switchTab('profile')">
+            <button class="nav-item">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-text">Рейтинг</span>
+            </button>
+            <button class="nav-item">
+                <span class="nav-icon">🎫</span>
+                <span class="nav-text">Лотерея</span>
+            </button>
+            <button class="nav-item">
+                <span class="nav-icon">✨</span>
+                <span class="nav-text">НФТ</span>
+            </button>
+            <button class="nav-item">
                 <span class="nav-icon">👤</span>
                 <span class="nav-text">Профиль</span>
-            </button>
-            <button class="nav-item admin-only" id="admin-tab" onclick="switchTab('admin')" style="display: none;">
-                <span class="nav-icon">⚙️</span>
-                <span class="nav-text">Админка</span>
             </button>
         </nav>
 
