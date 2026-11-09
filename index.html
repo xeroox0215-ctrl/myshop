@@ -11,21 +11,26 @@
 
     <!-- ЗАСТАВКА (Экран загрузки) -->
     <div id="splash-screen">
-        <!-- Заменили ссылку на рабочего Стива -->
-        <img src="https://i.ibb.co/3yq8R2V/steve.png" alt="Steve" class="splash-steve">
+        <!-- Стив -->
+        <img src="https://i.ibb.co/q32GPCNf/image.png" alt="Steve" class="splash-steve">
+        
+        <!-- Красивый текст -->
         <div class="splash-title">ЗАГРУЗКА...</div>
-        <!-- Иконка Minecraft -->
+        
+        <!-- Иконка майнкрафта -->
         <img src="https://cdn-icons-png.flaticon.com/512/8209/8209804.png" alt="Minecraft" class="splash-mc-icon">
         
-        <!-- Кнопка пропустить -->
+        <!-- Кнопка Пропустить (в правом верхнем углу) -->
         <button id="skip-btn" onclick="skipSplash()">Пропустить</button>
     </div>
 
-    <!-- ФОН С БЛОКАМИ -->
+    <!-- ФОН С ЛЕТАЮЩИМИ БЛОКАМИ -->
     <div class="bg-animations" id="bg-animations"></div>
 
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="app-container">
         
+        <!-- ПРОФИЛЬ -->
         <header class="profile-header glass-panel">
             <div class="profile-info">
                 <div class="avatar" id="user-avatar">👤</div>
@@ -41,47 +46,48 @@
             </div>
         </header>
 
+        <!-- КОНТЕНТ -->
         <main class="content-area" id="main-content">
             
-            <!-- КАРУСЕЛЬ (Слайдер) -->
+            <!-- КАРУСЕЛЬ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1: Сакура + Лепестки -->
+                    <!-- Слайд 1: Закат -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/3kR6R6Q/1.jpg');"></div>
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h2>Сакура</h2>
-                            <p>Уютный мир Minecraft</p>
-                        </div>
-                        <div class="petals-container" id="petals-1"></div>
-                    </div>
-                    
-                    <!-- Слайд 2: Закат -->
-                    <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/6P8g1y2/2.jpg');"></div>
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/ZRN8H5Sy/image.jpg');"></div>
                         <div class="slide-overlay"></div>
                         <div class="slide-content">
                             <h2>Закат</h2>
                             <p>Невероятные виды</p>
                         </div>
+                        <div class="petals-container" id="petals-1"></div>
+                    </div>
+                    
+                    <!-- Слайд 2: Сакура -->
+                    <div class="carousel-slide">
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/LdFGdKNR/image.jpg');"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h2>Сакура</h2>
+                            <p>Уютный мир Minecraft</p>
+                        </div>
                     </div>
                     
                     <!-- Слайд 3: Домик + Стив -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/KzK4xJ5/3.jpg');"></div>
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/WWTnjxZv/image.jpg');"></div>
                         <div class="slide-overlay"></div>
                         <div class="slide-content">
                             <h2>Твой дом</h2>
                             <p>Личный уголок</p>
                         </div>
-                        <img src="https://i.ibb.co/8zPzQxH/steve.png" class="banner-steve" alt="Steve">
+                        <img src="https://i.ibb.co/0jjt5gpn/image.png" class="banner-steve" alt="Steve">
                     </div>
 
                 </div>
                 
-                <!-- Точки (индикаторы) -->
+                <!-- Точки -->
                 <div class="carousel-dots" id="carousel-dots">
                     <span class="dot active"></span>
                     <span class="dot"></span>
@@ -93,21 +99,21 @@
             <div class="categories-grid">
                 <button class="category-btn" onclick="openPanel('news')">
                     <div class="cat-img-container">
-                        <img src="https://i.ibb.co/5Kq6Z9Z/4.jpg" alt="Новости">
+                        <img src="https://i.ibb.co/BHPv4mMd/image.jpg" alt="Новости">
                     </div>
                     <div class="cat-text">Новости</div>
                 </button>
                 
                 <button class="category-btn" onclick="openPanel('private')">
                     <div class="cat-img-container">
-                        <img src="https://i.ibb.co/7Qx3wW2/5.jpg" alt="Приватка">
+                        <img src="https://i.ibb.co/nMCYkVj5/image.jpg" alt="Приватка">
                     </div>
                     <div class="cat-text">Приватка</div>
                 </button>
                 
                 <button class="category-btn" onclick="openPanel('ads')">
                     <div class="cat-img-container">
-                        <img src="https://i.ibb.co/4sYg8yH/6.jpg" alt="Реклама">
+                        <img src="https://i.ibb.co/xbtF04y/image.jpg" alt="Реклама">
                     </div>
                     <div class="cat-text">Реклама</div>
                 </button>
