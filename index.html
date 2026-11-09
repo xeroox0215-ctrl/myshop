@@ -9,6 +9,14 @@
 </head>
 <body>
 
+    <!-- ЗАСТАВКА (Экран загрузки) -->
+    <div id="splash-screen">
+        <img src="https://i.ibb.co/8zPzQxH/steve.png" alt="Steve" class="splash-steve">
+        <div class="splash-title">ЗАГРУЗКА...</div>
+        <img src="https://cdn-icons-png.flaticon.com/512/8209/8209804.png" alt="Minecraft" class="splash-mc-icon">
+    </div>
+
+    <!-- ФОН С БЛОКАМИ -->
     <div class="bg-animations" id="bg-animations"></div>
 
     <div class="app-container">
@@ -30,21 +38,45 @@
 
         <main class="content-area" id="main-content">
             
-            <div class="carousel-container">
+            <!-- КАРУСЕЛЬ (Слайдер) -->
+            <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
-                    <div class="carousel-slide active" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
-                        <h2>Добро пожаловать!</h2>
-                        <p>Лучший магазин цифровых товаров</p>
+                    
+                    <!-- Слайд 1: Сакура + Лепестки -->
+                    <div class="carousel-slide">
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/3kR6R6Q/1.jpg');"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h2>Сакура</h2>
+                            <p>Уютный мир Minecraft</p>
+                        </div>
+                        <div class="petals-container" id="petals-1"></div>
                     </div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
-                        <h2>Скидки на кейсы</h2>
-                        <p>Успей купить по лучшей цене</p>
+                    
+                    <!-- Слайд 2: Закат -->
+                    <div class="carousel-slide">
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/6P8g1y2/2.jpg');"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h2>Закат</h2>
+                            <p>Невероятные виды</p>
+                        </div>
                     </div>
-                    <div class="carousel-slide" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
-                        <h2>Рулетка удачи</h2>
-                        <p>Испытай свою фортуну</p>
+                    
+                    <!-- Слайд 3: Домик + Стив -->
+                    <div class="carousel-slide">
+                        <div class="slide-bg" style="background-image: url('https://i.ibb.co/KzK4xJ5/3.jpg');"></div>
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h2>Твой дом</h2>
+                            <p>Личный уголок</p>
+                        </div>
+                        <img src="https://i.ibb.co/8zPzQxH/steve.png" class="banner-steve" alt="Steve">
                     </div>
+
                 </div>
+                
+                <!-- Точки (индикаторы) -->
                 <div class="carousel-dots" id="carousel-dots">
                     <span class="dot active"></span>
                     <span class="dot"></span>
@@ -52,23 +84,33 @@
                 </div>
             </div>
 
+            <!-- КНОПКИ КАТЕГОРИЙ -->
             <div class="categories-grid">
                 <button class="category-btn" onclick="openPanel('news')">
-                    <div class="cat-icon">📰</div>
+                    <div class="cat-img-container">
+                        <img src="https://i.ibb.co/5Kq6Z9Z/4.jpg" alt="Новости">
+                    </div>
                     <div class="cat-text">Новости</div>
                 </button>
+                
                 <button class="category-btn" onclick="openPanel('private')">
-                    <div class="cat-icon">🔒</div>
+                    <div class="cat-img-container">
+                        <img src="https://i.ibb.co/7Qx3wW2/5.jpg" alt="Приватка">
+                    </div>
                     <div class="cat-text">Приватка</div>
                 </button>
+                
                 <button class="category-btn" onclick="openPanel('ads')">
-                    <div class="cat-icon">📢</div>
+                    <div class="cat-img-container">
+                        <img src="https://i.ibb.co/4sYg8yH/6.jpg" alt="Реклама">
+                    </div>
                     <div class="cat-text">Реклама</div>
                 </button>
             </div>
 
         </main>
 
+        <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('home')">
                 <span class="nav-icon">🏠</span>
