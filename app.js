@@ -3,6 +3,7 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Данные профиля
     if (user) {
         document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
         document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startCarousel();
 });
 
-// Лепестки на всем фоне
+// Лепестки на фоне
 function createGlobalPetals() {
     const container = document.getElementById('petals-bg');
     for (let i = 0; i < 15; i++) {
@@ -49,19 +50,23 @@ function createBannerPetals() {
     }
 }
 
-// Карусель
+// Карусель (автопрокрутка + свайп)
 let currentSlide = 0;
 let carouselInterval;
-const track = document.getElementById('carousel-track');
-const dots = document.querySelectorAll('.dot');
-const totalSlides = dots.length;
-
-function updateCarousel() {
-    track.style.transform = `translateX(-${currentSlide * 50}%)`;
-    dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
-}
+let startX = 0;
+let isDragging = false;
 
 function startCarousel() {
+    const track = document.getElementById('carousel-track');
+    const dots = document.querySelectorAll('.dot');
+    const container = document.getElementById('carousel');
+    const totalSlides = dots.length;
+
+    function updateCarousel() {
+        track.style.transform = `translateX(-${currentSlide * 50}%)`;
+        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+    }
+
     carouselInterval = setInterval(() => {
         currentSlide = (currentSlide + 1) % totalSlides;
         updateCarousel();
@@ -75,4 +80,28 @@ function startCarousel() {
             startCarousel();
         });
     });
+
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        clearInterval(carouselInterval);
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+        if (diff > 40) {
+            currentSlide = (currentSlide + 1) % totalSlides;
+        } else if (diff < -40) {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        }
+        updateCarousel();
+        startCarousel();
+    });
+}
+
+function openPanel(panelName) {
+    console.log('Открытие панели:', panelName);
 }
