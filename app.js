@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
         }
-        // Твой ID для админки
         const MY_ADMIN_ID = 123456789; 
         if (user.id === MY_ADMIN_ID) {
             document.getElementById('admin-nav-tab').style.display = 'flex';
@@ -19,15 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Генерация декора
-    createDecor('bg-decor', 20);        // На фоне (много)
-    createDecor('banner-decor-1', 5);   // В 1 баннере
-    createDecor('banner-decor-2', 5);   // Во 2 баннере
+    createDecor('bg-decor', 15);        
+    createDecor('banner-decor-1', 6);   
+    createDecor('banner-decor-2', 6);   
 
     startCarousel();
 });
 
-// Функция для создания летающих элементов
 function createDecor(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -38,26 +35,25 @@ function createDecor(containerId, count) {
         const div = document.createElement('div');
         div.classList.add('floating-decor');
         
-        // Случайная картинка
         const randomImg = images[Math.floor(Math.random() * images.length)];
         div.style.backgroundImage = `url('${randomImg}')`;
         
-        // Размер (маленькие для баннера, чуть больше для фона)
         const isBanner = containerId.includes('banner');
-        const size = isBanner ? (Math.random() * 15 + 10) : (Math.random() * 25 + 15);
+        const size = isBanner ? (Math.random() * 20 + 15) : (Math.random() * 30 + 20);
         div.style.width = size + 'px';
         div.style.height = size + 'px';
         
-        // Позиция и скорость
-        div.style.left = Math.random() * 100 + '%';
-        div.style.animationDuration = (Math.random() * 10 + 15) + 's'; // Медленно летят
+        // Позиция (случайно по экрану)
+        div.style.left = Math.random() * 90 + '%';
+        div.style.top = Math.random() * 80 + 'vh'; // Начинают с разных мест
+        
+        div.style.animationDuration = (Math.random() * 15 + 15) + 's'; 
         div.style.animationDelay = (Math.random() * 10) + 's';
         
         container.appendChild(div);
     }
 }
 
-// Логика карусели
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
