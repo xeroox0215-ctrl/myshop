@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xero Shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -31,20 +31,15 @@
 
         <main class="content-area">
             
+            <!-- БАННЕРЫ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
-                    
-                    <!-- Баннер 1: TGK -->
                     <div class="carousel-slide">
                         <img src="Sakyra1.png" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
-                        
-                        <!-- Закрепленный декор по углам -->
                         <img src="derevo.png" class="pinned-decor" style="top: 10px; right: 10px; width: 50px;">
                         <img src="zvezda.png" class="pinned-decor" style="bottom: 10px; left: 10px; width: 30px; animation-delay: 1s;">
-
                         <div class="decor-layer" id="banner-decor-1"></div>
-                        
                         <div class="slide-content">
                             <div class="capsule">
                                 <span class="mc-text">Официальный Telegram канал</span>
@@ -53,37 +48,31 @@
                         </div>
                     </div>
                     
-                    <!-- Баннер 2: Never Time -->
                     <div class="carousel-slide">
                         <img src="Sakyra2.png" class="slide-img" alt="Лес">
                         <div class="slide-overlay"></div>
-
-                        <!-- Закрепленный декор по углам -->
                         <img src="zvezda.png" class="pinned-decor" style="top: 15px; left: 15px; width: 35px; animation-delay: 0.5s;">
                         <img src="derevo.png" class="pinned-decor" style="bottom: 5px; right: 5px; width: 45px; animation-delay: 1.5s;">
-
                         <div class="decor-layer" id="banner-decor-2"></div>
-
                         <div class="slide-content">
                             <div class="capsule">
                                 <span class="mc-text">Never Time</span>
                             </div>
                             <p class="sub-text">ip: mc.nevertime.su</p>
-                            <p class="sub-text-small">Лучший сервер</p>
                         </div>
                     </div>
-
                 </div>
-                
                 <div class="carousel-dots" id="carousel-dots">
                     <span class="dot active"></span>
                     <span class="dot"></span>
                 </div>
             </div>
 
+            <!-- ПАНЕЛИ -->
             <div class="menu-list">
                 
-                <button class="menu-card glass-panel" onclick="openPanel('ads')">
+                <!-- Кнопка открывает рекламу -->
+                <button class="menu-card glass-panel" onclick="openAdsModal()">
                     <div class="menu-info"><h3>Заказать рекламу</h3></div>
                     <img src="main.png" class="menu-png" alt="Реклама">
                 </button>
@@ -103,6 +92,7 @@
                     <img src="steve3.png" class="menu-png" alt="Поддержка">
                 </button>
 
+                <!-- АДМИНКА (включается по ID) -->
                 <button class="menu-card glass-panel admin-only" id="admin-menu-btn" onclick="openPanel('admin')" style="display: none;">
                     <div class="menu-info"><h3>Админ-панель</h3></div>
                     <img src="icon.png" class="menu-png" alt="Админка">
@@ -112,6 +102,7 @@
 
         </main>
 
+        <!-- НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <button class="nav-item active">
                 <span class="nav-icon">🏠</span>
@@ -121,12 +112,40 @@
                 <span class="nav-icon">👤</span>
                 <span class="nav-text">Профиль</span>
             </button>
-            <button class="nav-item admin-only" id="admin-nav-tab" style="display: none;">
+            <!-- Админка в таб-баре -->
+            <button class="nav-item admin-only" id="admin-nav-tab" onclick="openPanel('admin')" style="display: none;">
                 <span class="nav-icon">⚙️</span>
                 <span class="nav-text">Админка</span>
             </button>
         </nav>
 
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО РЕКЛАМЫ (Изначально скрыто) -->
+    <div class="modal-overlay" id="ads-modal">
+        <div class="modal-content glass-panel">
+            
+            <!-- Декор в окне рекламы -->
+            <img src="derevo.png" class="modal-pinned" style="top: 10px; right: 10px; width: 40px;">
+            <img src="zvezda.png" class="modal-pinned" style="bottom: 10px; left: 10px; width: 25px;">
+
+            <h2 class="modal-title mc-text" style="font-size: 14px; margin-bottom: 20px;">Реклама</h2>
+            
+            <!-- Список тарифов -->
+            <div class="ads-list">
+                <button class="ads-btn" onclick="selectAds('24 часа ТГК', 50)">24 часа ТГК</button>
+                <button class="ads-btn" onclick="selectAds('48 часов ТГК', 90)">48 часов ТГК</button>
+                <button class="ads-btn" onclick="selectAds('72 часа ТГК', 130)">72 часа ТГК</button>
+                <button class="ads-btn" onclick="selectAds('7 дней ТГК (максимум)', 250)">7 дней ТГК (максимум)</button>
+            </div>
+
+            <!-- Категория Закреп -->
+            <div class="ads-section-title">Категория: <span>Закреп 🔒</span></div>
+            <button class="ads-btn" onclick="showPinPrice()" style="background: rgba(255, 20, 147, 0.2); border-color: #ff1493;">Узнать цену закрепа</button>
+
+            <!-- Кнопка закрытия -->
+            <button class="close-btn" onclick="closeAdsModal()">Закрыть</button>
+        </div>
     </div>
 
     <script src="app.js"></script>
