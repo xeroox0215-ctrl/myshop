@@ -9,7 +9,13 @@
 </head>
 <body>
 
-    <div id="glow-dots"></div>
+    <!-- ФОН С ДЕКОРОМ -->
+    <div class="space-bg">
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <!-- Сюда падают звезды, листья и деревья -->
+        <div class="decor-layer" id="bg-decor"></div>
+    </div>
 
     <div class="app-container">
         
@@ -30,28 +36,34 @@
 
         <main class="content-area">
             
+            <!-- БАННЕРЫ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
                     <!-- Баннер 1 -->
                     <div class="carousel-slide">
-                        <img src="Sakyra1.png" class="slide-frame" alt="Сакура">
-                        <div class="slide-inner">
-                            <h2>Добро пожаловать</h2>
-                            <p>Мир сакуры</p>
+                        <img src="Sakyra1.png" class="slide-img" alt="Сакура">
+                        <div class="slide-overlay"></div>
+                        <!-- Летающий декор внутри баннера -->
+                        <div class="decor-layer" id="banner-decor-1"></div>
+                        
+                        <div class="slide-content">
+                            <h2>Премиум доступ</h2>
+                            <p>Лучшие приватные аккаунты</p>
                         </div>
-                        <img src="steve.png" class="banner-floating steve-float" alt="Steve">
-                        <div class="petals-container" id="petals-1"></div>
                     </div>
                     
                     <!-- Баннер 2 -->
                     <div class="carousel-slide">
-                        <img src="Sakyra2.png" class="slide-frame" alt="Лес">
-                        <div class="slide-inner">
-                            <h2>Ночной лес</h2>
-                            <p>Тайны Minecraft</p>
+                        <img src="Sakyra2.png" class="slide-img" alt="Лес">
+                        <div class="slide-overlay"></div>
+                        <!-- Летающий декор внутри 2 баннера -->
+                        <div class="decor-layer" id="banner-decor-2"></div>
+
+                        <div class="slide-content">
+                            <h2>Твой новый аккаунт</h2>
+                            <p>Быстрая выдача 24/7</p>
                         </div>
-                        <img src="steve2.png" class="banner-floating creeper-float" alt="Steve2">
                     </div>
 
                 </div>
@@ -62,32 +74,32 @@
                 </div>
             </div>
 
+            <!-- ТОНКИЕ СТЕКЛЯННЫЕ ПАНЕЛИ -->
             <div class="menu-list">
                 
-                <!-- Блок травы теперь main.png -->
                 <button class="menu-card glass-panel" onclick="openPanel('ads')">
-                    <div class="menu-info"><h3>Реклама</h3></div>
+                    <div class="menu-info"><h3>Заказать рекламу</h3></div>
                     <img src="main.png" class="menu-png" alt="Реклама">
                 </button>
                 
                 <button class="menu-card glass-panel" onclick="openPanel('private')">
-                    <div class="menu-info"><h3>Приватка</h3></div>
+                    <div class="menu-info"><h3>Приватные аккаунты</h3></div>
                     <img src="steve.png" class="menu-png" alt="Приватка">
                 </button>
                 
                 <button class="menu-card glass-panel" onclick="openPanel('profile')">
-                    <div class="menu-info"><h3>Профиль</h3></div>
+                    <div class="menu-info"><h3>Мой профиль</h3></div>
                     <img src="steve2.png" class="menu-png" alt="Профиль">
                 </button>
 
                 <button class="menu-card glass-panel" onclick="openPanel('support')">
-                    <div class="menu-info"><h3>Поддержка</h3></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" class="menu-png" alt="Поддержка">
+                    <div class="menu-info"><h3>Поддержка 24/7</h3></div>
+                    <img src="steve3.png" class="menu-png" alt="Поддержка">
                 </button>
 
                 <button class="menu-card glass-panel admin-only" id="admin-menu-btn" onclick="openPanel('admin')" style="display: none;">
                     <div class="menu-info"><h3>Админ-панель</h3></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099153.png" class="menu-png" alt="Админка">
+                    <img src="icon.png" class="menu-png" alt="Админка">
                 </button>
 
             </div>
