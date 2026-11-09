@@ -12,7 +12,7 @@
 }
 
 body {
-    background-color: #030008; /* Глубокий космос */
+    background-color: #020005; /* Очень темный космос */
     color: var(--tg-text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -21,25 +21,25 @@ body {
 /* --- КОСМИЧЕСКИЙ ФОН --- */
 .space-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; overflow: hidden; background: #030008;
+    z-index: 0; overflow: hidden; background: #020005;
 }
 .nebula {
-    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
+    position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; /* Сделал тусклее */
 }
 .nebula-1 { width: 300px; height: 300px; background: #ff1493; top: -50px; left: -50px; animation: moveNebula 15s infinite alternate; }
-.nebula-2 { width: 400px; height: 400px; background: #8a2be2; bottom: -100px; right: -100px; animation: moveNebula 20s infinite alternate-reverse; }
+.nebula-2 { width: 400px; height: 400px; background: #4b0082; bottom: -100px; right: -100px; animation: moveNebula 20s infinite alternate-reverse; }
 
 @keyframes moveNebula {
     0% { transform: translate(0, 0) scale(1); }
     100% { transform: translate(50px, 50px) scale(1.2); }
 }
 
-/* Слой для падающего декора (звезд, листьев) */
 .decor-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; overflow: hidden;
 }
 
+/* Плавное появление и полет */
 .floating-decor {
     position: absolute;
     background-size: contain; background-repeat: no-repeat; background-position: center;
@@ -47,15 +47,15 @@ body {
 }
 
 @keyframes floatSpace {
-    0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.8; }
-    100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+    0% { transform: translateY(20vh) rotate(0deg) scale(0.5); opacity: 0; }
+    20% { opacity: 0.8; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(-20vh) rotate(180deg) scale(1.2); opacity: 0; }
 }
 
 .app-container { position: relative; z-index: 2; padding: 16px; padding-bottom: 120px; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
-/* --- СТЕКЛО (С 3D-ЭФФЕКТОМ) --- */
+/* --- СТЕКЛО --- */
 .glass-panel {
     background: rgba(255, 255, 255, 0.03); 
     backdrop-filter: blur(20px) saturate(180%);
@@ -70,49 +70,79 @@ body {
     overflow: hidden;
 }
 
-/* Блик по стеклу */
-.glass-panel::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
-    transform: rotate(45deg);
-    animation: shine 5s infinite;
-    pointer-events: none;
-}
-@keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
 /* ПРОФИЛЬ */
 .profile-bar { display: flex; justify-content: space-between; align-items: center; border-radius: 50px; padding: 8px 16px; height: 60px; }
 .profile-left { display: flex; align-items: center; gap: 10px; }
 .avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; font-size: 18px; background-size: cover; background-position: center; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.2); }
 .user-name { font-size: 15px; font-weight: 700; line-height: 1.1; }
 .user-tag { font-size: 12px; color: var(--tg-hint); line-height: 1.1; }
-.profile-stats { display: flex; gap: 8px; font-size: 13px; font-weight: 600; color: white; }
+
+/* КНОПКА ПОПОЛНИТЬ */
+.topup-btn {
+    background: rgba(255, 20, 147, 0.2);
+    border: 1px solid rgba(255, 20, 147, 0.5);
+    color: #ffb7c5;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+}
+.topup-btn:active { background: rgba(255, 20, 147, 0.4); }
 
 /* БАННЕРЫ */
 .carousel-container { position: relative; width: 100%; overflow: hidden; border-radius: 20px; height: 200px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .carousel-track { display: flex; transition: transform 0.5s ease; width: 200%; height: 100%; }
 .carousel-slide { width: 50%; height: 100%; position: relative; padding: 20px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 .slide-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-.slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(3,0,8,0.9) 0%, rgba(3,0,8,0.1) 100%); z-index: 1; }
-.slide-content { position: relative; z-index: 2; }
-.slide-content h2 { font-size: 24px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin-bottom: 4px;}
-.slide-content p { font-size: 13px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); color: #ffb7c5; }
+.slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(2,0,5,0.9) 0%, rgba(2,0,5,0.1) 100%); z-index: 1; }
+.slide-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+
+/* ШРИФТ МАЙНКРАФТА */
+.mc-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    line-height: 1.4;
+}
+
+/* КАПСУЛА (Стеклянная плашка) */
+.capsule {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.sub-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: #ffb7c5;
+    text-shadow: 1px 1px 0 #000;
+    margin-top: 4px;
+}
+.sub-text-small {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 7px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+}
+
 .carousel-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
 .dot.active { width: 20px; border-radius: 3px; background: white; }
 
-/* ПАНЕЛИ */
-.menu-list { display: flex; flex-direction: column; gap: 12px; }
+/* ПАНЕЛИ (УВЕЛИЧЕН ПРОБЕЛ) */
+.menu-list { display: flex; flex-direction: column; gap: 20px; /* Больше пробела */ margin-top: 10px; }
 .menu-card { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border: none; height: 65px; cursor: pointer; width: 100%; text-align: left; }
 .menu-info { z-index: 2; color: white; }
 .menu-info h3 { font-size: 17px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
 
-/* ИКОНКИ НА ПАНЕЛЯХ */
 .menu-png { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); height: 40px; width: auto; z-index: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); object-fit: contain; animation: floatItem 3s ease-in-out infinite; }
 @keyframes floatItem { 0% { transform: translateY(-50%) rotate(0deg); } 50% { transform: translateY(-60%) rotate(3deg); } 100% { transform: translateY(-50%) rotate(0deg); } }
 
