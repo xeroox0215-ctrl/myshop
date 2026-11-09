@@ -11,7 +11,6 @@
 
     <!-- ЗАСТАВКА -->
     <div id="splash-screen">
-        <!-- Стив без фона -->
         <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" alt="Steve" class="splash-steve">
         <div class="splash-title">ЗАГРУЗКА...</div>
         <img src="https://cdn-icons-png.flaticon.com/512/8209/8209804.png" alt="Minecraft" class="splash-mc-icon">
@@ -22,6 +21,7 @@
 
     <div class="app-container">
         
+        <!-- ПРОФИЛЬ (Только аватар и имя) -->
         <header class="profile-header glass-panel">
             <div class="profile-info">
                 <div class="avatar" id="user-avatar">👤</div>
@@ -30,11 +30,6 @@
                     <div class="user-tag" id="user-tag">@username</div>
                 </div>
             </div>
-            <div class="stats-row">
-                <div class="stat-item"><span>⭐</span> 0</div>
-                <div class="stat-item"><span>🎟️</span> 0</div>
-                <div class="stat-item"><span>🛒</span> 0</div>
-            </div>
         </header>
 
         <main class="content-area" id="main-content">
@@ -42,7 +37,7 @@
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1: Сакура + Лепестки -->
+                    <!-- Слайд 1: Сакура -->
                     <div class="carousel-slide">
                         <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=800&auto=format&fit=crop');"></div>
                         <div class="slide-overlay"></div>
@@ -63,7 +58,7 @@
                         </div>
                     </div>
                     
-                    <!-- Слайд 3: Домик + Стив -->
+                    <!-- Слайд 3: Домик + Крипер -->
                     <div class="carousel-slide">
                         <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop');"></div>
                         <div class="slide-overlay"></div>
@@ -71,8 +66,8 @@
                             <h2>Твой дом</h2>
                             <p>Личный уголок</p>
                         </div>
-                        <!-- Стив без фона -->
-                        <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" class="banner-steve" alt="Steve">
+                        <!-- Крипер (PNG без фона) -->
+                        <img src="https://flyclipart.com/ru/minecraft-creeper-pixel-art-maker-creeper-png-672400" class="banner-steve" alt="Creeper">
                     </div>
 
                 </div>
@@ -84,7 +79,7 @@
                 </div>
             </div>
 
-            <!-- Кнопки с 3D-иконками без фона -->
+            <!-- Кнопки с иконками -->
             <div class="categories-grid">
                 <button class="category-btn" onclick="openPanel('news')">
                     <div class="cat-img-container">
@@ -110,6 +105,7 @@
 
         </main>
 
+        <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('home')">
                 <span class="nav-icon">🏠</span>
