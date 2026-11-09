@@ -252,3 +252,28 @@ body {
 .nav-icon { font-size: 24px; filter: grayscale(100%); transition: all 0.3s; }
 .nav-item.active .nav-icon { filter: grayscale(0%); transform: scale(1.1); text-shadow: 0 0 0 10px rgba(56, 239, 125, 0.5); }
 .nav-text { font-size: 11px; font-weight: 600; }
+/* Кнопка пропустить на заставке */
+#skip-btn {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+}
+#skip-btn:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+}
+
+/* Чтобы Стив не обрезался и фон исчез (на всякий случай) */
+.splash-steve {
+    width: 150px;
+    max-height: 150px;
+    object-fit: contain;
+    mix-blend-mode: screen; /* Убирает черный фон */
+}
