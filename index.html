@@ -9,11 +9,7 @@
 </head>
 <body>
 
-    <!-- Светящиеся пятна для "живого" фона -->
-    <div class="bg-glow-1"></div>
-    <div class="bg-glow-2"></div>
-
-    <div id="petals-bg"></div>
+    <div id="glow-dots"></div>
 
     <div class="app-container">
         
@@ -37,29 +33,25 @@
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Слайд 1 -->
+                    <!-- Баннер 1 -->
                     <div class="carousel-slide">
-                        <img src="https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Сакура">
-                        <div class="slide-overlay"></div>
-                        <!-- Рабочий Стив -->
-                        <img src="https://i.postimg.cc/5N1Y6R8x/steve.png" class="banner-floating steve-float" alt="Steve">
-                        <div class="slide-content">
+                        <img src="Sakyra1.png" class="slide-frame" alt="Сакура">
+                        <div class="slide-inner">
                             <h2>Добро пожаловать</h2>
                             <p>Мир сакуры</p>
                         </div>
+                        <img src="steve.png" class="banner-floating steve-float" alt="Steve">
                         <div class="petals-container" id="petals-1"></div>
                     </div>
                     
-                    <!-- Слайд 2 -->
+                    <!-- Баннер 2 -->
                     <div class="carousel-slide">
-                        <img src="https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1200&auto=format&fit=crop" class="slide-img" alt="Лес">
-                        <div class="slide-overlay"></div>
-                        <!-- Рабочий Крипер -->
-                        <img src="https://i.postimg.cc/x8XyD8sD/creeper.png" class="banner-floating creeper-float" alt="Creeper">
-                        <div class="slide-content">
+                        <img src="Sakyra2.png" class="slide-frame" alt="Лес">
+                        <div class="slide-inner">
                             <h2>Ночной лес</h2>
                             <p>Тайны Minecraft</p>
                         </div>
+                        <img src="steve2.png" class="banner-floating creeper-float" alt="Steve2">
                     </div>
 
                 </div>
@@ -72,20 +64,20 @@
 
             <div class="menu-list">
                 
+                <!-- Блок травы теперь main.png -->
                 <button class="menu-card glass-panel" onclick="openPanel('ads')">
                     <div class="menu-info"><h3>Реклама</h3></div>
-                    <!-- Рабочий Блок Травы -->
-                    <img src="https://i.postimg.cc/1zF1Y6Q2/grass.png" class="menu-png" alt="Реклама">
+                    <img src="main.png" class="menu-png" alt="Реклама">
                 </button>
                 
                 <button class="menu-card glass-panel" onclick="openPanel('private')">
                     <div class="menu-info"><h3>Приватка</h3></div>
-                    <img src="https://i.postimg.cc/5N1Y6R8x/steve.png" class="menu-png" alt="Приватка">
+                    <img src="steve.png" class="menu-png" alt="Приватка">
                 </button>
                 
                 <button class="menu-card glass-panel" onclick="openPanel('profile')">
                     <div class="menu-info"><h3>Профиль</h3></div>
-                    <img src="https://i.postimg.cc/x8XyD8sD/creeper.png" class="menu-png" alt="Профиль">
+                    <img src="steve2.png" class="menu-png" alt="Профиль">
                 </button>
 
                 <button class="menu-card glass-panel" onclick="openPanel('support')">
