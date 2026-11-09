@@ -40,18 +40,14 @@ body {
     opacity: 1; visibility: visible;
 }
 
-@keyframes fadeInSplash {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+@keyframes fadeInSplash { from { opacity: 0; } to { opacity: 1; } }
 #splash-screen { animation: fadeInSplash 0.8s ease-out forwards; }
 #splash-screen.hidden { opacity: 0; visibility: hidden; }
 
 /* Кнопка Пропустить */
 #skip-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 20px; right: 20px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -80,34 +76,22 @@ body {
 }
 
 .splash-title { 
-    font-size: 28px; 
-    font-weight: 800; 
-    color: white; 
-    margin-top: 20px; 
-    letter-spacing: 4px;
-    text-transform: uppercase;
+    font-size: 28px; font-weight: 800; color: white; margin-top: 20px; 
+    letter-spacing: 4px; text-transform: uppercase;
     text-shadow: 0 0 10px rgba(56, 239, 125, 0.8), 0 0 20px rgba(56, 239, 125, 0.4);
     animation: pulse 1.5s infinite; 
 }
-
-@keyframes pulse { 
-    0%, 100% { opacity: 1; transform: scale(1); } 
-    50% { opacity: 0.7; transform: scale(0.98); } 
-}
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.98); } }
 
 .splash-steve { 
-    width: 150px; 
-    max-height: 150px;
-    object-fit: contain;
+    width: 150px; max-height: 150px; object-fit: contain;
     animation: bounce 2s infinite ease-in-out; 
     mix-blend-mode: screen; 
 }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
 .splash-mc-icon { 
-    width: 80px; 
-    margin-top: 30px; 
-    animation: float 3s infinite ease-in-out; 
+    width: 80px; margin-top: 30px; animation: float 3s infinite ease-in-out; 
     filter: drop-shadow(0 0 15px #38ef7d); 
 }
 @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
@@ -119,7 +103,7 @@ body {
 }
 .floating-block {
     position: absolute; width: 40px; height: 40px;
-    background-size: cover; background-position: center;
+    background-size: contain; background-repeat: no-repeat; background-position: center;
     opacity: 0.4; animation: floatSpace 20s linear infinite;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
 }
@@ -158,156 +142,86 @@ body {
 .user-tag { font-size: 14px; color: var(--tg-hint); }
 .stats-row { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; }
 .stat-item { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
 /* --- КАРУСЕЛЬ --- */
 .carousel-container {
-    position: relative; 
-    width: 100%; 
-    overflow: hidden;
-    border-radius: var(--border-radius); 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative; width: 100%; overflow: hidden;
+    border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     height: 180px;
 }
-
 .carousel-track {
-    display: flex; 
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    width: 300%; 
-    height: 100%;
+    display: flex; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    width: 300%; height: 100%;
 }
-
 .carousel-slide {
-    width: 33.333%; 
-    height: 100%;
-    position: relative;
-    overflow: hidden;
+    width: 33.333%; height: 100%; position: relative; overflow: hidden;
 }
-
 .slide-bg {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    background-size: cover; 
-    background-position: center;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center;
     animation: zoomBg 15s infinite alternate ease-in-out;
 }
-
-@keyframes zoomBg { 
-    0% { transform: scale(1); } 
-    100% { transform: scale(1.15); } 
-}
+@keyframes zoomBg { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
 
 .slide-overlay {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(to right, rgba(15,12,41,0.9) 0%, rgba(15,12,41,0.1) 100%);
     z-index: 1;
 }
-
 .slide-content {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    padding: 24px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center;
-    color: white; 
-    z-index: 2; 
-    max-width: 75%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    padding: 24px; display: flex; flex-direction: column; justify-content: center;
+    color: white; z-index: 2; max-width: 75%;
 }
-
 .slide-content h2 { font-size: 22px; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 .slide-content p { font-size: 13px; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+.banner-steve { position: absolute; right: -10px; bottom: -10px; height: 130px; z-index: 3; mix-blend-mode: screen; animation: float 4s infinite ease-in-out; }
 
-.banner-steve {
+/* Лепестки */
+.petals-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: hidden; }
+.petal { 
     position: absolute; 
-    right: -10px; 
-    bottom: -10px;
-    height: 130px; 
-    z-index: 3; 
-    mix-blend-mode: screen;
-    animation: float 4s infinite ease-in-out;
-}
-
-.petals-container {
-    position: absolute; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%;
-    z-index: 2; 
-    pointer-events: none; 
-    overflow: hidden;
-}
-
-.petal {
-    position: absolute; 
-    background-color: #ffb7c5;
+    background-color: #ffb7c5; 
     border-radius: 15px 0 15px 0; 
-    opacity: 0.8;
-    animation: fall linear infinite;
+    opacity: 0.6; 
+    animation: fall linear infinite; 
+}
+@keyframes fall { 
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 0.8; } 
+    100% { transform: translateY(200px) rotate(360deg); opacity: 0; } 
 }
 
-@keyframes fall {
-    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
-}
-
-.carousel-dots {
-    position: absolute; 
-    bottom: 12px; 
-    left: 50%; 
-    transform: translateX(-50%);
-    display: flex; gap: 8px; z-index: 5;
-}
-
+.carousel-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: all 0.3s; }
 .dot.active { width: 24px; border-radius: 4px; background: white; }
 
-/* --- КНОПКИ КАТЕГОРИЙ --- */
+/* Кнопки */
 .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-
 .category-btn {
-    background: rgba(255, 255, 255, 0.05); 
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px; 
-    padding: 10px; 
-    color: var(--tg-text);
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 10px; color: var(--tg-text);
     display: flex; flex-direction: column; align-items: center; gap: 8px;
-    cursor: pointer; 
-    transition: all 0.3s ease;
+    cursor: pointer; transition: all 0.3s ease;
 }
-
 .category-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
 
 .cat-img-container {
-    width: 60px; height: 60px; border-radius: 50%; overflow: hidden;
+    width: 60px; height: 60px; border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
-    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px; /* Отступ, чтобы иконка не прилипала к краям */
 }
-
-.cat-img-container img { width: 100%; height: 100%; object-fit: cover; }
+.cat-img-container img { width: 100%; height: 100%; object-fit: contain; }
 .cat-text { font-size: 13px; font-weight: 600; }
 
-/* --- НИЖНЯЯ НАВИГАЦИЯ --- */
+/* Нижняя навигация */
 .bottom-nav {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(20px);
     border-top: 1px solid rgba(255,255,255,0.1);
     display: flex; justify-content: space-around; padding: 12px 0 24px 0; z-index: 100;
 }
-
-.nav-item {
-    background: none; border: none; display: flex; flex-direction: column;
-    align-items: center; gap: 6px; color: var(--tg-hint);
-    cursor: pointer; transition: all 0.3s; width: 60px;
-}
-
+.nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--tg-hint); cursor: pointer; transition: all 0.3s; width: 60px; }
 .nav-item.active { color: #38ef7d; transform: translateY(-4px); }
 .nav-icon { font-size: 24px; filter: grayscale(100%); transition: all 0.3s; }
 .nav-item.active .nav-icon { filter: grayscale(0%); transform: scale(1.1); text-shadow: 0 0 10px rgba(56, 239, 125, 0.5); }
