@@ -9,31 +9,22 @@
 </head>
 <body>
 
-    <!-- ЗАСТАВКА -->
-    <div id="splash-screen">
-        <img src="https://pngimg.com/uploads/minecraft/minecraft_PNG80.png" alt="Steve" class="splash-steve">
-        <div class="splash-title">ЗАГРУЗКА...</div>
-        <img src="https://cdn-icons-png.flaticon.com/512/8209/8209804.png" alt="Minecraft" class="splash-mc-icon">
-        <button id="skip-btn" onclick="skipSplash()">Пропустить</button>
-    </div>
-
     <div class="bg-animations" id="bg-animations"></div>
 
     <div class="app-container">
         
-        <!-- ПРОФИЛЬ (Только аватар и имя) -->
-        <header class="profile-header glass-panel">
-            <div class="profile-info">
-                <div class="avatar" id="user-avatar">👤</div>
-                <div class="user-details">
-                    <div class="user-name" id="user-name">Загрузка...</div>
-                    <div class="user-tag" id="user-tag">@username</div>
-                </div>
+        <!-- ТОНКАЯ ПАНЕЛЬ ПРОФИЛЯ -->
+        <header class="profile-bar glass-panel">
+            <div class="avatar" id="user-avatar">👤</div>
+            <div class="user-details">
+                <div class="user-name" id="user-name">Загрузка...</div>
+                <div class="user-tag" id="user-tag">@username</div>
             </div>
         </header>
 
         <main class="content-area" id="main-content">
             
+            <!-- КАРУСЕЛЬ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
@@ -66,8 +57,8 @@
                             <h2>Твой дом</h2>
                             <p>Личный уголок</p>
                         </div>
-                        <!-- Крипер (PNG без фона) -->
-                        <img src="https://flyclipart.com/ru/minecraft-creeper-pixel-art-maker-creeper-png-672400" class="banner-steve" alt="Creeper">
+                        <!-- Красивый 3D Крипер PNG без фона -->
+                        <img src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/2d/2d4a4244230323870c7d74dc3936638a29c6a4e0_full.jpg" class="banner-png" alt="Creeper" style="mix-blend-mode: screen; border-radius: 20px;">
                     </div>
 
                 </div>
@@ -79,10 +70,11 @@
                 </div>
             </div>
 
-            <!-- Кнопки с иконками -->
+            <!-- КНОПКИ КАТЕГОРИЙ -->
             <div class="categories-grid">
                 <button class="category-btn" onclick="openPanel('news')">
                     <div class="cat-img-container">
+                        <!-- 3D Иконка Новостей -->
                         <img src="https://cdn-icons-png.flaticon.com/512/2965/2965879.png" alt="Новости">
                     </div>
                     <div class="cat-text">Новости</div>
@@ -90,6 +82,7 @@
                 
                 <button class="category-btn" onclick="openPanel('private')">
                     <div class="cat-img-container">
+                        <!-- 3D Иконка Замка -->
                         <img src="https://cdn-icons-png.flaticon.com/512/2889/2889676.png" alt="Приватка">
                     </div>
                     <div class="cat-text">Приватка</div>
@@ -97,6 +90,7 @@
                 
                 <button class="category-btn" onclick="openPanel('ads')">
                     <div class="cat-img-container">
+                        <!-- 3D Иконка Рекламы -->
                         <img src="https://cdn-icons-png.flaticon.com/512/3154/3154315.png" alt="Реклама">
                     </div>
                     <div class="cat-text">Реклама</div>
