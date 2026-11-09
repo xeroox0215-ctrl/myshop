@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
         }
-
+        // Твой ID для админки
         const MY_ADMIN_ID = 123456789; 
         if (user.id === MY_ADMIN_ID) {
             document.getElementById('admin-nav-tab').style.display = 'flex';
@@ -19,40 +19,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    createGlobalPetals();
-    createBannerPetals();
+    // Генерация декора
+    createDecor('bg-decor', 20);        // На фоне (много)
+    createDecor('banner-decor-1', 5);   // В 1 баннере
+    createDecor('banner-decor-2', 5);   // Во 2 баннере
+
     startCarousel();
 });
 
-function createGlobalPetals() {
-    const container = document.getElementById('petals-bg');
-    for (let i = 0; i < 15; i++) {
-        const petal = document.createElement('div');
-        petal.classList.add('petal-global');
-        const size = Math.random() * 6 + 4;
-        petal.style.width = size + 'px'; petal.style.height = size + 'px';
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        petal.style.animationDelay = (Math.random() * 5) + 's';
-        container.appendChild(petal);
-    }
-}
-
-function createBannerPetals() {
-    const container = document.getElementById('petals-1');
+// Функция для создания летающих элементов
+function createDecor(containerId, count) {
+    const container = document.getElementById(containerId);
     if (!container) return;
-    for (let i = 0; i < 10; i++) {
-        const petal = document.createElement('div');
-        petal.classList.add('petal');
-        const size = Math.random() * 8 + 5;
-        petal.style.width = size + 'px'; petal.style.height = size + 'px';
-        petal.style.left = Math.random() * 100 + '%';
-        petal.style.animationDuration = (Math.random() * 3 + 3) + 's';
-        petal.style.animationDelay = (Math.random() * 4) + 's';
-        container.appendChild(petal);
+
+    const images = ['listok.png', 'zvezda.png', 'derevo.png'];
+
+    for (let i = 0; i < count; i++) {
+        const div = document.createElement('div');
+        div.classList.add('floating-decor');
+        
+        // Случайная картинка
+        const randomImg = images[Math.floor(Math.random() * images.length)];
+        div.style.backgroundImage = `url('${randomImg}')`;
+        
+        // Размер (маленькие для баннера, чуть больше для фона)
+        const isBanner = containerId.includes('banner');
+        const size = isBanner ? (Math.random() * 15 + 10) : (Math.random() * 25 + 15);
+        div.style.width = size + 'px';
+        div.style.height = size + 'px';
+        
+        // Позиция и скорость
+        div.style.left = Math.random() * 100 + '%';
+        div.style.animationDuration = (Math.random() * 10 + 15) + 's'; // Медленно летят
+        div.style.animationDelay = (Math.random() * 10) + 's';
+        
+        container.appendChild(div);
     }
 }
 
+// Логика карусели
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -72,7 +77,7 @@ function startCarousel() {
     carouselInterval = setInterval(() => {
         currentSlide = (currentSlide + 1) % totalSlides;
         updateCarousel();
-    }, 5000);
+    }, 6000);
 
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
