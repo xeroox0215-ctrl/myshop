@@ -3,7 +3,6 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Данные профиля
     if (user) {
         document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
         document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
@@ -12,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
         }
+
+        const MY_ADMIN_ID = 123456789; 
+        if (user.id === MY_ADMIN_ID) {
+            document.getElementById('admin-nav-tab').style.display = 'flex';
+            document.getElementById('admin-menu-btn').style.display = 'flex';
+        }
     }
 
     createGlobalPetals();
@@ -19,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     startCarousel();
 });
 
-// Лепестки на фоне
 function createGlobalPetals() {
     const container = document.getElementById('petals-bg');
     for (let i = 0; i < 15; i++) {
@@ -34,7 +38,6 @@ function createGlobalPetals() {
     }
 }
 
-// Лепестки внутри баннера
 function createBannerPetals() {
     const container = document.getElementById('petals-1');
     if (!container) return;
@@ -50,7 +53,6 @@ function createBannerPetals() {
     }
 }
 
-// Карусель (автопрокрутка + свайп)
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -92,11 +94,8 @@ function startCarousel() {
         isDragging = false;
         let endX = e.changedTouches[0].clientX;
         let diff = startX - endX;
-        if (diff > 40) {
-            currentSlide = (currentSlide + 1) % totalSlides;
-        } else if (diff < -40) {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        }
+        if (diff > 40) currentSlide = (currentSlide + 1) % totalSlides;
+        else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateCarousel();
         startCarousel();
     });
