@@ -9,12 +9,12 @@
 </head>
 <body>
 
-    <!-- Фон -->
-    <div class="bg-animations" id="bg-animations"></div>
+    <!-- ФОН ДЛЯ ЛЕПЕСТКОВ -->
+    <div id="petals-bg"></div>
 
     <div class="app-container">
         
-        <!-- ТОНКИЙ ПРОФИЛЬ (КАК НА РЕФЕРЕНСЕ) -->
+        <!-- ТОНКИЙ ПРОФИЛЬ -->
         <header class="profile-bar">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">👤</div>
@@ -32,64 +32,70 @@
 
         <main class="content-area">
             
-            <!-- БАННЕРЫ (Карусель) -->
+            <!-- БАННЕРЫ -->
             <div class="carousel-container" id="carousel">
                 <div class="carousel-track" id="carousel-track">
                     
-                    <!-- Баннер 1 (Зеленый как на скрине) -->
+                    <!-- Слайд 1: Твоя рамка с сакурой (с лепестками) -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background: linear-gradient(135deg, #0f3d1f, #1e7a35);"></div>
+                        <img src="https://i.ibb.co/ynYDmPWG/image.jpg" class="slide-img" alt="Сакура">
+                        <div class="slide-overlay"></div>
                         <div class="slide-content">
-                            <h2>РОЗЫГРЫШ 1000$</h2>
-                            <p>ДОБАВЬ БОТА К СЕБЕ В ЧАТ</p>
-                            <button class="slide-btn">создать клан →</button>
+                            <h2>Добро пожаловать</h2>
+                            <p>Мир сакуры</p>
                         </div>
+                        <div class="petals-container" id="petals-1"></div>
                     </div>
                     
-                    <!-- Баннер 2 (Темный) -->
+                    <!-- Слайд 2: Закатный сад -->
                     <div class="carousel-slide">
-                        <div class="slide-bg" style="background: linear-gradient(135deg, #2b0b0b, #6b1c1c);"></div>
+                        <img src="https://i.ibb.co/TDGJ6whb/image.jpg" class="slide-img" alt="Закат">
+                        <div class="slide-overlay"></div>
                         <div class="slide-content">
-                            <h2>ШКОЛА РОМАНТИКИ</h2>
-                            <p>ИГРА ОТ ШГШ</p>
+                            <h2>Закатный сад</h2>
+                            <p>Уютные закаты</p>
                         </div>
                     </div>
 
                 </div>
+                
                 <div class="carousel-dots" id="carousel-dots">
                     <span class="dot active"></span>
                     <span class="dot"></span>
                 </div>
             </div>
 
-            <!-- ДЛИННЫЕ КНОПКИ-МЕНЮ -->
+            <!-- ПАНЕЛИ -->
             <div class="menu-list">
                 
-                <!-- Магазин (Желтый) -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #e6b800, #ffcc00);">
+                <!-- Панель 1: Магазин -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #4a00e0, #8e2de2);">
                     <div class="menu-info">
                         <span class="menu-tag">НОВОЕ</span>
                         <h3>Магазин</h3>
                     </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/3514/3514491.png" class="menu-png" alt="Магазин">
+                    <!-- Твой Стив с поднятыми руками -->
+                    <img src="https://i.ibb.co/r9MchLk/image.png" class="menu-png" alt="Стив">
                 </button>
                 
-                <!-- НФТ актеры (Фиолетовый) -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #6a1b9a, #ab47bc);">
+                <!-- Панель 2: НФТ актеры -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #ff0844, #ffb199);">
                     <div class="menu-info">
                         <span class="menu-tag">ПОПУЛЯРНОЕ</span>
                         <h3>НФТ актёры</h3>
                     </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" class="menu-png" alt="НФТ">
+                    <!-- Блок травы -->
+                    <img src="https://i.ibb.co/ZRNYK6JF/image.png" class="menu-png" alt="Блок">
                 </button>
                 
-                <!-- Рейтинг (Синий) -->
-                <button class="menu-card" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">
+                <!-- Панель 3: Рейтинг -->
+                <button class="menu-card" style="background: linear-gradient(135deg, #00c6ff, #0072ff);">
                     <div class="menu-info">
                         <span class="menu-tag">ТОПЫ И ПРИЗЫ</span>
                         <h3>Рейтинг</h3>
                     </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" class="menu-png" alt="Рейтинг">
+                    <!-- Второй Стив -->
+                    <img src="https://i.ibb.co/BVSwbPpR/image.png" class="menu-png" alt="Стив">
                 </button>
 
             </div>
