@@ -10,6 +10,11 @@
 </head>
 <body>
 
+    <!-- ЗАСТАВКА -->
+    <div id="splash-screen">
+        <img src="logo.png" alt="Xero Logo" class="splash-logo">
+    </div>
+
     <div class="space-bg">
         <div class="nebula nebula-1"></div>
         <div class="nebula nebula-2"></div>
@@ -29,11 +34,11 @@
             </div>
             
             <div class="top-bar-right">
-                <button class="balance-btn">
-                    <span class="balance-icon">💎</span> 0
-                </button>
+                <button class="balance-btn">0 ⭐</button>
                 <button class="notify-btn" onclick="openNotificationsModal()">
-                    🔔
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16ZM16 17H8V11C8 8.52 9.51 6.5 12 6.5C14.49 6.5 16 8.52 16 11V17Z" fill="currentColor"/>
+                    </svg>
                 </button>
             </div>
         </header>
@@ -76,16 +81,29 @@
                 </div>
             </div>
 
-            <!-- Оставляем только поддержку по центру -->
             <div class="center-menu">
                 <button class="menu-card glass-panel big-btn" onclick="openSupportModal()">
                     <div class="menu-info"><h3>Поддержка 24/7</h3></div>
                     <img src="steve3.png" class="menu-png" alt="Поддержка">
                 </button>
+
+                <!-- НОВАЯ ПАНЕЛЬ: О НАС -->
+                <button class="menu-card glass-panel big-btn" onclick="openAboutModal()">
+                    <div class="menu-info"><h3>О нас</h3></div>
+                    <!-- Иконка для О нас (можно заменить на свою картинку) -->
+                    <img src="https://cdn-icons-png.flaticon.com/512/1581/1581652.png" class="menu-png" alt="О нас" style="filter: invert(1);">
+                </button>
+
+                <!-- НОВАЯ ПАНЕЛЬ: ПРАВИЛА -->
+                <button class="menu-card glass-panel big-btn" onclick="openRulesModal()">
+                    <div class="menu-info"><h3>Правила</h3></div>
+                    <!-- Иконка для Правил -->
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" class="menu-png" alt="Правила" style="filter: invert(1);">
+                </button>
             </div>
         </main>
 
-        <!-- ЭКРАН: РЕКЛАМА (Пока пустая, только для визуала) -->
+        <!-- ЭКРАН: РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
             <h2 class="tab-title mc-text">Реклама</h2>
             <button class="menu-card glass-panel" onclick="openAdsModal()">
@@ -122,7 +140,7 @@
         </main>
 
         <!-- НИЖНЯЯ НАВИГАЦИЯ -->
-        <nav class="bottom-nav">
+        <nav class="bottom-nav glass-panel"> 
             <button class="nav-item active" onclick="switchTab('home', this)">
                 <div class="nav-circle"><span class="nav-icon">🏠</span></div>
                 <span class="nav-text">Главная</span>
@@ -139,73 +157,77 @@
 
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: УВЕДОМЛЕНИЯ -->
+    <!-- МОДАЛЬНЫЕ ОКНА -->
     <div class="modal-overlay" id="notify-modal">
         <div class="modal-content glass-panel">
             <h2 class="modal-title">Уведомления</h2>
             <div class="empty-state">
-                <span style="font-size: 40px; margin-bottom: 10px; display:block;">🔕</span>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom: 10px; color: #b3b3b3;">
+                    <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16ZM16 17H8V11C8 8.52 9.51 6.5 12 6.5C14.49 6.5 16 8.52 16 11V17Z" fill="currentColor"/>
+                </svg>
                 <p class="mc-text-small" style="color: #b3b3b3;">Уведомлений нет</p>
             </div>
             <button class="close-btn" onclick="closeNotificationsModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: РЕКЛАМА -->
     <div class="modal-overlay" id="ads-modal">
         <div class="modal-content glass-panel">
             <h2 class="modal-title">Реклама</h2>
             <div class="faq-list">
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>24 часа ТГК</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Размещение поста на 24 часа.<br><br><b>Стоимость:</b> 50 звёзд ⭐</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>48 часов ТГК</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Размещение поста на 48 часов.<br><br><b>Стоимость:</b> 90 звёзд ⭐</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>72 часа ТГК</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Размещение поста на 72 часа.<br><br><b>Стоимость:</b> 130 звёзд ⭐</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>7 дней ТГК (максимум)</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Максимальное размещение поста на 7 дней.<br><br><b>Стоимость:</b> 250 звёзд ⭐</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>Закреп сообщения 🔒</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Закреп вашего поста в канале.<br><br><b>Стоимость:</b> 100 звёзд ⭐</div>
-                </div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>24 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 24 часа.<br><br><b>Стоимость:</b> 50 звёзд ⭐</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>48 часов ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 48 часов.<br><br><b>Стоимость:</b> 90 звёзд ⭐</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>72 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 72 часа.<br><br><b>Стоимость:</b> 130 звёзд ⭐</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>7 дней ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Максимальное размещение поста на 7 дней.<br><br><b>Стоимость:</b> 250 звёзд ⭐</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Закреп сообщения 🔒</span><span class="faq-icon">▼</span></button><div class="faq-answer">Закреп вашего поста в канале.<br><br><b>Стоимость:</b> 100 звёзд ⭐</div></div>
             </div>
             <button class="close-btn" onclick="closeAdsModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ПОДДЕРЖКА -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-content glass-panel support-modal-content">
             <h2 class="modal-title">Поддержка</h2>
             <div class="faq-list">
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Оплата происходит через Telegram Stars. После выбора товара, вам выдадут код транзакции.</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>Сколько ждать заказ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Выдача товара происходит вручную. Обычно от 5 до 30 минут.</div>
-                </div>
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)"><span>Кто админ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Главный администратор — @xeroox9.</div>
-                </div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Оплата происходит через Telegram Stars.</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Сколько ждать заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Выдача товара происходит вручную. Обычно от 5 до 30 минут.</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Кто админ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Главный администратор — @xeroox9.</div></div>
             </div>
-
             <div class="support-form">
                 <p class="form-title mc-text-small">Не нашли ответ?</p>
                 <textarea id="support-message" placeholder="Напишите свой текст..."></textarea>
                 <button class="send-btn" onclick="sendSupportMessage()">Отправить</button>
             </div>
             <button class="close-btn" onclick="closeSupportModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- НОВОЕ ОКНО: О НАС (С анимацией переливания) -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-content glass-panel animated-border">
+            <h2 class="modal-title">О нас</h2>
+            <div class="text-content">
+                <p>Мы — команда <b>Xero Shop</b>, и мы ценим доверие каждого клиента.</p>
+                <p>В нашем магазине вы найдете только качественные товары. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро и точно в срок.</p>
+                <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
+                <p>Спасибо, что выбираете нас!</p>
+            </div>
+            <button class="close-btn" onclick="closeAboutModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- НОВОЕ ОКНО: ПРАВИЛА (С анимацией переливания) -->
+    <div class="modal-overlay" id="rules-modal">
+        <div class="modal-content glass-panel animated-border">
+            <h2 class="modal-title">Правила</h2>
+            <div class="text-content">
+                <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
+                <p>2. Все сделки проводятся честно и прозрачно.</p>
+                <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram и правилами самого бота.</p>
+                <p>4. Любые попытки мошенничества или спама строго запрещены и будут приводить к блокировке.</p>
+                <p>5. Уважайте друг друга и администрацию магазина.</p>
+            </div>
+            <button class="close-btn" onclick="closeRulesModal()">Закрыть</button>
         </div>
     </div>
 
