@@ -45,13 +45,11 @@
 
         <!-- ЭКРАН: ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
-            <div class="carousel-container" id="carousel">
+            <div class="carousel-container glass-panel" id="carousel" style="border-radius: 20px; overflow: hidden;">
                 <div class="carousel-track" id="carousel-track">
                     <div class="carousel-slide">
                         <img src="Sakyra1.png" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
-                        <img src="derevo.png" class="pinned-decor" style="top: 10px; right: 10px; width: 50px;">
-                        <img src="zvezda.png" class="pinned-decor" style="bottom: 10px; left: 10px; width: 30px; animation-delay: 1s;">
                         <div class="decor-layer" id="banner-decor-1"></div>
                         <div class="slide-content">
                             <div class="capsule">
@@ -64,8 +62,6 @@
                     <div class="carousel-slide">
                         <img src="Sakyra2.png" class="slide-img" alt="Лес">
                         <div class="slide-overlay"></div>
-                        <img src="zvezda.png" class="pinned-decor" style="top: 15px; left: 15px; width: 35px; animation-delay: 0.5s;">
-                        <img src="derevo.png" class="pinned-decor" style="bottom: 5px; right: 5px; width: 45px; animation-delay: 1.5s;">
                         <div class="decor-layer" id="banner-decor-2"></div>
                         <div class="slide-content">
                             <div class="capsule">
@@ -82,22 +78,18 @@
             </div>
 
             <div class="center-menu">
-                <button class="menu-card glass-panel big-btn" onclick="openSupportModal()">
+                <button class="menu-card glass-panel" onclick="openSupportModal()">
                     <div class="menu-info"><h3>Поддержка 24/7</h3></div>
                     <img src="steve3.png" class="menu-png" alt="Поддержка">
                 </button>
 
-                <!-- НОВАЯ ПАНЕЛЬ: О НАС -->
-                <button class="menu-card glass-panel big-btn" onclick="openAboutModal()">
+                <button class="menu-card glass-panel" onclick="openAboutModal()">
                     <div class="menu-info"><h3>О нас</h3></div>
-                    <!-- Иконка для О нас (можно заменить на свою картинку) -->
                     <img src="https://cdn-icons-png.flaticon.com/512/1581/1581652.png" class="menu-png" alt="О нас" style="filter: invert(1);">
                 </button>
 
-                <!-- НОВАЯ ПАНЕЛЬ: ПРАВИЛА -->
-                <button class="menu-card glass-panel big-btn" onclick="openRulesModal()">
+                <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div>
-                    <!-- Иконка для Правил -->
                     <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" class="menu-png" alt="Правила" style="filter: invert(1);">
                 </button>
             </div>
@@ -105,7 +97,7 @@
 
         <!-- ЭКРАН: РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
-            <h2 class="tab-title mc-text">Реклама</h2>
+            <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Реклама</h2>
             <button class="menu-card glass-panel" onclick="openAdsModal()">
                 <div class="menu-info"><h3>Заказать рекламу</h3></div>
                 <img src="main.png" class="menu-png" alt="Реклама">
@@ -158,8 +150,10 @@
     </div>
 
     <!-- МОДАЛЬНЫЕ ОКНА -->
+    
+    <!-- Уведомления -->
     <div class="modal-overlay" id="notify-modal">
-        <div class="modal-content glass-panel">
+        <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Уведомления</h2>
             <div class="empty-state">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom: 10px; color: #b3b3b3;">
@@ -171,8 +165,9 @@
         </div>
     </div>
 
+    <!-- Реклама -->
     <div class="modal-overlay" id="ads-modal">
-        <div class="modal-content glass-panel">
+        <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Реклама</h2>
             <div class="faq-list">
                 <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>24 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 24 часа.<br><br><b>Стоимость:</b> 50 звёзд ⭐</div></div>
@@ -185,8 +180,9 @@
         </div>
     </div>
 
+    <!-- Поддержка -->
     <div class="modal-overlay" id="support-modal">
-        <div class="modal-content glass-panel support-modal-content">
+        <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка</h2>
             <div class="faq-list">
                 <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Оплата происходит через Telegram Stars.</div></div>
@@ -202,7 +198,7 @@
         </div>
     </div>
 
-    <!-- НОВОЕ ОКНО: О НАС (С анимацией переливания) -->
+    <!-- О НАС -->
     <div class="modal-overlay" id="about-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">О нас</h2>
@@ -212,11 +208,13 @@
                 <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
                 <p>Спасибо, что выбираете нас!</p>
             </div>
+            <!-- Стив в окне О нас -->
+            <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;" alt="Steve">
             <button class="close-btn" onclick="closeAboutModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- НОВОЕ ОКНО: ПРАВИЛА (С анимацией переливания) -->
+    <!-- ПРАВИЛА -->
     <div class="modal-overlay" id="rules-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Правила</h2>
@@ -224,9 +222,10 @@
                 <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
                 <p>2. Все сделки проводятся честно и прозрачно.</p>
                 <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram и правилами самого бота.</p>
-                <p>4. Любые попытки мошенничества или спама строго запрещены и будут приводить к блокировке.</p>
-                <p>5. Уважайте друг друга и администрацию магазина.</p>
+                <p>4. Любые попытки мошенничества или спама строго запрещены.</p>
             </div>
+            <!-- Стив в окне Правил -->
+            <img src="steve2.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;" alt="Steve2">
             <button class="close-btn" onclick="closeRulesModal()">Закрыть</button>
         </div>
     </div>
