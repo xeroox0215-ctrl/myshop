@@ -3,13 +3,14 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Увеличил время до 3 секунд
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
-    }, 2000);
+    }, 3000);
 
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
-        document.getElementById('user-tag').innerText = user.username ? '@' + user.username : 'нет юзернейма';
+        document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
         
         if (user.photo_url) {
             const avatar = document.getElementById('user-avatar');
@@ -21,17 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('profile-page-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
         document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
-
-        // Админка
-        const MY_ADMIN_ID = 1494459013; 
-        if (user.id === MY_ADMIN_ID) {
-            // Тут можно включить кнопку админки, если она нужна
-        }
     }
 
-    createDecor('bg-decor', 15);        
-    createDecor('banner-decor-1', 6);   
-    createDecor('banner-decor-2', 6);   
+    // Уменьшил количество летающих объектов для фона (с 15 до 8), чтобы не лагало
+    createDecor('bg-decor', 8);        
+    createDecor('banner-decor-1', 4);   
+    createDecor('banner-decor-2', 4);   
     startCarousel();
 });
 
@@ -67,8 +63,6 @@ function openAdsModal() { document.getElementById('ads-modal').classList.add('ac
 function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
 function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
 function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
-
-// НОВЫЕ МОДАЛКИ
 function openAboutModal() { document.getElementById('about-modal').classList.add('active'); }
 function closeAboutModal() { document.getElementById('about-modal').classList.remove('active'); }
 function openRulesModal() { document.getElementById('rules-modal').classList.add('active'); }
