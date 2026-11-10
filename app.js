@@ -3,6 +3,10 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('splash-screen').classList.add('hidden');
+    }, 2000);
+
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
         document.getElementById('user-tag').innerText = user.username ? '@' + user.username : 'нет юзернейма';
@@ -17,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('profile-page-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
         document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
+
+        // Админка
+        const MY_ADMIN_ID = 1494459013; 
+        if (user.id === MY_ADMIN_ID) {
+            // Тут можно включить кнопку админки, если она нужна
+        }
     }
 
     createDecor('bg-decor', 15);        
@@ -29,8 +39,6 @@ function createDecor(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const images = ['listok.png', 'zvezda.png', 'derevo.png'];
-    
-    // Сначала просто создаем, они появятся благодаря CSS
     for (let i = 0; i < count; i++) {
         const div = document.createElement('div');
         div.classList.add('floating-decor');
@@ -40,40 +48,31 @@ function createDecor(containerId, count) {
         div.style.left = Math.random() * 90 + '%';
         div.style.top = Math.random() * 80 + 'vh';
         div.style.animationDuration = (Math.random() * 15 + 15) + 's'; 
-        // Сделал задержку поменьше, чтобы они сразу вылетали
         div.style.animationDelay = (Math.random() * 3) + 's'; 
         container.appendChild(div);
     }
 }
 
-// --- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
 function switchTab(tabName, btnElement) {
-    // Убираем активный класс со всех контентов
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    // Показываем нужный
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
-
-    // Убираем активный класс со всех кнопок
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    // Добавляем класс кнопке, на которую нажали
-    if(btnElement) {
-        btnElement.classList.add('active');
-    }
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    if(btnElement) btnElement.classList.add('active');
 }
 
-// --- МОДАЛКИ ---
+// Модалки
 function openNotificationsModal() { document.getElementById('notify-modal').classList.add('active'); }
 function closeNotificationsModal() { document.getElementById('notify-modal').classList.remove('active'); }
-
 function openAdsModal() { document.getElementById('ads-modal').classList.add('active'); }
 function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
-
 function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
 function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
+
+// НОВЫЕ МОДАЛКИ
+function openAboutModal() { document.getElementById('about-modal').classList.add('active'); }
+function closeAboutModal() { document.getElementById('about-modal').classList.remove('active'); }
+function openRulesModal() { document.getElementById('rules-modal').classList.add('active'); }
+function closeRulesModal() { document.getElementById('rules-modal').classList.remove('active'); }
 
 function toggleFaq(button) {
     const item = button.parentElement;
