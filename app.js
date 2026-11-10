@@ -4,18 +4,19 @@ const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
     if (user) {
-        document.getElementById('user-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-        document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
+        document.getElementById('user-name').innerText = user.first_name;
+        document.getElementById('user-tag').innerText = user.username ? '@' + user.username : 'нет юзернейма';
+        
         if (user.photo_url) {
             const avatar = document.getElementById('user-avatar');
             avatar.style.backgroundImage = `url(${user.photo_url})`;
             avatar.innerText = ''; 
+            const profileAvatar = document.getElementById('profile-page-avatar');
+            profileAvatar.style.backgroundImage = `url(${user.photo_url})`;
+            profileAvatar.innerText = '';
         }
-        const MY_ADMIN_ID = 1494459013; 
-        if (user.id === MY_ADMIN_ID) {
-            document.getElementById('admin-nav-tab').style.display = 'flex';
-            document.getElementById('admin-menu-btn').style.display = 'flex';
-        }
+        document.getElementById('profile-page-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
     }
 
     createDecor('bg-decor', 15);        
@@ -28,6 +29,8 @@ function createDecor(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const images = ['listok.png', 'zvezda.png', 'derevo.png'];
+    
+    // Сначала просто создаем, они появятся благодаря CSS
     for (let i = 0; i < count; i++) {
         const div = document.createElement('div');
         div.classList.add('floating-decor');
@@ -37,11 +40,55 @@ function createDecor(containerId, count) {
         div.style.left = Math.random() * 90 + '%';
         div.style.top = Math.random() * 80 + 'vh';
         div.style.animationDuration = (Math.random() * 15 + 15) + 's'; 
-        div.style.animationDelay = (Math.random() * 10) + 's';
+        // Сделал задержку поменьше, чтобы они сразу вылетали
+        div.style.animationDelay = (Math.random() * 3) + 's'; 
         container.appendChild(div);
     }
 }
 
+// --- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
+function switchTab(tabName, btnElement) {
+    // Убираем активный класс со всех контентов
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    // Показываем нужный
+    document.getElementById('tab-' + tabName).classList.add('active');
+
+    // Убираем активный класс со всех кнопок
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    // Добавляем класс кнопке, на которую нажали
+    if(btnElement) {
+        btnElement.classList.add('active');
+    }
+}
+
+// --- МОДАЛКИ ---
+function openNotificationsModal() { document.getElementById('notify-modal').classList.add('active'); }
+function closeNotificationsModal() { document.getElementById('notify-modal').classList.remove('active'); }
+
+function openAdsModal() { document.getElementById('ads-modal').classList.add('active'); }
+function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
+
+function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
+function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
+
+function toggleFaq(button) {
+    const item = button.parentElement;
+    item.classList.toggle('active');
+}
+
+function sendSupportMessage() {
+    const text = document.getElementById('support-message').value;
+    if (text.trim() === '') { alert('Напишите текст сообщения!'); return; }
+    alert('Сообщение отправлено в поддержку!');
+    document.getElementById('support-message').value = '';
+    closeSupportModal();
+}
+
+// КАРУСЕЛЬ
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -66,35 +113,4 @@ function startCarousel() {
         else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateCarousel(); startCarousel();
     });
-}
-
-// Реклама
-function openAdsModal() { document.getElementById('ads-modal').classList.add('active'); }
-function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
-
-// Поддержка
-function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
-function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
-
-// Раскрытие вопросов (работает для обоих окон)
-function toggleFaq(button) {
-    const item = button.parentElement;
-    item.classList.toggle('active');
-}
-
-// Отправка в поддержку
-function sendSupportMessage() {
-    const text = document.getElementById('support-message').value;
-    if (text.trim() === '') {
-        // Красивое уведомление вместо alert можно добавить позже
-        alert('Напишите текст сообщения!');
-        return;
-    }
-    alert('Сообщение отправлено в поддержку!');
-    document.getElementById('support-message').value = '';
-    closeSupportModal();
-}
-
-function openPanel(panelName) {
-    console.log('Открытие панели:', panelName);
 }
