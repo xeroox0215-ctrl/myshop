@@ -10,9 +10,8 @@
 </head>
 <body>
 
-    <!-- ЗАСТАВКА (Сканер) -->
+    <!-- ЗАСТАВКА (Чистая, без полоски) -->
     <div id="splash-screen">
-        <div class="scan-line"></div>
         <img src="logo.png" alt="Xero Logo" class="splash-logo">
     </div>
 
@@ -225,7 +224,7 @@
         </div>
     </div>
 
-    <!-- СТАРЫЕ ОКНА (Поддержка, О нас, Правила, Уведомления) -->
+    <!-- СТАРЫЕ ОКНА -->
     <div class="modal-overlay" id="notify-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Уведомления</h2>
@@ -238,8 +237,8 @@
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка</h2>
             <div class="faq-list">
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Через Telegram Stars или на карту.</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Сколько ждать?</span><span class="faq-icon">▼</span></button><div class="faq-answer">От 5 до 30 минут.</div></div>
+                <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-question"><span>Как оплатить?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Через Telegram Stars или на карту.</div></div>
+                <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-question"><span>Сколько ждать?</span><span class="faq-icon">▼</span></button><div class="faq-answer">От 5 до 30 минут.</div></div>
             </div>
             <div class="support-form">
                 <p class="form-title mc-text-small">Не нашли ответ?</p>
@@ -275,4 +274,4 @@
 
     <script src="app.js"></script>
 </body>
-                                            </html>
+</html>
