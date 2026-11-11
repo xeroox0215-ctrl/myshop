@@ -25,14 +25,16 @@ active_orders = []
 # --- СОКЕТЫ ---
 @socketio.on('join')
 def on_join(data):
-    # Подключаем клиента к комнате тикета
     ticket_id = str(data['ticket_id'])
     join_room(ticket_id)
-    # Если это тикет, отправляем историю
     if ticket_id in active_tickets:
         emit('ticket_history', active_tickets[ticket_id]['messages'], room=request.sid)
 
-# Новый сокет для тикетов
+@socketio.on('join_admin')
+def on_join_admin():
+    join_room('admins')
+    emit('all_orders', active_orders) # Отправляем все заказы при подключении
+
 @socketio.on('send_ticket_msg')
 def handle_ticket_msg(data):
     ticket_id = str(data['ticket_id'])
@@ -42,11 +44,8 @@ def handle_ticket_msg(data):
         active_tickets[ticket_id] = { "user_name": data['user_name'], "user_id": data.get('user_id'), "messages": [] }
     
     active_tickets[ticket_id]['messages'].append(msg_obj)
-    
-    # Пересылаем всем в комнате (включая админа)
     emit('receive_ticket_msg', msg_obj, room=ticket_id)
     
-    # Дублируем в бота (если пишет не админ)
     if str(data.get('user_id')) != str(ADMIN_ID):
         try:
             asyncio.run(application.bot.send_message(
@@ -56,16 +55,14 @@ def handle_ticket_msg(data):
         except Exception as e:
             print(f"Ошибка ТГ: {e}")
 
-# Новый сокет для заказов
 @socketio.on('new_order')
 def handle_new_order(data):
     global active_orders
     active_orders.append(data)
     
-    # Рассылаем всем админам (всем, кто в комнате 'admins')
+    # Рассылаем админам
     emit('receive_order', data, room='admins')
     
-    # Отправляем в бота
     try:
         asyncio.run(application.bot.send_message(
             chat_id=ADMIN_ID, 
@@ -74,14 +71,6 @@ def handle_new_order(data):
     except Exception as e:
         print(f"Ошибка ТГ: {e}")
 
-# Админ подключается к комнате 'admins' при загрузке
-@socketio.on('join_admin')
-def on_join_admin():
-    join_room('admins')
-    # Отправляем все текущие заказы админу
-    emit('all_orders', active_orders)
-
-# --- HTTP ЭНДПОИНТЫ (для получения данных при загрузке) ---
 @app.route('/get_tickets', methods=['GET'])
 def get_tickets():
     return jsonify(active_tickets)
@@ -90,7 +79,6 @@ def get_tickets():
 def get_orders():
     return jsonify(active_orders)
 
-# --- БОТ ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
