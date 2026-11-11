@@ -45,7 +45,6 @@
             </div>
         </div>
 
-        <!-- ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
             <div class="carousel-container glass-panel" id="carousel">
                 <div class="carousel-track" id="carousel-track">
@@ -80,7 +79,6 @@
             </div>
         </main>
 
-        <!-- НОВОСТИ -->
         <main class="content-area tab-content" id="tab-news">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Новости</h2>
             <div class="news-banner animated-border" style="height: 150px; margin-bottom: 15px; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #ff1493, #4b0082); background-size: 300% 300%;">
@@ -91,7 +89,6 @@
             </div>
         </main>
 
-        <!-- РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Реклама</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -107,7 +104,6 @@
             </div>
         </main>
 
-        <!-- ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -122,7 +118,6 @@
             </div>
         </main>
 
-        <!-- ПРОМОКОД -->
         <main class="content-area tab-content" id="tab-promo">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Промокод</h2>
             <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
@@ -132,7 +127,6 @@
             </div>
         </main>
 
-        <!-- ПРОФИЛЬ -->
         <main class="content-area tab-content" id="tab-profile">
             <div class="profile-page glass-panel">
                 <div class="profile-page-header">
@@ -147,7 +141,6 @@
             </div>
         </main>
 
-        <!-- НАВИГАЦИЯ -->
         <nav class="bottom-nav glass-panel"> 
             <button class="nav-item active" onclick="switchTab('home', this)"><div class="nav-circle"><span class="nav-icon">🏠</span></div><span class="nav-text">Главная</span></button>
             <button class="nav-item" onclick="switchTab('news', this)"><div class="nav-circle"><span class="nav-icon">📰</span></div><span class="nav-text">Новости</span></button>
@@ -158,7 +151,6 @@
         </nav>
     </div>
 
-    <!-- МОДАЛКИ -->
     <div class="modal-overlay" id="admin-modal">
         <div class="modal-content glass-panel animated-border" style="max-width: 450px; width: 95%;">
             <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
@@ -186,13 +178,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="notify-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Уведомления</h2>
-            <div id="notifications-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
-            <button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button>
-        </div>
-    </div>
+    <div class="modal-overlay" id="notify-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">Уведомления</h2><div id="notifications-list" style="display: flex; flex-direction: column; gap: 10px;"></div><button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button></div></div>
 
     <div class="modal-overlay" id="ticket-modal">
         <div class="modal-content glass-panel animated-border" style="display: flex; flex-direction: column; height: 80vh; padding: 15px;">
@@ -212,9 +198,7 @@
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title" id="buy-title">Покупка</h2>
             <p style="color:#fff; text-align:center; margin-bottom:10px;">Переведите звёзды на <b>@xeroox9</b>.</p>
-            <p style="color:#ffb7c5; text-align:center; font-size:12px; margin-bottom:15px; font-weight: bold;">
-                ⚠️ ВНИМАНИЕ: Если у вас есть промокод, но вы не оплатили заказ, промокод сгорит, а заказ будет закрыт!
-            </p>
+            <p style="color:#ffb7c5; text-align:center; font-size:12px; margin-bottom:15px; font-weight: bold;">⚠️ ВНИМАНИЕ: Если у вас есть промокод, но вы не оплатили заказ, промокод сгорит!</p>
             <button class="send-btn" onclick="showConfirmModal()">Я оплатил</button>
             <button class="close-btn" style="background: #333;" onclick="closeModal('buy-modal')">Отмена</button>
         </div>
@@ -223,10 +207,7 @@
     <div class="modal-overlay" id="confirm-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Подтверждение</h2>
-            <p style="color:#fff; text-align:center; font-size:14px; margin-bottom:20px;">
-                Вы уверены, что хотите нажать «Купить»?<br><br>
-                Если у вас есть промокод и вы не оплатили — он просто сгорит, а ваш заказ закроют.
-            </p>
+            <p style="color:#fff; text-align:center; font-size:14px; margin-bottom:20px;">Вы уверены? Если у вас есть промокод и вы не оплатили — он сгорит.</p>
             <button class="send-btn" style="background: #4ade80; color: #000;" onclick="confirmOrder()">Да, я уверен</button>
             <button class="close-btn" style="background: #333;" onclick="closeModal('confirm-modal')">Отмена</button>
         </div>
@@ -242,21 +223,8 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="about-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">О нас</h2>
-            <p style="color:#fff;">Мы честный магазин.</p>
-            <button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="rules-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Правила</h2>
-            <p style="color:#fff;">1. Соблюдаем правила Telegram.</p>
-            <button class="close-btn" onclick="closeModal('rules-modal')">Закрыть</button>
-        </div>
-    </div>
+    <div class="modal-overlay" id="about-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">О нас</h2><p style="color:#fff;">Мы честный магазин.</p><button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button></div></div>
+    <div class="modal-overlay" id="rules-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">Правила</h2><p style="color:#fff;">1. Соблюдаем правила Telegram.</p><button class="close-btn" onclick="closeModal('rules-modal')">Закрыть</button></div></div>
 
     <script src="app.js"></script>
 </body>
