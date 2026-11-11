@@ -1,7 +1,8 @@
 import os
 import logging
-from flask import Flask, request, render_template_string
-from flask_socketio import SocketIO, emit
+import asyncio
+from flask import Flask, request
+from flask_socketio import SocketIO, emit, join_room
 from telegram import Update, WebAppInfo, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -9,44 +10,42 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk"
 WEBAPP_URL = "https://xeroox0215-ctrl.github.io/myshop/"
-ADMIN_ID = 1494459013  # Твой ID
+ADMIN_ID = 1494459013
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'xero_secret!'
-socketio = SocketIO(app, cors_allowed_origins="*") # Разрешаем подключения с сайта
+app.config['SECRET_KEY'] = 'xero_secret_key'
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 application = Application.builder().token(TOKEN).updater(None).build()
 
-# --- Сокеты (Реальное время) ---
-@socketio.on('connect')
-def handle_connect():
-    print('Клиент подключился к сокету')
+# --- СОКЕТЫ (ЧАТ В РЕАЛЬНОМ ВРЕМЕНИ) ---
+@socketio.on('join')
+def on_join(data):
+    ticket_id = data['ticket_id']
+    join_room(str(ticket_id))
+    print(f"Клиент подключился к тикету {ticket_id}")
 
-@socketio.on('send_message')
-def handle_message(data):
-    # data = { ticket_id: 123, text: 'Привет', from: 'Пользователь' }
-    # Пересылаем сообщение всем, кто в этом тикете
-    socketio.emit('receive_message', data, room=f"ticket_{data['ticket_id']}")
+@socketio.on('send_msg')
+def handle_msg(data):
+    ticket_id = data['ticket_id']
+    text = data['text']
+    from_user = data['from']
+    user_name = data['user_name']
     
-    # Если пишет юзер, отправляем уведомление тебе в ТГ
-    if data['from'] != 'Админ':
+    # Пересылаем всем в комнате
+    emit('receive_msg', {'text': text, 'from': from_user, 'user_name': user_name}, room=str(ticket_id))
+    
+    # Если пишет юзер, уведомляем админа в ТГ
+    if from_user != 'Админ':
         try:
-            import asyncio
             asyncio.run(application.bot.send_message(
                 chat_id=ADMIN_ID, 
-                text=f"💬 Новое сообщение в тикете #{data['ticket_id']} от {data['user_name']}:\n{data['text']}"
+                text=f"💬 Новое сообщение в тикете #{ticket_id} от {user_name}:\n{text}"
             ))
         except Exception as e:
             print(f"Ошибка отправки в ТГ: {e}")
 
-@socketio.on('join_ticket')
-def join_ticket(data):
-    from flask_socketio import join_room
-    room = f"ticket_{data['ticket_id']}"
-    join_room(room)
-    print(f"Клиент зашел в комнату {room}")
-
-# --- Telegram Бот ---
+# --- БОТ ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[KeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, is_persistent=True)
@@ -61,7 +60,6 @@ def health():
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
     if request.method == "POST":
-        import asyncio
         update = Update.de_json(data=request.get_json(force=True), bot=application.bot)
         asyncio.run(application.process_update(update))
         return "ok", 200
