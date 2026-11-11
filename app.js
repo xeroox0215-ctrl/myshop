@@ -3,7 +3,6 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Увеличил время до 3 секунд
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
     }, 3000);
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
         document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
-        
         if (user.photo_url) {
             const avatar = document.getElementById('user-avatar');
             avatar.style.backgroundImage = `url(${user.photo_url})`;
@@ -24,11 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
     }
 
-    // Уменьшил количество летающих объектов для фона (с 15 до 8), чтобы не лагало
     createDecor('bg-decor', 8);        
     createDecor('banner-decor-1', 4);   
     createDecor('banner-decor-2', 4);   
     startCarousel();
+    startMiniCarousels();
 });
 
 function createDecor(containerId, count) {
@@ -81,7 +79,7 @@ function sendSupportMessage() {
     closeSupportModal();
 }
 
-// КАРУСЕЛЬ
+// Карусель Главная
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -105,5 +103,22 @@ function startCarousel() {
         if (diff > 40) currentSlide = (currentSlide + 1) % totalSlides;
         else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateCarousel(); startCarousel();
+    });
+}
+
+// Мини-карусели в окнах
+function startMiniCarousels() {
+    const tracks = ['banner-track-notify', 'banner-track-ads', 'banner-track-support', 'banner-track-about', 'banner-track-rules'];
+    
+    tracks.forEach(trackId => {
+        const track = document.getElementById(trackId);
+        if (!track) return;
+        let miniSlide = 0;
+        
+        // Автопрокрутка для каждого баннера (раз в 3 секунды)
+        setInterval(() => {
+            miniSlide = (miniSlide + 1) % 2;
+            track.style.transform = `translateX(-${miniSlide * 50}%)`;
+        }, 3000);
     });
 }
