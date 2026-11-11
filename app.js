@@ -1,7 +1,6 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -9,15 +8,13 @@ setTimeout(() => {
     if (container) container.classList.add('visible');
 }, 2000);
 
-// Данные пользователя
 const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013; 
 const BOT_TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk";
-const currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
-const isAdmin = (currentUser.id === ADMIN_ID);
-
-// Подключение к серверу Render (WebSockets)
 const socket = io("https://myshop-o4pl.onrender.com"); 
+
+let currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
+const isAdmin = (currentUser.id === ADMIN_ID);
 
 let orders = [];
 let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
@@ -25,39 +22,30 @@ let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
-// === ОБРАБОТКА СОКЕТОВ (РЕАЛЬНОЕ ВРЕМЯ) ===
-
-// Получаем новые заказы от других людей
+// === СОКЕТЫ (РЕАЛЬНОЕ ВРЕМЯ) ===
 socket.on('receive_order', (data) => {
     if (isAdmin) {
         orders.push(data);
         renderAdminOrders();
     }
 });
-
-// Получаем все заказы при загрузке (для админа)
 socket.on('all_orders', (data) => {
     if (isAdmin) {
         orders = data;
         renderAdminOrders();
     }
 });
-
-// Получаем сообщения в тикетах
 socket.on('receive_ticket_msg', (data) => {
     if (currentTicketId == data.ticket_id) {
         renderSingleMessage(data);
     }
 });
-
-// История тикета при открытии
 socket.on('ticket_history', (messages) => {
     const box = document.getElementById('ticket-chat-box');
     box.innerHTML = '';
     messages.forEach(msg => renderSingleMessage(msg));
 });
 
-// Админ подключается к комнате, чтобы видеть все заказы
 if (isAdmin) {
     socket.emit('join_admin');
 }
@@ -76,11 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('profile-page-avatar').innerText = '';
     }
 
-    if (isAdmin) {
-        document.getElementById('btn-admin-main').style.display = 'flex';
-    } else {
-        document.getElementById('btn-admin-main').style.display = 'none';
-    }
+    if (isAdmin) document.getElementById('btn-admin-main').style.display = 'flex';
+    else document.getElementById('btn-admin-main').style.display = 'none';
 
     renderProfileOrders();
     applyDiscountToPrices();
@@ -90,15 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
-// === НАВИГАЦИЯ ===
+// === НАВИГАЦИЯ И МОДАЛКИ ===
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     if(btnElement) btnElement.classList.add('active');
 }
-
-// === МОДАЛКИ ===
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleFaq(element) {
@@ -157,41 +140,57 @@ function openBuyMenu(name, price) {
     document.getElementById('buy-title').innerText = name;
     openModal('buy-modal');
 }
-
 function showConfirmModal() { closeModal('buy-modal'); openModal('confirm-modal'); }
 
-function confirmOrder() {
+async function confirmOrder() {
     if (userDiscount > 0) {
         userDiscount = 0;
         localStorage.removeItem('userDiscount');
         alert('Промокод сгорел, так как заказ был оформлен.');
     }
+    
     const txCode = 'XR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     const newOrder = {
         id: Date.now(), userName: currentUser.first_name, userId: currentUser.id,
-        item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', date: new Date().toLocaleString(), txCode: txCode
+        item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', 
+        date: new Date().toLocaleString(), txCode: txCode
     };
     
-    // Отправляем заказ на сервер Render (чтобы админ увидел)
+    // Сохраняем локально
+    let localOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+    localOrders.push(newOrder);
+    localStorage.setItem('myOrders', JSON.stringify(localOrders));
+
+    // Отправляем на сервер (fetch)
+    try {
+        await fetch('https://myshop-o4pl.onrender.com/add_order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newOrder)
+        });
+    } catch(e) { console.log("Сервер спит"); }
+
+    // Отправляем через сокет
     socket.emit('new_order', newOrder);
     
     alert(`Заказ отправлен!\nВАШ КОД: ${txCode}\nОтправьте чек и код в ЛС @xeroox9.`);
     closeModal('confirm-modal');
-    renderProfileOrders(); // Если это админ, он тоже увидит в профиле
+    renderProfileOrders(); 
 }
 
 function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
     if(!container) return;
     container.innerHTML = ''; 
-    const myOrders = orders.filter(o => o.userId === currentUser.id);
     
-    if (myOrders.length === 0) { 
+    let localOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+    
+    if (localOrders.length === 0) { 
         container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">Заказов нет.</p>'; 
         return; 
     }
     
-    myOrders.forEach(o => {
+    localOrders.forEach(o => {
         let statusClass = 'status-pending';
         if (o.status === 'Оплачено') statusClass = 'status-paid';
         if (o.status === 'Отказано') statusClass = 'status-rejected';
@@ -209,7 +208,13 @@ function renderProfileOrders() {
 }
 
 // === АДМИНКА ===
-function openAdminPanel() { 
+async function openAdminPanel() { 
+    try {
+        const res = await fetch('https://myshop-o4pl.onrender.com/get_orders');
+        const data = await res.json();
+        orders = data;
+    } catch(e) { console.log("Сервер спит"); }
+    
     renderAdminOrders(); 
     openModal('admin-modal');
 }
@@ -316,7 +321,7 @@ function applyDiscountToPrices() {
     }
 }
 
-// === ТИКЕТЫ (СОКЕТЫ) ===
+// === ТИКЕТЫ ===
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
@@ -343,10 +348,7 @@ function openNotificationsModal() {
 
     if (isAdmin) {
         fetch('https://myshop-o4pl.onrender.com/get_tickets')
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 container.innerHTML = '';
                 const ticketIds = Object.keys(data);
@@ -368,7 +370,6 @@ function openNotificationsModal() {
                 });
             })
             .catch(err => {
-                console.error(err);
                 container.innerHTML = '<p style="color:#b3b3b3; text-align:center;">Сервер просыпается...<br>Подождите 30 секунд и нажмите еще раз.</p>';
             });
     } else {
