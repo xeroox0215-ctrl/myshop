@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xero Shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ЗАСТАВКА -->
     <div id="splash-screen">
         <img src="logo.png" alt="Xero Logo" class="splash-logo">
     </div>
@@ -22,14 +22,12 @@
     </div>
 
     <div class="app-container" id="app-container">
-        
-        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
         <header class="profile-bar glass-panel">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">👤</div>
                 <div class="user-details">
-                    <div class="user-name" id="user-name">xeroox</div>
-                    <div class="user-tag" id="user-tag">@xeroox9</div>
+                    <div class="user-name" id="user-name">Загрузка...</div>
+                    <div class="user-tag" id="user-tag">@username</div>
                 </div>
             </div>
             <div class="top-bar-right">
@@ -40,7 +38,6 @@
             </div>
         </header>
 
-        <!-- БАННЕР КАПСУЛА -->
         <div class="top-capsule-banner animated-border">
             <div class="capsule-track" id="capsule-track">
                 <div class="capsule-slide" onclick="openSupportModal()">Поддержка 24/7</div>
@@ -48,7 +45,6 @@
             </div>
         </div>
 
-        <!-- ЭКРАН: ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
             <div class="carousel-container glass-panel" id="carousel">
                 <div class="carousel-track" id="carousel-track">
@@ -76,16 +72,13 @@
                 <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div><img src="steve2.png" class="menu-png">
                 </button>
-
-                <!-- КНОПКА АДМИНКИ (скрыта, пока не проверится ID) -->
-                <button class="menu-card glass-panel" id="btn-admin-main" onclick="openAdminPanel()" style="display: none;">
+                <button class="menu-card glass-panel" id="btn-admin-main" onclick="openAdminPanel()">
                     <div class="menu-info"><h3 style="color: var(--neon-pink);">Админ-Панель</h3></div>
                     <img src="icon.png" class="menu-png" alt="Админка" style="height: 35px;">
                 </button>
             </div>
         </main>
 
-        <!-- ЭКРАН: РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Реклама</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -101,7 +94,6 @@
             </div>
         </main>
 
-        <!-- ЭКРАН: ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -116,7 +108,6 @@
             </div>
         </main>
 
-        <!-- ЭКРАН: ПРОМОКОД -->
         <main class="content-area tab-content" id="tab-promo">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Промокод</h2>
             <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
@@ -126,7 +117,6 @@
             </div>
         </main>
 
-        <!-- ЭКРАН: ПРОФИЛЬ -->
         <main class="content-area tab-content" id="tab-profile">
             <div class="profile-page glass-panel">
                 <div class="profile-page-header">
@@ -134,7 +124,6 @@
                     <div class="profile-page-name" id="profile-page-name">Загрузка...</div>
                     <div class="profile-page-id" id="profile-page-id">ID: ...</div>
                 </div>
-                
                 <div class="profile-history" style="margin-top: 20px;">
                     <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Мои заказы</h3>
                     <div id="profile-orders-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
@@ -142,7 +131,6 @@
             </div>
         </main>
 
-        <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav glass-panel"> 
             <button class="nav-item active" onclick="switchTab('home', this)"><div class="nav-circle"><span class="nav-icon">🏠</span></div><span class="nav-text">Главная</span></button>
             <button class="nav-item" onclick="switchTab('ads', this)"><div class="nav-circle"><span class="nav-icon">📢</span></div><span class="nav-text">Реклама</span></button>
@@ -150,20 +138,11 @@
             <button class="nav-item" onclick="switchTab('promo', this)"><div class="nav-circle"><span class="nav-icon">🎁</span></div><span class="nav-text">Промокод</span></button>
             <button class="nav-item" onclick="switchTab('profile', this)"><div class="nav-circle"><span class="nav-icon">👤</span></div><span class="nav-text">Профиль</span></button>
         </nav>
-
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: АДМИНКА -->
     <div class="modal-overlay" id="admin-modal">
         <div class="modal-content glass-panel animated-border" style="max-width: 450px; width: 95%;">
             <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
-            
-            <!-- БЛОК С ID -->
-            <div style="background: rgba(255, 20, 147, 0.1); border: 1px solid var(--neon-pink); padding: 10px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
-                <p style="color: #fff; font-size: 12px;">Ваш ID (Админ):</p>
-                <p style="color: var(--neon-pink); font-size: 16px; font-weight: 800;">1494459013</p>
-            </div>
-
             <div class="faq-item" onclick="toggleFaq(this)">
                 <button class="faq-question"><span>Создать промокод</span><span class="faq-icon">▼</span></button>
                 <div class="faq-answer">
@@ -173,61 +152,46 @@
                     <button class="send-btn" onclick="createPromoCode()">Создать</button>
                 </div>
             </div>
-
             <div style="margin-top: 15px;">
                 <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Новые заказы</h3>
                 <div id="admin-orders-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
             </div>
-
             <button class="close-btn" onclick="closeModal('admin-modal')">Закрыть</button>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: УВЕДОМЛЕНИЯ / ТИКЕТЫ -->
     <div class="modal-overlay" id="notify-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Уведомления</h2>
-            <div id="notifications-list" style="display: flex; flex-direction: column; gap: 10px;">
-                <p style="color: #b3b3b3; text-align: center;">Уведомлений нет</p>
-            </div>
+            <div id="notifications-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
             <button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ЧАТ ТИКЕТА -->
     <div class="modal-overlay" id="ticket-modal">
         <div class="modal-content glass-panel animated-border" style="display: flex; flex-direction: column; height: 80vh; padding: 15px;">
             <h2 class="modal-title" id="ticket-title" style="margin-bottom: 10px;">Чат поддержки</h2>
-            
-            <div style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); padding: 8px; border-radius: 8px; margin-bottom: 10px; font-size: 11px; color: #fbbf24; text-align: center;">
-                ⚠️ ВНИМАНИЕ: После отправки текста в поддержку, ОБНОВИТЕ САЙТ, и до вас дойдут сообщения от поддержки в этом чате.
-            </div>
-
             <div id="ticket-chat-box" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; margin-bottom: 10px;"></div>
-            
             <div style="display: flex; gap: 8px;">
                 <input type="text" id="ticket-chat-input" class="promo-input" placeholder="Написать сообщение..." style="flex: 1;">
                 <button class="send-btn" style="padding: 10px 15px; width: auto;" onclick="sendTicketMsg()">➤</button>
             </div>
-
             <button class="send-btn" id="btn-user-close-ticket" style="margin-top: 10px; background: #4ade80; color: #000; display: none;" onclick="userCloseTicket()">Спасибо, закрыть тикет</button>
             <button class="send-btn" id="btn-admin-delete-ticket" style="margin-top: 10px; background: #f87171; display: none;" onclick="adminDeleteTicket()">Удалить тикет</button>
             <button class="close-btn" style="background: #333; margin-top: 10px;" onclick="closeModal('ticket-modal')">Свернуть чат</button>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ПОКУПКА -->
     <div class="modal-overlay" id="buy-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title" id="buy-title">Покупка</h2>
             <p style="color:#fff; text-align:center; margin-bottom:10px;">Переведите звёзды в профиль <b>@xeroox9</b>.</p>
-            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:15px;">После перевода нажмите «Я оплатил». Админ проверит и выдаст товар.</p>
+            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:15px;">После перевода нажмите «Я оплатил».</p>
             <button class="send-btn" onclick="submitOrder()">Я оплатил</button>
             <button class="close-btn" style="background: #333;" onclick="closeModal('buy-modal')">Отмена</button>
         </div>
     </div>
 
-    <!-- ПОДДЕРЖКА, О НАС, ПРАВИЛА -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка</h2>
@@ -243,7 +207,7 @@
     <div class="modal-overlay" id="about-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">О нас</h2>
-            <div class="text-content"><p>Мы — команда <b>Xero Shop</b>. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро.</p></div>
+            <div class="text-content"><p>Мы — команда <b>Xero Shop</b>. Мы <b>никогда не обманываем</b>.</p></div>
             <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
             <button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button>
         </div>
