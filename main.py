@@ -1,35 +1,75 @@
+import os
 import logging
 import asyncio
-from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
+from flask import Flask, request, jsonify
+from flask_socketio import SocketIO, emit, join_room
+from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk"
 WEBAPP_URL = "https://xeroox0215-ctrl.github.io/myshop/"
+ADMIN_ID = 1494459013
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'xero_secret_key'
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+application = Application.builder().token(TOKEN).updater(None).build()
+
+# Хранилище тикетов на сервере
+active_tickets = {}
+
+@socketio.on('join')
+def on_join(data):
+    ticket_id = str(data['ticket_id'])
+    join_room(ticket_id)
+    if ticket_id in active_tickets:
+        emit('ticket_history', active_tickets[ticket_id]['messages'], room=request.sid)
+
+@socketio.on('send_msg')
+def handle_msg(data):
+    ticket_id = str(data['ticket_id'])
+    msg_obj = {'from': data['from'], 'text': data['text'], 'user_name': data['user_name']}
+
+    if ticket_id not in active_tickets:
+        active_tickets[ticket_id] = { "user_name": data['user_name'], "user_id": data.get('user_id'), "messages": [] }
+    
+    active_tickets[ticket_id]['messages'].append(msg_obj)
+    emit('receive_msg', msg_obj, room=ticket_id)
+
+    if data['from'] != 'Админ':
+        try:
+            asyncio.run(application.bot.send_message(
+                chat_id=ADMIN_ID, 
+                text=f"💬 Тикет #{ticket_id[-4:]} от {data['user_name']}:\n{data['text']}"
+            ))
+        except Exception as e:
+            print(f"Ошибка ТГ: {e}")
+
+@app.route('/get_tickets', methods=['GET'])
+def get_tickets():
+    return jsonify(active_tickets)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Убираем старую Reply-клавиатуру
-    await update.message.reply_text("Загрузка...", reply_markup=ReplyKeyboardRemove())
-    
-    # Отправляем Inline-кнопку
     keyboard = [[InlineKeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    await update.message.reply_text(
-        f"👋 Привет, {update.effective_user.first_name}!\n\nЖми на кнопку под этим сообщением.",
-        reply_markup=reply_markup
-    )
+    await update.message.reply_text(f"Привет! Жми кнопку.", reply_markup=reply_markup)
 
-def main():
-    application = Application.builder().token(TOKEN).build()
-    application.add_handler(CommandHandler("start", start))
-    
-    # Удаляем вебхук перед запуском
-    asyncio.run(application.bot.delete_webhook(drop_pending_updates=True))
-    
-    logging.info("Бот запущен через Polling")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+application.add_handler(CommandHandler("start", start))
+
+@app.route('/')
+def health():
+    return "Bot is running!", 200
+
+@app.route(f'/{TOKEN}', methods=['POST'])
+def webhook():
+    if request.method == "POST":
+        update = Update.de_json(data=request.get_json(force=True), bot=application.bot)
+        asyncio.run(application.process_update(update))
+        return "ok", 200
 
 if __name__ == "__main__":
-    main()
+    port = int(os.environ.get("PORT", 10000))
+    socketio.run(app, host="0.0.0.0", port=port)
