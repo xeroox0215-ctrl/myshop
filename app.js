@@ -1,7 +1,6 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -9,10 +8,8 @@ setTimeout(() => {
     if (container) container.classList.add('visible');
 }, 2000);
 
-// Данные пользователя
 const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013; 
-const BOT_TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk";
 const socket = io("https://myshop-o4pl.onrender.com"); 
 
 let currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
@@ -24,23 +21,15 @@ let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
-// === СОКЕТЫ ===
+// СОКЕТЫ
 socket.on('receive_order', (data) => {
-    if (isAdmin) {
-        orders.push(data);
-        renderAdminOrders();
-    }
+    if (isAdmin) { orders.push(data); renderAdminOrders(); }
 });
 socket.on('all_orders', (data) => {
-    if (isAdmin) {
-        orders = data;
-        renderAdminOrders();
-    }
+    if (isAdmin) { orders = data; renderAdminOrders(); }
 });
 socket.on('receive_ticket_msg', (data) => {
-    if (currentTicketId == data.ticket_id) {
-        renderSingleMessage(data);
-    }
+    if (currentTicketId == data.ticket_id) renderSingleMessage(data);
 });
 socket.on('ticket_history', (messages) => {
     const box = document.getElementById('ticket-chat-box');
@@ -48,11 +37,8 @@ socket.on('ticket_history', (messages) => {
     messages.forEach(msg => renderSingleMessage(msg));
 });
 
-if (isAdmin) {
-    socket.emit('join_admin');
-}
+if (isAdmin) socket.emit('join_admin');
 
-// === ИНИЦИАЛИЗАЦИЯ ===
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('user-name').innerText = currentUser.first_name;
     document.getElementById('user-tag').innerText = currentUser.username ? '@' + currentUser.username : '';
@@ -77,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
-// === НАВИГАЦИЯ ===
+// НАВИГАЦИЯ
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
@@ -85,9 +71,8 @@ function switchTab(tabName, btnElement) {
     if(btnElement) btnElement.classList.add('active');
 }
 
-// === МОДАЛКИ (ИСПРАВЛЕНО) ===
+// МОДАЛКИ
 function openModal(id) { 
-    // Закрываем все остальные модалки перед открытием новой
     document.querySelectorAll('.modal-overlay').forEach(m => {
         if(m.id !== id) m.classList.remove('active');
     });
@@ -102,7 +87,7 @@ function openSupportModal() { openModal('support-modal'); }
 function openAboutModal() { openModal('about-modal'); }
 function openRulesModal() { openModal('rules-modal'); }
 
-// === КАРУСЕЛЬ ===
+// КАРУСЕЛЬ
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -144,19 +129,15 @@ function startCarousel() {
     });
 }
 
-// === ПОКУПКА ===
+// ПОКУПКА
 function openBuyMenu(name, price) {
     currentProduct = { name, price };
     document.getElementById('buy-title').innerText = name;
     openModal('buy-modal');
 }
-function showConfirmModal() { 
-    closeModal('buy-modal'); 
-    openModal('confirm-modal'); 
-}
+function showConfirmModal() { closeModal('buy-modal'); openModal('confirm-modal'); }
 
-async function confirmOrder() {
-    // Принудительно закрываем все окна
+function confirmOrder() {
     document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
 
     if (userDiscount > 0) {
@@ -172,19 +153,9 @@ async function confirmOrder() {
         date: new Date().toLocaleString(), txCode: txCode
     };
     
-    // Сохраняем локально (для профиля)
     let localOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
     localOrders.push(newOrder);
     localStorage.setItem('myOrders', JSON.stringify(localOrders));
-
-    // Отправляем на сервер
-    try {
-        await fetch('https://myshop-o4pl.onrender.com/add_order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newOrder)
-        });
-    } catch(e) { console.log("Сервер не отвечает"); }
 
     socket.emit('new_order', newOrder);
     
@@ -196,19 +167,14 @@ function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
     if(!container) return;
     container.innerHTML = ''; 
-    
     let localOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
     
-    if (localOrders.length === 0) { 
-        container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">Заказов нет.</p>'; 
-        return; 
-    }
+    if (localOrders.length === 0) { container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">Заказов нет.</p>'; return; }
     
     localOrders.forEach(o => {
         let statusClass = 'status-pending';
         if (o.status === 'Оплачено') statusClass = 'status-paid';
         if (o.status === 'Отказано') statusClass = 'status-rejected';
-
         container.innerHTML += `
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -216,37 +182,22 @@ function renderProfileOrders() {
                     <span class="status-badge ${statusClass}">${o.status}</span>
                 </div>
                 <span style="color: #ffb7c5; font-size: 12px; font-family: 'Press Start 2P', cursive;">Код: ${o.txCode || 'N/A'}</span>
-            </div>
-        `;
+            </div>`;
     });
 }
 
-// === АДМИНКА ===
-async function openAdminPanel() { 
-    // Закрываем все перед открытием
+// АДМИНКА
+function openAdminPanel() { 
     document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
-
-    try {
-        const res = await fetch('https://myshop-o4pl.onrender.com/get_orders');
-        const data = await res.json();
-        orders = data;
-    } catch(e) { console.log("Сервер не отвечает"); }
-    
     renderAdminOrders(); 
     openModal('admin-modal');
 }
-
 function renderAdminOrders() {
     const container = document.getElementById('admin-orders-list');
     if(!container) return;
     container.innerHTML = ''; 
     const pending = orders.filter(o => o.status === 'Ожидает проверки');
-    
-    if (pending.length === 0) { 
-        container.innerHTML = '<p style="color:#b3b3b3;">Нет новых заказов.</p>'; 
-        return; 
-    }
-    
+    if (pending.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Нет новых заказов.</p>'; return; }
     pending.forEach(o => {
         container.innerHTML += `
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
@@ -263,17 +214,12 @@ function renderAdminOrders() {
             </div>`;
     });
 }
-
 function updateOrderStatus(txCode, status) {
     const idx = orders.findIndex(o => o.txCode === txCode);
-    if (idx !== -1) {
-        orders[idx].status = status;
-        renderAdminOrders();
-        renderProfileOrders();
-    }
+    if (idx !== -1) { orders[idx].status = status; renderAdminOrders(); }
 }
 
-// === НОВОСТИ И ПРОМОКОДЫ ===
+// НОВОСТИ И ПРОМОКОДЫ
 function createNews() {
     const text = document.getElementById('admin-news-text').value;
     if (!text.trim()) { alert('Напишите текст!'); return; }
@@ -283,7 +229,6 @@ function createNews() {
     document.getElementById('admin-news-text').value = '';
     closeModal('admin-modal');
 }
-
 function createPromoCode() {
     const nameInput = document.getElementById('admin-promo-name');
     const usesInput = document.getElementById('admin-promo-uses');
@@ -297,7 +242,6 @@ function createPromoCode() {
     alert(`Промокод ${name} создан!`);
     nameInput.value = ''; usesInput.value = ''; discInput.value = '';
 }
-
 function applyPromo() {
     const input = document.getElementById('promo-input').value.toUpperCase().trim();
     const statusText = document.getElementById('promo-status');
@@ -317,7 +261,6 @@ function applyPromo() {
         } else { alert('Промокод закончился!'); }
     } else { alert('Такого промокода нет!'); }
 }
-
 function applyDiscountToPrices() {
     if (userDiscount === 0) return;
     document.querySelectorAll('.ads-price-item').forEach(item => {
@@ -338,52 +281,37 @@ function applyDiscountToPrices() {
     }
 }
 
-// === ТИКЕТЫ ===
+// ТИКЕТЫ
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
-    
     currentTicketId = Date.now();
-    
     socket.emit('send_ticket_msg', {
-        ticket_id: currentTicketId,
-        text: text,
-        from: 'Пользователь',
-        user_name: currentUser.first_name,
-        user_id: currentUser.id
+        ticket_id: currentTicketId, text: text, from: 'Пользователь',
+        user_name: currentUser.first_name, user_id: currentUser.id
     });
-
     alert('Сообщение отправлено! Зайдите в колокольчик.');
     document.getElementById('support-message').value = '';
     closeModal('support-modal');
 }
-
 function openNotificationsModal() {
     const container = document.getElementById('notifications-list');
     container.innerHTML = '<p style="color:#b3b3b3;">Загрузка...</p>';
     openModal('notify-modal');
-
     if (isAdmin) {
         fetch('https://myshop-o4pl.onrender.com/get_tickets')
             .then(res => res.json())
             .then(data => {
                 container.innerHTML = '';
                 const ticketIds = Object.keys(data);
-                
-                if (ticketIds.length === 0) {
-                    container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
-                    return;
-                }
-                
+                if (ticketIds.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>'; return; }
                 ticketIds.forEach(id => {
                     const t = data[id];
-                    container.innerHTML += `
-                        <div onclick="openTicket('${id}')" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);">
-                            <p style="color: #fff; font-weight: 700;">Тикет #${id.slice(-4)}</p>
-                            <p style="color: #ffb7c5; font-size: 12px;">От: ${t.user_name}</p>
-                            <p style="color: #b3b3b3; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.messages[0].text}</p>
-                        </div>
-                    `;
+                    container.innerHTML += `<div onclick="openTicket('${id}')" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);">
+                        <p style="color: #fff; font-weight: 700;">Тикет #${id.slice(-4)}</p>
+                        <p style="color: #ffb7c5; font-size: 12px;">От: ${t.user_name}</p>
+                        <p style="color: #b3b3b3; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.messages[0].text}</p>
+                    </div>`;
                 });
             })
             .catch(err => {
@@ -393,9 +321,8 @@ function openNotificationsModal() {
         let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
         let list = tickets.filter(t => t.userId === currentUser.id);
         container.innerHTML = '';
-        if (list.length === 0) {
-            container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
-        } else {
+        if (list.length === 0) container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
+        else {
             list.forEach(t => {
                 container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
                     <p style="color: #fff;">Тикет #${t.id.toString().slice(-4)} (${t.status})</p>
@@ -404,58 +331,38 @@ function openNotificationsModal() {
         }
     }
 }
-
 function openTicket(id) {
     currentTicketId = id;
     document.getElementById('ticket-title').innerText = `Тикет #${id.toString().slice(-4)}`;
     document.getElementById('ticket-chat-box').innerHTML = ''; 
-    
     socket.emit('join', { ticket_id: id });
-
     document.getElementById('btn-admin-delete-ticket').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('btn-user-close-ticket').style.display = isAdmin ? 'none' : 'block';
     closeModal('notify-modal');
     openModal('ticket-modal');
 }
-
 function renderSingleMessage(data) {
     const box = document.getElementById('ticket-chat-box');
     const isAdm = data.from === 'Админ';
     const align = isAdm ? 'flex-end' : 'flex-start';
     const bg = isAdm ? 'rgba(255,255,255,0.1)' : 'rgba(255, 20, 147, 0.15)';
     const border = isAdm ? 'rgba(255,255,255,0.2)' : 'rgba(255, 20, 147, 0.3)';
-    
     box.innerHTML += `
         <div style="background: ${bg}; border: 1px solid ${border}; padding: 10px; border-radius: 10px; align-self: ${align}; max-width: 80%; margin-bottom: 8px;">
             <span style="font-size: 10px; color: ${isAdm ? '#4ade80' : '#ffb7c5'};">${data.from}</span>
             <p style="color: #fff; font-size: 13px; margin-top: 3px;">${data.text}</p>
-        </div>
-    `;
+        </div>`;
     box.scrollTop = box.scrollHeight;
 }
-
 function sendTicketMsg() {
     const input = document.getElementById('ticket-chat-input');
     const text = input.value.trim();
     if (!text) return;
-
     socket.emit('send_ticket_msg', {
-        ticket_id: currentTicketId,
-        text: text,
-        from: isAdmin ? 'Админ' : 'Пользователь',
-        user_name: currentUser.first_name,
-        user_id: currentUser.id
+        ticket_id: currentTicketId, text: text, from: isAdmin ? 'Админ' : 'Пользователь',
+        user_name: currentUser.first_name, user_id: currentUser.id
     });
-    
     input.value = '';
 }
-
-function userCloseTicket() {
-    alert('Тикет закрыт');
-    closeModal('ticket-modal');
-}
-
-function adminDeleteTicket() {
-    alert('Удалено');
-    closeModal('ticket-modal');
-}
+function userCloseTicket() { alert('Тикет закрыт'); closeModal('ticket-modal'); }
+function adminDeleteTicket() { alert('Удалено'); closeModal('ticket-modal'); }
