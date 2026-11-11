@@ -10,12 +10,9 @@
 </head>
 <body>
 
-    <!-- ЗАСТАВКА -->
+    <!-- ЗАСТАВКА (Сканер) -->
     <div id="splash-screen">
-        <div class="splash-bg">
-            <div class="splash-glow"></div>
-            <div class="splash-glow-2"></div>
-        </div>
+        <div class="scan-line"></div>
         <img src="logo.png" alt="Xero Logo" class="splash-logo">
     </div>
 
@@ -25,7 +22,8 @@
         <div class="decor-layer" id="bg-decor"></div>
     </div>
 
-    <div class="app-container">
+    <!-- Плавное появление контента -->
+    <div class="app-container" id="app-container">
         
         <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
         <header class="profile-bar glass-panel">
@@ -47,39 +45,31 @@
             </div>
         </header>
 
+        <!-- БАННЕР КАПСУЛА (ВСЕГДА СВЕРХУ) -->
+        <div class="top-capsule-banner animated-border">
+            <div class="capsule-track" id="capsule-track">
+                <div class="capsule-slide" onclick="openSupportModal()">Поддержка 24/7</div>
+                <div class="capsule-slide">tgk xeroox news</div>
+            </div>
+        </div>
+
         <!-- ЭКРАН: ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
-            
-            <!-- НОВЫЙ БАННЕР-КАПСУЛА -->
-            <div class="top-capsule-banner animated-border">
-                <div class="capsule-track" id="capsule-track">
-                    <div class="capsule-slide" onclick="openSupportModal()">Поддержка 24/7</div>
-                    <div class="capsule-slide">tgk xeroox news</div>
-                </div>
-            </div>
-
             <div class="carousel-container glass-panel" id="carousel" style="border-radius: 20px; overflow: hidden;">
                 <div class="carousel-track" id="carousel-track">
                     <div class="carousel-slide">
                         <img src="Sakyra1.png" class="slide-img" alt="Сакура">
                         <div class="slide-overlay"></div>
-                        <div class="decor-layer" id="banner-decor-1"></div>
                         <div class="slide-content">
-                            <div class="capsule">
-                                <span class="mc-text">Официальный Telegram канал</span>
-                            </div>
+                            <div class="capsule"><span class="mc-text">Официальный Telegram канал</span></div>
                             <p class="sub-text mc-text-small">tgk xeroox news</p>
                         </div>
                     </div>
-                    
                     <div class="carousel-slide">
                         <img src="Sakyra2.png" class="slide-img" alt="Лес">
                         <div class="slide-overlay"></div>
-                        <div class="decor-layer" id="banner-decor-2"></div>
                         <div class="slide-content">
-                            <div class="capsule">
-                                <span class="mc-text">Never Time</span>
-                            </div>
+                            <div class="capsule"><span class="mc-text">Never Time</span></div>
                             <p class="sub-text mc-text-small">ip: mc.nevertime.su</p>
                         </div>
                     </div>
@@ -95,12 +85,10 @@
                     <div class="menu-info"><h3>Поддержка 24/7</h3></div>
                     <img src="steve3.png" class="menu-png" alt="Поддержка">
                 </button>
-
                 <button class="menu-card glass-panel" onclick="openAboutModal()">
                     <div class="menu-info"><h3>О нас</h3></div>
                     <img src="steve.png" class="menu-png" alt="О нас">
                 </button>
-
                 <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div>
                     <img src="steve2.png" class="menu-png" alt="Правила">
@@ -111,26 +99,41 @@
         <!-- ЭКРАН: РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Реклама</h2>
-            <button class="menu-card glass-panel" onclick="openAdsModal()">
-                <div class="menu-info"><h3>Заказать рекламу</h3></div>
-                <img src="main.png" class="menu-png" alt="Реклама">
-            </button>
+            <div class="glass-panel" style="padding: 20px;">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <button class="faq-question"><span>Услуги рекламы</span><span class="faq-icon">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="ads-price-item">24 часа ТГК — <b>50 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 24ч', 50, 100)">Купить</button></div>
+                        <div class="ads-price-item">48 часов ТГК — <b>90 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 48ч', 90, 180)">Купить</button></div>
+                        <div class="ads-price-item">72 часа ТГК — <b>130 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 72ч', 130, 260)">Купить</button></div>
+                        <div class="ads-price-item">7 дней ТГК — <b>250 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 7д', 250, 500)">Купить</button></div>
+                        <div class="ads-price-item">Закреп 🔒 — <b>100 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Закреп', 100, 200)">Купить</button></div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- ЭКРАН: ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
             <div class="glass-panel" style="padding: 20px;">
-                <div class="faq-item" onclick="toggleFaq(this)" style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px;">
-                    <button class="faq-question" style="font-size: 16px; padding: 10px;">
-                        <span>Что такое Приватка?</span><span class="faq-icon">▼</span>
-                    </button>
-                    <div class="faq-answer" style="background: rgba(0,0,0,0.3);">
-                        Это ТГК канал, где находится ресурс-паки (РП), которые не найти нигде в открытом доступе. Вы получаете доступ только после покупки.<br><br>
-                        <b>Важно:</b> вы не сможете копировать или скачивать файлы, чтобы приватка не слилась. Всё защищено.
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <button class="faq-question"><span>Что такое Приватка?</span><span class="faq-icon">▼</span></button>
+                    <div class="faq-answer">
+                        Это закрытое комьюнити, где хранятся ресурс-паки (РП), которые нигде не найти в открытом доступе. Вы получаете доступ только после покупки. Копировать или скачивать файлы запрещено.
                     </div>
                 </div>
-                <button class="send-btn" style="margin-top: 20px; width: 100%;">Купить доступ</button>
+                <button class="send-btn" style="margin-top: 20px; width: 100%;" onclick="openBuyMenu('Приватка РП', 199, 399)">Купить доступ</button>
+            </div>
+        </main>
+
+        <!-- ЭКРАН: ПРОМОКОД -->
+        <main class="content-area tab-content" id="tab-promo">
+            <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Промокод</h2>
+            <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <p style="text-align: center; color: #b3b3b3; font-size: 14px;">Введите промокод, чтобы получить скидку или бонус.</p>
+                <input type="text" id="promo-input" class="promo-input" placeholder="Введите промокод...">
+                <button class="send-btn" onclick="applyPromo()">Активировать</button>
             </div>
         </main>
 
@@ -142,12 +145,15 @@
                     <div class="profile-page-name" id="profile-page-name">Загрузка...</div>
                     <div class="profile-page-id" id="profile-page-id">ID: ...</div>
                 </div>
-                
                 <div class="profile-history">
                     <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Мои покупки</h3>
                     <div class="history-item">
                         <span class="history-name">Приватный аккаунт</span>
                         <span class="history-status status-paid">Оплачено</span>
+                    </div>
+                    <div class="history-item">
+                        <span class="history-name">Реклама (24ч)</span>
+                        <span class="history-status status-pending">Ожидается</span>
                     </div>
                 </div>
             </div>
@@ -167,6 +173,10 @@
                 <div class="nav-circle"><span class="nav-icon">🔒</span></div>
                 <span class="nav-text">Приватка</span>
             </button>
+            <button class="nav-item" onclick="switchTab('promo', this)">
+                <div class="nav-circle"><span class="nav-icon">🎁</span></div>
+                <span class="nav-text">Промокод</span>
+            </button>
             <button class="nav-item" onclick="switchTab('profile', this)">
                 <div class="nav-circle"><span class="nav-icon">👤</span></div>
                 <span class="nav-text">Профиль</span>
@@ -175,31 +185,52 @@
 
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
-    <div class="modal-overlay" id="notify-modal">
+    <!-- МОДАЛЬНОЕ ОКНО: ПОКУПКА (Выбор валюты) -->
+    <div class="modal-overlay" id="buy-modal">
         <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Уведомления</h2>
-            <div class="empty-state">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom: 10px; color: #b3b3b3;">
-                    <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16ZM16 17H8V11C8 8.52 9.51 6.5 12 6.5C14.49 6.5 16 8.52 16 11V17Z" fill="currentColor"/>
-                </svg>
-                <p class="mc-text-small" style="color: #b3b3b3;">Уведомлений нет</p>
+            <h2 class="modal-title" id="buy-title">Покупка</h2>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                <button class="buy-option-btn" onclick="selectPayment('stars')">Купить за звёзды ⭐</button>
+                <button class="buy-option-btn" onclick="selectPayment('uah')">Купить за грн ₴</button>
             </div>
-            <button class="close-btn" onclick="closeNotificationsModal()">Закрыть</button>
+            <button class="close-btn" onclick="closeModal('buy-modal')">Отмена</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="ads-modal">
+    <!-- МОДАЛЬНОЕ ОКНО: ОПЛАТА ЗВЕЗДАМИ -->
+    <div class="modal-overlay" id="stars-modal">
         <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Реклама</h2>
-            <div class="faq-list">
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>24 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 24 часа.<br><br><b>Стоимость:</b> 50 звёзд ⭐</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>48 часов ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 48 часов.<br><br><b>Стоимость:</b> 90 звёзд ⭐</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>72 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 72 часа.<br><br><b>Стоимость:</b> 130 звёзд ⭐</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>7 дней ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Максимальное размещение поста на 7 дней.<br><br><b>Стоимость:</b> 250 звёзд ⭐</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Закреп сообщения 🔒</span><span class="faq-icon">▼</span></button><div class="faq-answer">Закреп вашего поста в канале.<br><br><b>Стоимость:</b> 100 звёзд ⭐</div></div>
-            </div>
-            <button class="close-btn" onclick="closeAdsModal()">Закрыть</button>
+            <h2 class="modal-title">Оплата звёздами</h2>
+            <p style="color: #fff; text-align: center; font-size: 14px; line-height: 1.5;">
+                Вы выбрали покупку за звёзды.<br><br>
+                Чтобы оплатить, перейдите в профиль <b>@xeroox9</b>, скиньте сумму, указанную на товаре.<br><br>
+                <i>Спустя оплаты в течение 24/7 часов вам выдадут товар вручную. Чтобы посмотреть статус (Оплачено / Ожидается / Отказано) — перейдите в Профиль.</i>
+            </p>
+            <button class="close-btn" onclick="closeModal('stars-modal')">Понятно</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ОПЛАТА ГРН -->
+    <div class="modal-overlay" id="uah-modal">
+        <div class="modal-content glass-panel animated-border">
+            <h2 class="modal-title">Оплата ГРН</h2>
+            <p style="color: #fff; text-align: center; font-size: 14px; line-height: 1.5;">
+                Скиньте на данную карту деньги:<br>
+                <b>4874070017822428</b><br>
+                (Дмитрий)<br><br>
+                После того как вы скинули, сохраните чек и отправьте его человеку <b>@xeroox9</b>.<br><br>
+                Товар будет выдан вручную.
+            </p>
+            <button class="close-btn" onclick="closeModal('uah-modal')">Понятно</button>
+        </div>
+    </div>
+
+    <!-- СТАРЫЕ ОКНА (Поддержка, О нас, Правила, Уведомления) -->
+    <div class="modal-overlay" id="notify-modal">
+        <div class="modal-content glass-panel animated-border">
+            <h2 class="modal-title">Уведомления</h2>
+            <div class="empty-state"><p class="mc-text-small" style="color: #b3b3b3;">Уведомлений нет</p></div>
+            <button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button>
         </div>
     </div>
 
@@ -207,16 +238,15 @@
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка</h2>
             <div class="faq-list">
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Оплата происходит через Telegram Stars.</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Сколько ждать заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Выдача товара происходит вручную. Обычно от 5 до 30 минут.</div></div>
-                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Кто админ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Главный администратор — @xeroox9.</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Через Telegram Stars или на карту.</div></div>
+                <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Сколько ждать?</span><span class="faq-icon">▼</span></button><div class="faq-answer">От 5 до 30 минут.</div></div>
             </div>
             <div class="support-form">
                 <p class="form-title mc-text-small">Не нашли ответ?</p>
                 <textarea id="support-message" placeholder="Напишите свой текст..."></textarea>
                 <button class="send-btn" onclick="sendSupportMessage()">Отправить</button>
             </div>
-            <button class="close-btn" onclick="closeSupportModal()">Закрыть</button>
+            <button class="close-btn" onclick="closeModal('support-modal')">Закрыть</button>
         </div>
     </div>
 
@@ -224,12 +254,10 @@
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">О нас</h2>
             <div class="text-content">
-                <p>Мы — команда <b>Xero Shop</b>, и мы ценим доверие каждого клиента.</p>
-                <p>В нашем магазине вы найдете только качественные товары. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро и точно в срок.</p>
-                <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
+                <p>Мы — команда <b>Xero Shop</b>. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро.</p>
             </div>
             <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
-            <button class="close-btn" onclick="closeAboutModal()">Закрыть</button>
+            <button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button>
         </div>
     </div>
 
@@ -237,16 +265,14 @@
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Правила</h2>
             <div class="text-content">
-                <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
-                <p>2. Все сделки проводятся честно и прозрачно.</p>
-                <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram и правилами самого бота.</p>
-                <p>4. Любые попытки мошенничества или спама строго запрещены.</p>
+                <p>1. Соблюдаем правила Telegram.</p>
+                <p>2. Все сделки честные.</p>
             </div>
             <img src="steve2.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
-            <button class="close-btn" onclick="closeRulesModal()">Закрыть</button>
+            <button class="close-btn" onclick="closeModal('rules-modal')">Закрыть</button>
         </div>
     </div>
 
     <script src="app.js"></script>
 </body>
-</html>
+                                            </html>
