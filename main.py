@@ -3,7 +3,7 @@ import logging
 import asyncio
 from flask import Flask, request
 from flask_socketio import SocketIO, emit, join_room
-from telegram import Update, WebAppInfo, KeyboardButton, ReplyKeyboardMarkup
+from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -18,38 +18,33 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 application = Application.builder().token(TOKEN).updater(None).build()
 
-# --- СОКЕТЫ (ЧАТ В РЕАЛЬНОМ ВРЕМЕНИ) ---
+# --- СОКЕТЫ ---
 @socketio.on('join')
 def on_join(data):
-    ticket_id = data['ticket_id']
-    join_room(str(ticket_id))
-    print(f"Клиент подключился к тикету {ticket_id}")
+    join_room(str(data['ticket_id']))
 
 @socketio.on('send_msg')
 def handle_msg(data):
-    ticket_id = data['ticket_id']
-    text = data['text']
-    from_user = data['from']
-    user_name = data['user_name']
-    
-    # Пересылаем всем в комнате
-    emit('receive_msg', {'text': text, 'from': from_user, 'user_name': user_name}, room=str(ticket_id))
-    
-    # Если пишет юзер, уведомляем админа в ТГ
-    if from_user != 'Админ':
+    emit('receive_msg', data, room=str(data['ticket_id']))
+    if data['from'] != 'Админ':
         try:
             asyncio.run(application.bot.send_message(
                 chat_id=ADMIN_ID, 
-                text=f"💬 Новое сообщение в тикете #{ticket_id} от {user_name}:\n{text}"
+                text=f"💬 Сообщение от {data['user_name']} (Тикет #{data['ticket_id']}):\n{data['text']}"
             ))
         except Exception as e:
-            print(f"Ошибка отправки в ТГ: {e}")
+            print(f"Ошибка ТГ: {e}")
 
-# --- БОТ ---
+# --- БОТ (ИСПРАВЛЕНО НА INLINE) ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [[KeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, is_persistent=True)
-    await update.message.reply_text(f"Привет, {update.effective_user.first_name}! Жми кнопку.", reply_markup=reply_markup)
+    # Используем Inline-кнопку вместо Reply-кнопки
+    keyboard = [[InlineKeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await update.message.reply_text(
+        f"👋 Привет, {update.effective_user.first_name}!\n\nЖми на кнопку ниже.",
+        reply_markup=reply_markup
+    )
 
 application.add_handler(CommandHandler("start", start))
 
