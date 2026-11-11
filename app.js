@@ -3,9 +3,11 @@ tg.expand();
 const user = tg.initDataUnsafe?.user;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Логика Заставки и появления сайта
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
-    }, 2500);
+        document.getElementById('app-container').classList.add('visible'); // Плавно показываем сайт
+    }, 2500); // 2.5 секунды сканирования
 
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
@@ -23,8 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     createDecor('bg-decor', 10);        
-    createDecor('banner-decor-1', 4);   
-    createDecor('banner-decor-2', 4);   
     startCarousel();
     startTopBanner();
 });
@@ -37,7 +37,7 @@ function createDecor(containerId, count) {
         const div = document.createElement('div');
         div.classList.add('floating-decor');
         div.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
-        const size = containerId.includes('banner') ? (Math.random() * 15 + 10) : (Math.random() * 25 + 20);
+        const size = Math.random() * 25 + 20;
         div.style.width = size + 'px'; div.style.height = size + 'px';
         div.style.left = Math.random() * 90 + '%';
         div.style.top = Math.random() * 80 + 'vh';
@@ -54,42 +54,55 @@ function switchTab(tabName, btnElement) {
     if(btnElement) btnElement.classList.add('active');
 }
 
-// Модалки
-function openNotificationsModal() { document.getElementById('notify-modal').classList.add('active'); }
-function closeNotificationsModal() { document.getElementById('notify-modal').classList.remove('active'); }
-function openAdsModal() { document.getElementById('ads-modal').classList.add('active'); }
-function closeAdsModal() { document.getElementById('ads-modal').classList.remove('active'); }
-function openSupportModal() { document.getElementById('support-modal').classList.add('active'); }
-function closeSupportModal() { document.getElementById('support-modal').classList.remove('active'); }
-function openAboutModal() { document.getElementById('about-modal').classList.add('active'); }
-function closeAboutModal() { document.getElementById('about-modal').classList.remove('active'); }
-function openRulesModal() { document.getElementById('rules-modal').classList.add('active'); }
-function closeRulesModal() { document.getElementById('rules-modal').classList.remove('active'); }
+// Модалки (Общие)
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
 function toggleFaq(button) {
     const item = button.parentElement;
     item.classList.toggle('active');
 }
 
+// Специфичные функции
+function openNotificationsModal() { openModal('notify-modal'); }
+function openSupportModal() { openModal('support-modal'); }
+function openAboutModal() { openModal('about-modal'); }
+function openRulesModal() { openModal('rules-modal'); }
+
 function sendSupportMessage() {
     const text = document.getElementById('support-message').value;
     if (text.trim() === '') { alert('Напишите текст сообщения!'); return; }
     alert('Сообщение отправлено в поддержку!');
     document.getElementById('support-message').value = '';
-    closeSupportModal();
+    closeModal('support-modal');
 }
 
-// Верхний Баннер
-function startTopBanner() {
-    const track = document.getElementById('capsule-track');
-    let slide = 0;
-    setInterval(() => {
-        slide = (slide + 1) % 2;
-        track.style.transform = `translateX(-${slide * 50}%)`;
-    }, 4000);
+// Логика Покупки
+let currentProduct = {};
+function openBuyMenu(name, starsPrice, uahPrice) {
+    currentProduct = { name: name, stars: starsPrice, uah: uahPrice };
+    document.getElementById('buy-title').innerText = name;
+    openModal('buy-modal');
 }
 
-// Карусель Главная
+function selectPayment(type) {
+    closeModal('buy-modal');
+    if (type === 'stars') {
+        openModal('stars-modal');
+    } else if (type === 'uah') {
+        openModal('uah-modal');
+    }
+}
+
+// Промокод
+function applyPromo() {
+    const val = document.getElementById('promo-input').value;
+    if (val.trim() === '') { alert('Введите промокод!'); return; }
+    alert('Промокод ' + val + ' активирован! (Заглушка)');
+    document.getElementById('promo-input').value = '';
+}
+
+// Карусель и Баннер
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
@@ -99,6 +112,7 @@ function startCarousel() {
     const track = document.getElementById('carousel-track');
     const dots = document.querySelectorAll('.dot');
     const container = document.getElementById('carousel');
+    if(!track || !container) return;
     const totalSlides = dots.length;
     function updateCarousel() {
         track.style.transform = `translateX(-${currentSlide * 50}%)`;
@@ -114,4 +128,14 @@ function startCarousel() {
         else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateCarousel(); startCarousel();
     });
+}
+
+function startTopBanner() {
+    const track = document.getElementById('capsule-track');
+    if(!track) return;
+    let slide = 0;
+    setInterval(() => {
+        slide = (slide + 1) % 2;
+        track.style.transform = `translateX(-${slide * 50}%)`;
+    }, 4000);
 }
