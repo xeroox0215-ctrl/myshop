@@ -229,3 +229,14 @@ textarea:focus { outline: none; border-color: var(--neon-pink); }
 .btn-paid:active { background: rgba(74, 222, 128, 0.2); }
 .btn-reject { border-color: #f87171; color: #f87171; }
 .btn-reject:active { background: rgba(248, 113, 113, 0.2); }
+/* Анимация для баннера новостей */
+.news-banner {
+    background-size: 300% 300% !important;
+    animation: bgGlow 4s linear infinite !important;
+}
+
+@keyframes bgGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
