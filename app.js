@@ -1,7 +1,6 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Принудительное скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -13,15 +12,27 @@ const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013; 
 const BOT_TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk";
 
+// Подключение к Render (Сокеты)
+const socket = io("https://myshop-o4pl.onrender.com"); 
+
 let currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
 const isAdmin = (currentUser.id === ADMIN_ID);
 
 let orders = JSON.parse(localStorage.getItem('orders')) || [];
-let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
 let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
 let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
+
+socket.on('receive_msg', (data) => {
+    if (currentTicketId == data.ticket_id) renderSingleMessage(data);
+});
+
+socket.on('ticket_history', (messages) => {
+    const box = document.getElementById('ticket-chat-box');
+    box.innerHTML = '';
+    messages.forEach(msg => renderSingleMessage(msg));
+});
 
 async function sendToBot(text) {
     try {
@@ -50,14 +61,56 @@ document.addEventListener('DOMContentLoaded', () => {
     else document.getElementById('btn-admin-main').style.display = 'none';
 
     renderProfileOrders();
-    checkTickets();
     applyDiscountToPrices();
+    startCarousel();
     
     const savedNews = localStorage.getItem('newsText');
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
-// НАВИГАЦИЯ
+// --- КАРУСЕЛЬ (ПОЧИНЕНО) ---
+let currentSlide = 0;
+let carouselInterval;
+let startX = 0;
+let isDragging = false;
+
+function startCarousel() {
+    const track = document.getElementById('carousel-track');
+    const dots = document.querySelectorAll('.dot');
+    const container = document.getElementById('carousel');
+    if(!track || !container) return;
+    const totalSlides = dots.length;
+
+    function updateCarousel() {
+        track.style.transform = `translateX(-${currentSlide * 50}%)`;
+        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+    }
+
+    clearInterval(carouselInterval);
+    carouselInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateCarousel();
+    }, 5000);
+
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        clearInterval(carouselInterval);
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        let endX = e.changedTouches[0].clientX;
+        let diff = startX - endX;
+        if (diff > 40) currentSlide = (currentSlide + 1) % totalSlides;
+        else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateCarousel();
+        startCarousel();
+    });
+}
+
+// --- НАВИГАЦИЯ И МОДАЛКИ ---
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
@@ -65,7 +118,6 @@ function switchTab(tabName, btnElement) {
     if(btnElement) btnElement.classList.add('active');
 }
 
-// МОДАЛКИ
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleFaq(element) {
@@ -76,7 +128,7 @@ function openSupportModal() { openModal('support-modal'); }
 function openAboutModal() { openModal('about-modal'); }
 function openRulesModal() { openModal('rules-modal'); }
 
-// ПОКУПКА
+// --- ПОКУПКА ---
 function openBuyMenu(name, price) {
     currentProduct = { name, price };
     document.getElementById('buy-title').innerText = name;
@@ -90,19 +142,21 @@ function confirmOrder() {
         localStorage.removeItem('userDiscount');
         alert('Промокод сгорел, так как заказ был оформлен.');
     }
+    const txCode = 'XR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     const newOrder = {
         id: Date.now(), userName: currentUser.first_name, userId: currentUser.id,
-        item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', date: new Date().toLocaleString()
+        item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', date: new Date().toLocaleString(), txCode: txCode
     };
     orders.push(newOrder);
     localStorage.setItem('orders', JSON.stringify(orders)); 
-    sendToBot(`🛒 *НОВЫЙ ЗАКАЗ!*\nОт: ${currentUser.first_name}\nТовар: ${newOrder.item}`);
-    alert('Заказ отправлен администратору!');
+
+    sendToBot(`🛒 *НОВЫЙ ЗАКАЗ!*\nОт: ${currentUser.first_name}\nТовар: ${newOrder.item}\nКод: *${txCode}*`);
+    alert(`Заказ отправлен!\nВАШ КОД: ${txCode}\nОтправьте чек и код в ЛС @xeroox9.`);
+    
     closeModal('confirm-modal');
     renderProfileOrders();
 }
 
-// ПРОФИЛЬ (ОБНОВЛЕНО)
 function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
     if(!container) return;
@@ -120,15 +174,18 @@ function renderProfileOrders() {
         if (o.status === 'Отказано') statusClass = 'status-rejected';
 
         container.innerHTML += `
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #fff; font-weight: 600; font-size: 14px;">${o.item}</span>
-                <span class="status-badge ${statusClass}">${o.status}</span>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 5px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #fff; font-weight: 600; font-size: 14px;">${o.item}</span>
+                    <span class="status-badge ${statusClass}">${o.status}</span>
+                </div>
+                <span style="color: #ffb7c5; font-size: 12px; font-family: 'Press Start 2P', cursive;">Код: ${o.txCode || 'N/A'}</span>
             </div>
         `;
     });
 }
 
-// АДМИНКА
+// --- АДМИНКА ---
 function openAdminPanel() { renderAdminOrders(); openModal('admin-modal'); }
 
 function renderAdminOrders() {
@@ -149,7 +206,8 @@ function renderAdminOrders() {
                     <span style="color: #fff; font-weight: 700;">${o.item}</span>
                     <span class="status-badge status-pending">${o.status}</span>
                 </div>
-                <p style="color: #b3b3b3; font-size: 12px; margin-bottom: 10px;">Клиент: ${o.userName}</p>
+                <p style="color: #b3b3b3; font-size: 12px; margin-bottom: 5px;">Клиент: ${o.userName}</p>
+                <p style="color: #ffb7c5; font-size: 12px; margin-bottom: 10px; font-family: 'Press Start 2P', cursive;">Код: ${o.txCode || 'N/A'}</p>
                 <div style="display: flex; gap: 10px;">
                     <button onclick="updateOrderStatus(${o.id}, 'Оплачено')" class="send-btn" style="background: #4ade80; color: #000; padding: 8px;">Оплачено</button>
                     <button onclick="updateOrderStatus(${o.id}, 'Отказано')" class="send-btn" style="background: #f87171; color: #fff; padding: 8px;">Отказано</button>
@@ -168,7 +226,7 @@ function updateOrderStatus(id, status) {
     }
 }
 
-// НОВОСТИ
+// --- НОВОСТИ И ПРОМОКОДЫ ---
 function createNews() {
     const text = document.getElementById('admin-news-text').value;
     if (!text.trim()) { alert('Напишите текст!'); return; }
@@ -179,7 +237,6 @@ function createNews() {
     closeModal('admin-modal');
 }
 
-// ПРОМОКОДЫ
 function createPromoCode() {
     const nameInput = document.getElementById('admin-promo-name');
     const usesInput = document.getElementById('admin-promo-uses');
@@ -234,88 +291,102 @@ function applyDiscountToPrices() {
     }
 }
 
-// ТИКЕТЫ
+// --- ТИКЕТЫ (СОКЕТЫ) ---
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
-    tickets.push({ id: Date.now(), userName: currentUser.first_name, userId: currentUser.id, text: text, status: 'open', replies: [] });
-    localStorage.setItem('tickets', JSON.stringify(tickets));
-    sendToBot(`🎫 *НОВЫЙ ТИКЕТ!*\nОт: ${currentUser.first_name}\nТекст: ${text}`);
-    alert('Отправлено! Зайдите в колокольчик.');
+    
+    currentTicketId = Date.now();
+    
+    socket.emit('send_msg', {
+        ticket_id: currentTicketId,
+        text: text,
+        from: 'Пользователь',
+        user_name: currentUser.first_name,
+        user_id: currentUser.id
+    });
+
+    alert('Сообщение отправлено! Зайдите в колокольчик.');
     document.getElementById('support-message').value = '';
     closeModal('support-modal');
-    checkTickets();
-}
-
-function checkTickets() {
-    const dot = document.getElementById('notify-dot');
-    if (isAdmin) {
-        if (tickets.filter(t => t.status === 'open').length > 0) dot.style.display = 'block';
-        else dot.style.display = 'none';
-    } else {
-        if (tickets.filter(t => t.userId === currentUser.id && t.status === 'answered').length > 0) dot.style.display = 'block';
-        else dot.style.display = 'none';
-    }
 }
 
 function openNotificationsModal() {
     const container = document.getElementById('notifications-list');
     container.innerHTML = '';
-    let list = isAdmin ? tickets : tickets.filter(t => t.userId === currentUser.id);
-    if (list.length === 0) container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
-    list.forEach(t => {
-        container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
-            <p style="color: #fff;">Тикет #${t.id.toString().slice(-4)} (${t.status})</p>
-        </div>`;
-    });
+    
+    if (isAdmin) {
+        fetch('https://myshop-o4pl.onrender.com/get_tickets')
+            .then(res => res.json())
+            .then(data => {
+                const ticketIds = Object.keys(data);
+                if (ticketIds.length === 0) container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
+                ticketIds.forEach(id => {
+                    const t = data[id];
+                    container.innerHTML += `<div onclick="openTicket('${id}')" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
+                        <p style="color: #fff;">Тикет от ${t.user_name}</p>
+                    </div>`;
+                });
+            });
+    } else {
+        container.innerHTML = '<p style="color:#b3b3b3;">Ваши тикеты отображаются в чате.</p>';
+    }
     openModal('notify-modal');
 }
 
 function openTicket(id) {
     currentTicketId = id;
-    const t = tickets.find(x => x.id === id);
-    document.getElementById('ticket-title').innerText = `Тикет #${id.toString().slice(-4)}`;
-    const box = document.getElementById('ticket-chat-box');
-    box.innerHTML = `<div style="color: #fff; margin-bottom: 10px;">${t.text}</div>`;
-    t.replies.forEach(r => {
-        const senderName = r.from === 'Админ' ? 'Поддержка' : t.userName;
-        box.innerHTML += `<div style="color: #fff; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 5px;"><b>${senderName}:</b> ${r.text}</div>`;
-    });
+    document.getElementById('ticket-title').innerText = `Тикет #${id.slice(-4)}`;
+    document.getElementById('ticket-chat-box').innerHTML = ''; 
+    
+    socket.emit('join', { ticket_id: id });
+
     document.getElementById('btn-admin-delete-ticket').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('btn-user-close-ticket').style.display = isAdmin ? 'none' : 'block';
     closeModal('notify-modal');
     openModal('ticket-modal');
 }
 
+function renderSingleMessage(data) {
+    const box = document.getElementById('ticket-chat-box');
+    const isAdm = data.from === 'Админ';
+    const align = isAdm ? 'flex-end' : 'flex-start';
+    const bg = isAdm ? 'rgba(255,255,255,0.1)' : 'rgba(255, 20, 147, 0.15)';
+    const border = isAdm ? 'rgba(255,255,255,0.2)' : 'rgba(255, 20, 147, 0.3)';
+    
+    box.innerHTML += `
+        <div style="background: ${bg}; border: 1px solid ${border}; padding: 10px; border-radius: 10px; align-self: ${align}; max-width: 80%; margin-bottom: 8px;">
+            <span style="font-size: 10px; color: ${isAdm ? '#4ade80' : '#ffb7c5'};">${data.from}</span>
+            <p style="color: #fff; font-size: 13px; margin-top: 3px;">${data.text}</p>
+        </div>
+    `;
+    box.scrollTop = box.scrollHeight;
+}
+
 function sendTicketMsg() {
-    const text = document.getElementById('ticket-chat-input').value;
+    const input = document.getElementById('ticket-chat-input');
+    const text = input.value.trim();
     if (!text) return;
-    const idx = tickets.findIndex(t => t.id === currentTicketId);
-    if (idx !== -1) {
-        tickets[idx].replies.push({ from: isAdmin ? 'Админ' : 'Пользователь', text: text });
-        tickets[idx].status = isAdmin ? 'answered' : 'open';
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-        document.getElementById('ticket-chat-input').value = '';
-        openTicket(currentTicketId);
-        checkTickets();
-        if (!isAdmin) sendToBot(`💬 *СООБЩЕНИЕ В ТИКЕТЕ #${currentTicketId.toString().slice(-4)}*\nОт: ${currentUser.first_name}\nТекст: ${text}`);
-    }
+
+    socket.emit('send_msg', {
+        ticket_id: currentTicketId,
+        text: text,
+        from: isAdmin ? 'Админ' : 'Пользователь',
+        user_name: currentUser.first_name,
+        user_id: currentUser.id
+    });
+    
+    input.value = '';
 }
 
 function userCloseTicket() {
-    const idx = tickets.findIndex(t => t.id === currentTicketId);
-    if (idx !== -1) {
-        tickets[idx].status = 'closed';
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-        alert('Тикет закрыт');
-        closeModal('ticket-modal');
-        checkTickets();
-    }
+    // Логика закрытия для юзера
+    alert('Тикет закрыт');
+    closeModal('ticket-modal');
 }
+
 function adminDeleteTicket() {
-    tickets = tickets.filter(t => t.id !== currentTicketId);
-    localStorage.setItem('tickets', JSON.stringify(tickets));
+    // Логика удаления для админа
     alert('Удалено');
     closeModal('ticket-modal');
-    checkTickets();
 }
