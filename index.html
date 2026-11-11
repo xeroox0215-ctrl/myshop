@@ -77,8 +77,8 @@
                     <div class="menu-info"><h3>Правила</h3></div><img src="steve2.png" class="menu-png">
                 </button>
 
-                <!-- КНОПКА АДМИНКИ (видна всем, пока не настроим бэкенд) -->
-                <button class="menu-card glass-panel" id="btn-admin-main" onclick="openModal('admin-modal')">
+                <!-- Кнопка Админки (Скрыта, пока не проверится ID) -->
+                <button class="menu-card glass-panel" id="btn-admin-main" onclick="openAdminPanel()" style="display: none;">
                     <div class="menu-info"><h3 style="color: var(--neon-pink);">Админ-Панель</h3></div>
                     <img src="icon.png" class="menu-png" alt="Админка" style="height: 35px;">
                 </button>
@@ -92,10 +92,10 @@
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <button class="faq-question"><span>Услуги рекламы</span><span class="faq-icon">▼</span></button>
                     <div class="faq-answer">
-                        <div class="ads-price-item">24 часа ТГК — <b>50 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 24ч', 50)">Купить</button></div>
-                        <div class="ads-price-item">48 часов ТГК — <b>90 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 48ч', 90)">Купить</button></div>
-                        <div class="ads-price-item">72 часа ТГК — <b>130 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 72ч', 130)">Купить</button></div>
-                        <div class="ads-price-item">7 дней ТГК — <b>250 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 7д', 250)">Купить</button></div>
+                        <div class="ads-price-item" data-base="50">24 часа ТГК — <b class="price-val">50 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 24ч', 50)">Купить</button></div>
+                        <div class="ads-price-item" data-base="90">48 часов ТГК — <b class="price-val">90 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 48ч', 90)">Купить</button></div>
+                        <div class="ads-price-item" data-base="130">72 часа ТГК — <b class="price-val">130 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 72ч', 130)">Купить</button></div>
+                        <div class="ads-price-item" data-base="250">7 дней ТГК — <b class="price-val">250 ⭐</b> <button class="buy-small-btn" onclick="openBuyMenu('Реклама 7д', 250)">Купить</button></div>
                     </div>
                 </div>
             </div>
@@ -107,10 +107,10 @@
             <div class="glass-panel" style="padding: 20px;">
                 <div class="faq-item" onclick="toggleFaq(this)" style="margin-bottom: 20px;">
                     <button class="faq-question"><span>Что такое Приватка?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Это закрытое комьюнити, где хранятся ресурс-паки (РП), которые нигде не найти. Доступ после покупки. Копировать запрещено.</div>
+                    <div class="faq-answer">Это закрытое комьюнити, где хранятся ресурс-паки (РП). Доступ после покупки. Копировать запрещено.</div>
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <p style="color:var(--neon-pink); font-size: 28px; font-weight: 900; margin: 0;">199 ⭐</p>
+                    <p style="color:var(--neon-pink); font-size: 28px; font-weight: 900; margin: 0;" id="private-price" data-base="199">199 ⭐</p>
                     <button class="send-btn" style="width: 100%;" onclick="openBuyMenu('Приватка РП', 199)">Купить доступ</button>
                 </div>
             </div>
@@ -134,11 +134,11 @@
                     <div class="profile-page-name" id="profile-page-name">Загрузка...</div>
                     <div class="profile-page-id" id="profile-page-id">ID: ...</div>
                 </div>
-                <div class="profile-history">
-                    <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">История заказов</h3>
-                    <div class="history-item">
-                        <span class="history-name">Реклама 24ч</span>
-                        <span class="history-status status-pending">Ожидается</span>
+                
+                <div class="profile-history" style="margin-top: 20px;">
+                    <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Мои заказы</h3>
+                    <div id="profile-orders-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Сюда будут падать заказы пользователя -->
                     </div>
                 </div>
             </div>
@@ -157,7 +157,7 @@
 
     <!-- МОДАЛЬНОЕ ОКНО: АДМИНКА -->
     <div class="modal-overlay" id="admin-modal">
-        <div class="modal-content glass-panel animated-border">
+        <div class="modal-content glass-panel animated-border" style="max-width: 450px; width: 95%;">
             <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
             
             <div class="faq-item" onclick="toggleFaq(this)">
@@ -170,16 +170,10 @@
                 </div>
             </div>
 
-            <div class="admin-order-card glass-panel" style="margin-top: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="color:#fff; font-weight:800;">Заказ #1001</span>
-                    <span style="color:var(--neon-pink); font-size:12px;">Ожидает</span>
-                </div>
-                <p style="color:#b3b3b3; font-size:12px;">Товар: Реклама 24ч</p>
-                <div class="admin-actions">
-                    <button class="glass-action-btn btn-paid" onclick="adminAction('paid')">Оплачено</button>
-                    <button class="glass-action-btn btn-next" onclick="adminAction('next')">Дальше</button>
-                    <button class="glass-action-btn btn-reject" onclick="adminAction('reject')">Отказано</button>
+            <div style="margin-top: 15px;">
+                <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Новые заказы</h3>
+                <div id="admin-orders-list" style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Сюда будут падать заказы -->
                 </div>
             </div>
 
@@ -275,4 +269,4 @@
 
     <script src="app.js"></script>
 </body>
-</html>
+                    </html>
