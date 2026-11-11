@@ -1,6 +1,7 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
+// Скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -8,6 +9,7 @@ setTimeout(() => {
     if (container) container.classList.add('visible');
 }, 2000);
 
+// Данные пользователя
 const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013; 
 const BOT_TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk";
@@ -22,7 +24,7 @@ let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
-// === СОКЕТЫ (РЕАЛЬНОЕ ВРЕМЯ) ===
+// === СОКЕТЫ ===
 socket.on('receive_order', (data) => {
     if (isAdmin) {
         orders.push(data);
@@ -75,14 +77,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
-// === НАВИГАЦИЯ И МОДАЛКИ ===
+// === НАВИГАЦИЯ ===
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     if(btnElement) btnElement.classList.add('active');
 }
-function openModal(id) { document.getElementById(id).classList.add('active'); }
+
+// === МОДАЛКИ (ИСПРАВЛЕНО) ===
+function openModal(id) { 
+    // Закрываем все остальные модалки перед открытием новой
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+        if(m.id !== id) m.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active'); 
+}
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleFaq(element) {
     let item = element.classList.contains('faq-item') ? element : element.closest('.faq-item');
@@ -140,9 +150,15 @@ function openBuyMenu(name, price) {
     document.getElementById('buy-title').innerText = name;
     openModal('buy-modal');
 }
-function showConfirmModal() { closeModal('buy-modal'); openModal('confirm-modal'); }
+function showConfirmModal() { 
+    closeModal('buy-modal'); 
+    openModal('confirm-modal'); 
+}
 
 async function confirmOrder() {
+    // Принудительно закрываем все окна
+    document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
+
     if (userDiscount > 0) {
         userDiscount = 0;
         localStorage.removeItem('userDiscount');
@@ -156,25 +172,23 @@ async function confirmOrder() {
         date: new Date().toLocaleString(), txCode: txCode
     };
     
-    // Сохраняем локально
+    // Сохраняем локально (для профиля)
     let localOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
     localOrders.push(newOrder);
     localStorage.setItem('myOrders', JSON.stringify(localOrders));
 
-    // Отправляем на сервер (fetch)
+    // Отправляем на сервер
     try {
         await fetch('https://myshop-o4pl.onrender.com/add_order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newOrder)
         });
-    } catch(e) { console.log("Сервер спит"); }
+    } catch(e) { console.log("Сервер не отвечает"); }
 
-    // Отправляем через сокет
     socket.emit('new_order', newOrder);
     
     alert(`Заказ отправлен!\nВАШ КОД: ${txCode}\nОтправьте чек и код в ЛС @xeroox9.`);
-    closeModal('confirm-modal');
     renderProfileOrders(); 
 }
 
@@ -209,11 +223,14 @@ function renderProfileOrders() {
 
 // === АДМИНКА ===
 async function openAdminPanel() { 
+    // Закрываем все перед открытием
+    document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
+
     try {
         const res = await fetch('https://myshop-o4pl.onrender.com/get_orders');
         const data = await res.json();
         orders = data;
-    } catch(e) { console.log("Сервер спит"); }
+    } catch(e) { console.log("Сервер не отвечает"); }
     
     renderAdminOrders(); 
     openModal('admin-modal');
@@ -441,4 +458,4 @@ function userCloseTicket() {
 function adminDeleteTicket() {
     alert('Удалено');
     closeModal('ticket-modal');
-        }
+}
