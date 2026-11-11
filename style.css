@@ -192,3 +192,40 @@ textarea:focus { outline: none; border-color: var(--neon-pink); }
     border-radius: 12px;
     padding: 12px;
 }
+/* Красная точка на колокольчике */
+#notify-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #ff1493;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ff1493;
+}
+
+/* Карточки тикетов */
+.ticket-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.ticket-card:active { background: rgba(255, 20, 147, 0.1); }
+.ticket-card h4 { color: #fff; margin-bottom: 5px; font-size: 14px; }
+.ticket-card p { color: #b3b3b3; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Кнопки в админке */
+.admin-actions { display: flex; gap: 8px; justify-content: space-between; margin-top: 15px; }
+.glass-action-btn {
+    flex: 1; padding: 10px 5px; border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white; font-weight: 700; font-size: 12px; cursor: pointer; text-align: center; transition: all 0.3s;
+}
+.glass-action-btn:active { transform: scale(0.95); }
+.btn-paid { border-color: #4ade80; color: #4ade80; }
+.btn-paid:active { background: rgba(74, 222, 128, 0.2); }
+.btn-reject { border-color: #f87171; color: #f87171; }
+.btn-reject:active { background: rgba(248, 113, 113, 0.2); }
