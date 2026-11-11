@@ -249,3 +249,70 @@ textarea:focus { outline: none; border-color: var(--neon-pink); }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+/* Красивые плашки статусов заказов */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Переливание для статусов */
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shineBadge 3s infinite;
+}
+@keyframes shineBadge {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.status-paid {
+    background: linear-gradient(45deg, #00b09b, #96c93d);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite alternate;
+    color: #fff;
+}
+
+.status-rejected {
+    background: linear-gradient(45deg, #cb2d3e, #ef473a);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite alternate;
+    color: #fff;
+}
+
+.status-pending {
+    background: linear-gradient(45deg, #f12711, #f5af19);
+    background-size: 200% 200%;
+    animation: gradientMove 3s infinite alternate;
+    color: #fff;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Плавное переливание для всех кнопок меню (категорий) */
+.menu-card, .category-btn {
+    transition: all 0.4s ease;
+}
+.menu-card::after, .category-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: all 0.5s;
+    z-index: 0;
+}
+.menu-card:hover::after, .category-btn:hover::after {
+    left: 100%;
+}
