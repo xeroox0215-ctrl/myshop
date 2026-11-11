@@ -1,215 +1,102 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
-const user = tg.initDataUnsafe?.user;
+const user = tg.initDataUnsafe?.user || { id: 123456789, first_name: "Гость", username: "guest" };
 const ADMIN_ID = 1494459013; 
+const isAdmin = (user.id === ADMIN_ID);
 
-// Если юзера нет (зашел через браузер), создаем фейкового
-const currentUser = user || { id: 123456789, first_name: "Гость", username: "guest" };
-const isAdmin = (currentUser.id === ADMIN_ID);
-
-let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
-let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 let orders = JSON.parse(localStorage.getItem('orders')) || [];
 let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
 let currentTicketId = null;
+let currentProduct = {};
+let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
+
+// Загрузка новостей
+let newsText = localStorage.getItem('newsText') || "Мы обновили магазин! Добавили новые товары и улучшили дизайн.";
+document.getElementById('news-text').innerText = newsText;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Заставка
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
         document.getElementById('app-container').classList.add('visible'); 
-    }, 2000);
+    }, 1500);
 
-    // Профиль
-    if (currentUser) {
-        document.getElementById('user-name').innerText = currentUser.first_name;
-        document.getElementById('user-tag').innerText = currentUser.username ? '@' + currentUser.username : '';
-        document.getElementById('profile-page-name').innerText = currentUser.first_name;
-        document.getElementById('profile-page-id').innerText = `ID: ${currentUser.id}`;
-        
-        if (currentUser.photo_url) {
-            const avatar = document.getElementById('user-avatar');
-            avatar.style.backgroundImage = `url(${currentUser.photo_url})`;
-            avatar.innerText = ''; 
-            const pAvatar = document.getElementById('profile-page-avatar');
-            pAvatar.style.backgroundImage = `url(${currentUser.photo_url})`;
-            pAvatar.innerText = '';
-        }
+    document.getElementById('user-name').innerText = user.first_name;
+    document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
+    document.getElementById('profile-page-name').innerText = user.first_name;
+    document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
+    
+    if (user.photo_url) {
+        document.getElementById('user-avatar').style.backgroundImage = `url(${user.photo_url})`;
+        document.getElementById('user-avatar').innerText = '';
+        document.getElementById('profile-page-avatar').style.backgroundImage = `url(${user.photo_url})`;
+        document.getElementById('profile-page-avatar').innerText = '';
     }
+    
+    if (isAdmin) document.getElementById('btn-admin-main').style.display = 'flex';
 
-    // Показываем админку, если это админ
-    if (isAdmin) {
-        const adminBtn = document.getElementById('btn-admin-main');
-        if (adminBtn) adminBtn.style.display = 'flex';
-    }
-
-    // Запускаем фон и карусель
-    createDecor('bg-decor', 10);        
-    startCarousel();
-    startTopBanner();
     renderProfileOrders();
     checkTickets();
+    applyDiscountToPrices();
 });
-
-// --- ФОНОВЫЕ ЭЛЕМЕНТЫ ---
-function createDecor(containerId, count) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const images = ['listok.png', 'zvezda.png', 'derevo.png'];
-    for (let i = 0; i < count; i++) {
-        const div = document.createElement('div');
-        div.classList.add('floating-decor');
-        div.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
-        const size = Math.random() * 25 + 20;
-        div.style.width = size + 'px'; div.style.height = size + 'px';
-        div.style.left = Math.random() * 90 + '%';
-        div.style.top = Math.random() * 80 + 'vh';
-        div.style.animationDuration = (Math.random() * 15 + 15) + 's'; 
-        div.style.animationDelay = (Math.random() * 3) + 's'; 
-        container.appendChild(div);
-    }
-}
 
 // --- НАВИГАЦИЯ ---
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
-    
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     if(btnElement) btnElement.classList.add('active');
 }
 
 // --- МОДАЛКИ ---
-function openModal(id) { 
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add('active'); 
-}
-function closeModal(id) { 
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove('active'); 
-}
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleFaq(element) {
     let item = element.classList.contains('faq-item') ? element : element.closest('.faq-item');
     if (item) item.classList.toggle('active');
 }
-
-// Открытие окон
 function openSupportModal() { openModal('support-modal'); }
 function openAboutModal() { openModal('about-modal'); }
 function openRulesModal() { openModal('rules-modal'); }
 
-// --- КАРУСЕЛЬ (БАННЕРЫ) ---
-let currentSlide = 0;
-let carouselInterval;
-let startX = 0;
-let isDragging = false;
-
-function startCarousel() {
-    const track = document.getElementById('carousel-track');
-    const dots = document.querySelectorAll('.dot');
-    const container = document.getElementById('carousel');
-    if(!track || !container) return;
-    const totalSlides = dots.length;
-    
-    function updateCarousel() {
-        track.style.transform = `translateX(-${currentSlide * 50}%)`;
-        dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
-    }
-    
-    clearInterval(carouselInterval);
-    carouselInterval = setInterval(() => { 
-        currentSlide = (currentSlide + 1) % totalSlides; 
-        updateCarousel(); 
-    }, 6000);
-    
-    dots.forEach((dot, index) => { 
-        dot.addEventListener('click', () => { 
-            currentSlide = index; 
-            updateCarousel(); 
-            clearInterval(carouselInterval); 
-            startCarousel(); 
-        }); 
-    });
-    
-    container.addEventListener('touchstart', (e) => { 
-        startX = e.touches[0].clientX; 
-        isDragging = true; 
-        clearInterval(carouselInterval); 
-    }, { passive: true });
-    
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging) return; 
-        isDragging = false;
-        let endX = e.changedTouches[0].clientX; 
-        let diff = startX - endX;
-        if (diff > 40) currentSlide = (currentSlide + 1) % totalSlides;
-        else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        updateCarousel(); 
-        startCarousel();
-    });
-}
-
-function startTopBanner() {
-    const track = document.getElementById('capsule-track');
-    if(!track) return;
-    let slide = 0;
-    setInterval(() => {
-        slide = (slide + 1) % 2;
-        track.style.transform = `translateX(-${slide * 50}%)`;
-    }, 4000);
-}
-
 // --- ПОКУПКА ---
-let currentProduct = {};
 function openBuyMenu(name, price) {
-    currentProduct = { name: name, price: price };
+    currentProduct = { name, price };
     document.getElementById('buy-title').innerText = name;
     openModal('buy-modal');
 }
 
-function submitOrder() {
-    const newOrder = {
-        id: Date.now(), 
-        userName: currentUser.first_name, 
-        userId: currentUser.id,
-        item: currentProduct.name, 
-        price: currentProduct.price, 
-        status: 'Ожидает проверки', 
-        date: new Date().toLocaleString()
-    };
-    orders.push(newOrder);
+function showConfirmModal() {
+    closeModal('buy-modal');
+    openModal('confirm-modal');
+}
+
+function confirmOrder() {
+    if (userDiscount > 0) {
+        userDiscount = 0;
+        localStorage.removeItem('userDiscount');
+        alert('Промокод сгорел, так как заказ был оформлен.');
+    }
+
+    orders.push({
+        id: Date.now(), userName: user.first_name, userId: user.id,
+        item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', date: new Date().toLocaleString()
+    });
     localStorage.setItem('orders', JSON.stringify(orders)); 
     
     alert('Заказ отправлен администратору!');
-    closeModal('buy-modal');
+    closeModal('confirm-modal');
     renderProfileOrders();
+    location.reload(); 
 }
 
-// --- ПРОФИЛЬ (ЗАКАЗЫ) ---
 function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
-    if(!container) return;
     container.innerHTML = ''; 
-    
-    const myOrders = orders.filter(o => o.userId === currentUser.id);
-    
-    if (myOrders.length === 0) { 
-        container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">У вас пока нет заказов.</p>'; 
-        return; 
-    }
-    
-    myOrders.forEach(order => {
-        let statusColor = '#fbbf24'; 
-        if (order.status === 'Оплачено') statusColor = '#4ade80';
-        if (order.status === 'Отказано') statusColor = '#f87171';
-        
-        container.innerHTML += `
-            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-                <p style="color: #fff; font-weight: 700;">${order.item}</p>
-                <p style="color: #b3b3b3; font-size: 12px;">${order.date}</p>
-                <p style="color: ${statusColor}; font-weight: 800; margin-top: 5px;">${order.status}</p>
-            </div>
-        `;
+    const myOrders = orders.filter(o => o.userId === user.id);
+    if (myOrders.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Заказов нет.</p>'; return; }
+    myOrders.forEach(o => {
+        container.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; color: #fff; margin-bottom:5px;">${o.item} - ${o.status}</div>`;
     });
 }
 
@@ -221,61 +108,64 @@ function openAdminPanel() {
 
 function renderAdminOrders() {
     const container = document.getElementById('admin-orders-list');
-    if(!container) return;
     container.innerHTML = ''; 
-    
-    const pendingOrders = orders.filter(o => o.status === 'Ожидает проверки');
-    
-    if (pendingOrders.length === 0) { 
-        container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">Новых заказов нет.</p>'; 
-        return; 
-    }
-    
-    pendingOrders.forEach(order => {
+    const pending = orders.filter(o => o.status === 'Ожидает проверки');
+    if (pending.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Нет заказов.</p>'; return; }
+    pending.forEach(o => {
         container.innerHTML += `
-            <div class="admin-order-card glass-panel">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span style="color:#fff; font-weight:800;">${order.item}</span>
-                    <span style="color:var(--neon-pink); font-size:10px;">${order.userName}</span>
-                </div>
-                <div class="admin-actions" style="margin-top: 10px;">
-                    <button class="glass-action-btn btn-paid" onclick="updateOrderStatus(${order.id}, 'Оплачено')">Оплачено</button>
-                    <button class="glass-action-btn btn-reject" onclick="updateOrderStatus(${order.id}, 'Отказано')">Отказано</button>
-                </div>
-            </div>
-        `;
+            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                <p style="color: #fff;">${o.item} (${o.userName})</p>
+                <button onclick="updateOrderStatus(${o.id}, 'Оплачено')" style="background: #4ade80; color: #000; padding: 5px; border: none; border-radius: 5px; margin-right: 5px;">Оплачено</button>
+                <button onclick="updateOrderStatus(${o.id}, 'Отказано')" style="background: #f87171; color: #fff; padding: 5px; border: none; border-radius: 5px;">Отказано</button>
+            </div>`;
     });
 }
 
-function updateOrderStatus(orderId, newStatus) {
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    if (orderIndex !== -1) {
-        orders[orderIndex].status = newStatus;
+function updateOrderStatus(id, status) {
+    const idx = orders.findIndex(o => o.id === id);
+    if (idx !== -1) {
+        orders[idx].status = status;
         localStorage.setItem('orders', JSON.stringify(orders));
-        renderAdminOrders(); 
-        renderProfileOrders(); 
-        alert(`Статус изменен на: ${newStatus}`);
+        renderAdminOrders();
+        renderProfileOrders();
     }
+}
+
+// --- НОВОСТИ ---
+function createNews() {
+    const text = document.getElementById('admin-news-text').value;
+    if (!text.trim()) { alert('Напишите текст!'); return; }
+    
+    localStorage.setItem('newsText', text);
+    document.getElementById('news-text').innerText = text;
+    
+    alert('Новость успешно опубликована!');
+    document.getElementById('admin-news-text').value = '';
+    closeModal('admin-modal');
 }
 
 // --- ПРОМОКОДЫ ---
 function createPromoCode() {
-    const name = document.getElementById('admin-promo-name').value.toUpperCase().trim();
-    const uses = parseInt(document.getElementById('admin-promo-uses').value);
-    const discount = parseInt(document.getElementById('admin-promo-discount').value);
+    const nameInput = document.getElementById('admin-promo-name');
+    const usesInput = document.getElementById('admin-promo-uses');
+    const discInput = document.getElementById('admin-promo-discount');
+
+    const name = nameInput.value.toUpperCase().trim();
+    const uses = parseInt(usesInput.value);
+    const disc = parseInt(discInput.value);
     
-    if (!name || isNaN(uses) || isNaN(discount)) { 
+    if (!name || isNaN(uses) || isNaN(disc)) {
         alert('Заполните все поля!'); 
-        return; 
+        return;
     }
     
-    promoCodes.push({ code: name, uses: uses, discount: discount });
+    promoCodes.push({ code: name, uses: uses, discount: disc });
     localStorage.setItem('promoCodes', JSON.stringify(promoCodes));
-    alert(`Промокод ${name} создан!`);
+    alert(`Промокод ${name} создан на ${disc}%!`);
     
-    document.getElementById('admin-promo-name').value = '';
-    document.getElementById('admin-promo-uses').value = '';
-    document.getElementById('admin-promo-discount').value = '';
+    nameInput.value = '';
+    usesInput.value = '';
+    discInput.value = '';
 }
 
 function applyPromo() {
@@ -290,12 +180,15 @@ function applyPromo() {
         if (promo.uses > 0) {
             userDiscount = promo.discount;
             localStorage.setItem('userDiscount', userDiscount);
+            
             promoCodes[promoIndex].uses -= 1;
             localStorage.setItem('promoCodes', JSON.stringify(promoCodes));
             
             statusText.style.display = 'block';
             statusText.innerText = `Промокод активирован! Скидка ${promo.discount}%.`;
             document.getElementById('promo-input').value = '';
+            
+            applyDiscountToPrices();
         } else { 
             alert('Промокод закончился!'); 
         }
@@ -304,160 +197,111 @@ function applyPromo() {
     }
 }
 
-// --- ТИКЕТЫ (УВЕДОМЛЕНИЯ) ---
+function applyDiscountToPrices() {
+    if (userDiscount === 0) return;
+    
+    document.querySelectorAll('.ads-price-item').forEach(item => {
+        const basePrice = parseInt(item.getAttribute('data-base'));
+        const priceVal = item.querySelector('.price-val');
+        if (basePrice && priceVal) {
+            const newPrice = Math.floor(basePrice - (basePrice * (userDiscount / 100)));
+            priceVal.innerHTML = `<span style="text-decoration: line-through; color: #888; font-size: 12px;">${basePrice} ⭐</span> ${newPrice} ⭐<br><span style="color: #4ade80; font-size: 10px;">Скидка ${userDiscount}%</span>`;
+        }
+    });
+
+    const privatePriceEl = document.getElementById('private-price');
+    if (privatePriceEl) {
+        const base = parseInt(privatePriceEl.getAttribute('data-base'));
+        if (base) {
+            const newPrice = Math.floor(base - (base * (userDiscount / 100)));
+            privatePriceEl.innerHTML = `<span style="text-decoration: line-through; color: #888; font-size: 16px;">${base} ⭐</span> ${newPrice} ⭐<br><span style="color: #4ade80; font-size: 12px;">Скидка ${userDiscount}%</span>`;
+        }
+    }
+}
+
+// --- ТИКЕТЫ ---
 function createTicket() {
     const text = document.getElementById('support-message').value;
-    if (!text.trim()) { 
-        alert('Напишите текст!'); 
-        return; 
-    }
-    
-    const newTicket = { 
-        id: Date.now(), 
-        userName: currentUser.first_name, 
-        userId: currentUser.id, 
-        text: text, 
-        status: 'open', 
-        replies: [] 
-    };
-    
-    tickets.push(newTicket);
+    if (!text) return alert('Напишите текст!');
+    tickets.push({ id: Date.now(), userName: user.first_name, userId: user.id, text: text, status: 'open', replies: [] });
     localStorage.setItem('tickets', JSON.stringify(tickets));
     
-    alert('Тикет отправлен!');
+    alert('Сообщение отправлено! Зайдите в колокольчик (уведомления) и там откроется чат с поддержкой.');
+    
     document.getElementById('support-message').value = '';
     closeModal('support-modal');
     checkTickets();
 }
 
 function checkTickets() {
-    const notifyDot = document.getElementById('notify-dot');
-    if (!notifyDot) return;
-    
-    const myTickets = tickets.filter(t => t.userId === currentUser.id && t.status === 'answered');
-    
-    if (myTickets.length > 0 || (isAdmin && tickets.filter(t => t.status === 'open').length > 0)) {
-        notifyDot.style.display = 'block';
+    const dot = document.getElementById('notify-dot');
+    if (tickets.filter(t => t.userId === user.id && t.status === 'answered').length > 0 || (isAdmin && tickets.filter(t => t.status === 'open').length > 0)) {
+        dot.style.display = 'block';
     } else {
-        notifyDot.style.display = 'none';
+        dot.style.display = 'none';
     }
 }
 
 function openNotificationsModal() {
     const container = document.getElementById('notifications-list');
-    if (!container) return;
     container.innerHTML = '';
-    
-    let myTickets = isAdmin 
-        ? tickets.filter(t => t.status === 'open' || t.status === 'answered') 
-        : tickets.filter(t => t.userId === currentUser.id);
-        
-    if (myTickets.length === 0) {
-        container.innerHTML = '<p style="color: #b3b3b3; text-align: center;">Уведомлений нет</p>';
-    } else {
-        myTickets.forEach(ticket => {
-            const title = isAdmin ? `Тикет #${ticket.id.toString().slice(-4)} от ${ticket.userName}` : `Ваш тикет #${ticket.id.toString().slice(-4)}`;
-            let statusText = ticket.status === 'open' ? 'Открыт' : (ticket.status === 'answered' ? 'Есть ответ' : 'Закрыт');
-            
-            container.innerHTML += `
-                <div class="ticket-card" onclick="openTicket(${ticket.id})">
-                    <h4>${title}</h4>
-                    <p style="color: #ffb7c5;">${statusText}</p>
-                    <p>${ticket.text}</p>
-                </div>
-            `;
-        });
-    }
+    let list = isAdmin ? tickets : tickets.filter(t => t.userId === user.id);
+    if (list.length === 0) container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
+    list.forEach(t => {
+        container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
+            <p style="color: #fff;">Тикет #${t.id.toString().slice(-4)} (${t.status})</p>
+        </div>`;
+    });
     openModal('notify-modal');
 }
 
 function openTicket(id) {
     currentTicketId = id;
-    const ticket = tickets.find(t => t.id === id);
-    if (!ticket) return;
-    
+    const t = tickets.find(x => x.id === id);
     document.getElementById('ticket-title').innerText = `Тикет #${id.toString().slice(-4)}`;
+    const box = document.getElementById('ticket-chat-box');
+    box.innerHTML = `<div style="color: #fff; margin-bottom: 10px;">${t.text}</div>`;
     
-    const chatBox = document.getElementById('ticket-chat-box');
-    chatBox.innerHTML = '';
-    
-    // Отрисовка истории
-    chatBox.innerHTML += `
-        <div style="background: rgba(255, 20, 147, 0.15); border: 1px solid rgba(255, 20, 147, 0.3); padding: 10px; border-radius: 10px; align-self: flex-start; max-width: 80%;">
-            <span style="font-size: 10px; color: #ffb7c5;">${ticket.userName}</span>
-            <p style="color: #fff; font-size: 13px; margin-top: 3px;">${ticket.text}</p>
-        </div>
-    `;
-    
-    ticket.replies.forEach(reply => {
-        const isAdm = reply.from === 'Админ';
-        const align = isAdm ? 'flex-end' : 'flex-start';
-        const bg = isAdm ? 'rgba(255,255,255,0.1)' : 'rgba(255, 20, 147, 0.15)';
-        const border = isAdm ? 'rgba(255,255,255,0.2)' : 'rgba(255, 20, 147, 0.3)';
-        
-        chatBox.innerHTML += `
-            <div style="background: ${bg}; border: 1px solid ${border}; padding: 10px; border-radius: 10px; align-self: ${align}; max-width: 80%;">
-                <span style="font-size: 10px; color: ${isAdm ? '#4ade80' : '#ffb7c5'};">${reply.from}</span>
-                <p style="color: #fff; font-size: 13px; margin-top: 3px;">${reply.text}</p>
-            </div>
-        `;
+    t.replies.forEach(r => {
+        const senderName = r.from === 'Админ' ? 'Поддержка' : t.userName;
+        box.innerHTML += `<div style="color: #fff; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 5px;"><b>${senderName}:</b> ${r.text}</div>`;
     });
     
-    setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
-    
-    // Настройка кнопок
-    const btnUserClose = document.getElementById('btn-user-close-ticket');
-    const btnAdminDelete = document.getElementById('btn-admin-delete-ticket');
-    
-    if (isAdmin) {
-        btnAdminDelete.style.display = 'block';
-        btnUserClose.style.display = 'none';
-    } else {
-        btnUserClose.style.display = 'block';
-        btnAdminDelete.style.display = 'none';
-    }
-    
+    document.getElementById('btn-admin-delete-ticket').style.display = isAdmin ? 'block' : 'none';
+    document.getElementById('btn-user-close-ticket').style.display = isAdmin ? 'none' : 'block';
     closeModal('notify-modal');
     openModal('ticket-modal');
 }
 
 function sendTicketMsg() {
-    const input = document.getElementById('ticket-chat-input');
-    const text = input.value.trim();
+    const text = document.getElementById('ticket-chat-input').value;
     if (!text) return;
-    
-    const ticketIndex = tickets.findIndex(t => t.id === currentTicketId);
-    if (ticketIndex !== -1) {
-        const from = isAdmin ? 'Админ' : 'Пользователь';
-        tickets[ticketIndex].replies.push({ from: from, text: text });
-        tickets[ticketIndex].status = isAdmin ? 'answered' : 'open'; 
-        
+    const idx = tickets.findIndex(t => t.id === currentTicketId);
+    if (idx !== -1) {
+        tickets[idx].replies.push({ from: isAdmin ? 'Админ' : 'Пользователь', text: text });
+        tickets[idx].status = isAdmin ? 'answered' : 'open';
         localStorage.setItem('tickets', JSON.stringify(tickets));
-        input.value = '';
-        
-        openTicket(currentTicketId); // Перерисовываем
+        document.getElementById('ticket-chat-input').value = '';
+        openTicket(currentTicketId);
         checkTickets();
     }
 }
 
 function userCloseTicket() {
-    const ticketIndex = tickets.findIndex(t => t.id === currentTicketId);
-    if (ticketIndex !== -1) {
-        tickets[ticketIndex].status = 'closed';
+    const idx = tickets.findIndex(t => t.id === currentTicketId);
+    if (idx !== -1) {
+        tickets[idx].status = 'closed';
         localStorage.setItem('tickets', JSON.stringify(tickets));
-        alert('Спасибо за обращение! Тикет закрыт.');
+        alert('Тикет закрыт');
         closeModal('ticket-modal');
         checkTickets();
     }
 }
 
 function adminDeleteTicket() {
-    if (!isAdmin) return;
-    if (confirm('Удалить этот тикет?')) {
-        tickets = tickets.filter(t => t.id !== currentTicketId);
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-        alert('Тикет удален.');
-        closeModal('ticket-modal');
-        checkTickets();
-    }
-            }
+    tickets = tickets.filter(t => t.id !== currentTicketId);
+    localStorage.setItem('tickets', JSON.stringify(tickets));
+    alert('Удалено');
+    closeModal('ticket-modal');
+    checkTickets();
+}
