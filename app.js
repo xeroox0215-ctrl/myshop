@@ -1,7 +1,7 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Принудительное скрытие заставки через 2 секунды
+// Принудительное скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
+// НАВИГАЦИЯ
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
@@ -64,6 +65,7 @@ function switchTab(tabName, btnElement) {
     if(btnElement) btnElement.classList.add('active');
 }
 
+// МОДАЛКИ
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleFaq(element) {
@@ -74,6 +76,7 @@ function openSupportModal() { openModal('support-modal'); }
 function openAboutModal() { openModal('about-modal'); }
 function openRulesModal() { openModal('rules-modal'); }
 
+// ПОКУПКА
 function openBuyMenu(name, price) {
     currentProduct = { name, price };
     document.getElementById('buy-title').innerText = name;
@@ -99,19 +102,33 @@ function confirmOrder() {
     renderProfileOrders();
 }
 
+// ПРОФИЛЬ (ОБНОВЛЕНО)
 function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
     if(!container) return;
     container.innerHTML = ''; 
     const myOrders = orders.filter(o => o.userId === currentUser.id);
-    if (myOrders.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Заказов нет.</p>'; return; }
+    
+    if (myOrders.length === 0) { 
+        container.innerHTML = '<p style="color:#b3b3b3; font-size:12px;">Заказов нет.</p>'; 
+        return; 
+    }
+    
     myOrders.forEach(o => {
-        container.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; color: #fff; margin-bottom:5px; display:flex; justify-content:space-between;">
-            <span>${o.item}</span><span style="color:#fbbf24;">${o.status}</span>
-        </div>`;
+        let statusClass = 'status-pending';
+        if (o.status === 'Оплачено') statusClass = 'status-paid';
+        if (o.status === 'Отказано') statusClass = 'status-rejected';
+
+        container.innerHTML += `
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #fff; font-weight: 600; font-size: 14px;">${o.item}</span>
+                <span class="status-badge ${statusClass}">${o.status}</span>
+            </div>
+        `;
     });
 }
 
+// АДМИНКА
 function openAdminPanel() { renderAdminOrders(); openModal('admin-modal'); }
 
 function renderAdminOrders() {
@@ -119,13 +136,24 @@ function renderAdminOrders() {
     if(!container) return;
     container.innerHTML = ''; 
     const pending = orders.filter(o => o.status === 'Ожидает проверки');
-    if (pending.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Нет заказов.</p>'; return; }
+    
+    if (pending.length === 0) { 
+        container.innerHTML = '<p style="color:#b3b3b3;">Нет новых заказов.</p>'; 
+        return; 
+    }
+    
     pending.forEach(o => {
         container.innerHTML += `
-            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                <p style="color: #fff;">${o.item} (${o.userName})</p>
-                <button onclick="updateOrderStatus(${o.id}, 'Оплачено')" style="background: #4ade80; color: #000; padding: 5px; border: none; border-radius: 5px; margin-right: 5px;">Оплачено</button>
-                <button onclick="updateOrderStatus(${o.id}, 'Отказано')" style="background: #f87171; color: #fff; padding: 5px; border: none; border-radius: 5px;">Отказано</button>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #fff; font-weight: 700;">${o.item}</span>
+                    <span class="status-badge status-pending">${o.status}</span>
+                </div>
+                <p style="color: #b3b3b3; font-size: 12px; margin-bottom: 10px;">Клиент: ${o.userName}</p>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="updateOrderStatus(${o.id}, 'Оплачено')" class="send-btn" style="background: #4ade80; color: #000; padding: 8px;">Оплачено</button>
+                    <button onclick="updateOrderStatus(${o.id}, 'Отказано')" class="send-btn" style="background: #f87171; color: #fff; padding: 8px;">Отказано</button>
+                </div>
             </div>`;
     });
 }
@@ -135,10 +163,12 @@ function updateOrderStatus(id, status) {
     if (idx !== -1) {
         orders[idx].status = status;
         localStorage.setItem('orders', JSON.stringify(orders));
-        renderAdminOrders(); renderProfileOrders();
+        renderAdminOrders(); 
+        renderProfileOrders();
     }
 }
 
+// НОВОСТИ
 function createNews() {
     const text = document.getElementById('admin-news-text').value;
     if (!text.trim()) { alert('Напишите текст!'); return; }
@@ -149,6 +179,7 @@ function createNews() {
     closeModal('admin-modal');
 }
 
+// ПРОМОКОДЫ
 function createPromoCode() {
     const nameInput = document.getElementById('admin-promo-name');
     const usesInput = document.getElementById('admin-promo-uses');
@@ -203,6 +234,7 @@ function applyDiscountToPrices() {
     }
 }
 
+// ТИКЕТЫ
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
@@ -286,22 +318,4 @@ function adminDeleteTicket() {
     alert('Удалено');
     closeModal('ticket-modal');
     checkTickets();
-}
-
-function createDecor(containerId, count) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const images = ['listok.png', 'zvezda.png', 'derevo.png'];
-    for (let i = 0; i < count; i++) {
-        const div = document.createElement('div');
-        div.classList.add('floating-decor');
-        div.style.backgroundImage = `url('${images[Math.floor(Math.random() * images.length)]}')`;
-        const size = Math.random() * 25 + 20;
-        div.style.width = size + 'px'; div.style.height = size + 'px';
-        div.style.left = Math.random() * 90 + '%';
-        div.style.top = Math.random() * 80 + 'vh';
-        div.style.animationDuration = (Math.random() * 15 + 15) + 's'; 
-        div.style.animationDelay = (Math.random() * 3) + 's'; 
-        container.appendChild(div);
-    }
 }
