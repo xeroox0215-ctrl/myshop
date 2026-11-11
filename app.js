@@ -1,6 +1,7 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
+// Принудительное скрытие заставки
 setTimeout(() => {
     const splash = document.getElementById('splash-screen');
     const container = document.getElementById('app-container');
@@ -12,6 +13,7 @@ const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013; 
 const BOT_TOKEN = "9272871777:AAGp-nfdwn-92-WW7Yza0NPK-5ChUiWBUzk";
 
+// Подключение к серверу Render
 const socket = io("https://myshop-o4pl.onrender.com"); 
 
 let currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
@@ -23,16 +25,21 @@ let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
+// Слушаем сообщения от сервера в реальном времени
 socket.on('receive_msg', (data) => {
-    if (currentTicketId == data.ticket_id) renderSingleMessage(data);
+    if (currentTicketId == data.ticket_id) {
+        renderSingleMessage(data);
+    }
 });
 
+// Слушаем историю тикета (когда зашли в чат)
 socket.on('ticket_history', (messages) => {
     const box = document.getElementById('ticket-chat-box');
     box.innerHTML = '';
     messages.forEach(msg => renderSingleMessage(msg));
 });
 
+// Отправка уведомлений в ТГ
 async function sendToBot(text) {
     try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -44,6 +51,7 @@ async function sendToBot(text) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Заполнение профиля
     document.getElementById('user-name').innerText = currentUser.first_name;
     document.getElementById('user-tag').innerText = currentUser.username ? '@' + currentUser.username : '';
     document.getElementById('profile-page-name').innerText = currentUser.first_name;
@@ -56,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('profile-page-avatar').innerText = '';
     }
 
+    // Админка
     if (isAdmin) document.getElementById('btn-admin-main').style.display = 'flex';
     else document.getElementById('btn-admin-main').style.display = 'none';
 
@@ -109,7 +118,7 @@ function startCarousel() {
     });
 }
 
-// --- НАВИГАЦИЯ И МОДАЛКИ ---
+// --- НАВИГАЦИЯ ---
 function switchTab(tabName, btnElement) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
@@ -290,19 +299,14 @@ function applyDiscountToPrices() {
     }
 }
 
-// --- ТИКЕТЫ (ЛОКАЛЬНО + СОКЕТЫ) ---
+// --- ТИКЕТЫ (ИСПРАВЛЕНО) ---
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
     
     currentTicketId = Date.now();
     
-    // Сохраняем локально
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    tickets.push({ id: currentTicketId, userName: currentUser.first_name, userId: currentUser.id, text: text, status: 'open', replies: [] });
-    localStorage.setItem('tickets', JSON.stringify(tickets));
-    
-    // Отправляем на сервер (сокет)
+    // Отправляем на сервер
     socket.emit('send_msg', {
         ticket_id: currentTicketId,
         text: text,
@@ -318,80 +322,107 @@ function createTicket() {
 
 function openNotificationsModal() {
     const container = document.getElementById('notifications-list');
-    container.innerHTML = '';
-    
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    let list = isAdmin ? tickets : tickets.filter(t => t.userId === currentUser.id);
-    
-    if (list.length === 0) {
-        container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
-    } else {
-        list.forEach(t => {
-            container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
-                <p style="color: #fff;">Тикет #${t.id.toString().slice(-4)} (${t.status})</p>
-            </div>`;
-        });
-    }
+    container.innerHTML = '<p style="color:#b3b3b3;">Загрузка...</p>';
     openModal('notify-modal');
+
+    if (isAdmin) {
+        // Админ видит ВСЕ тикеты с сервера Render
+        fetch('https://myshop-o4pl.onrender.com/get_tickets')
+            .then(res => res.json())
+            .then(data => {
+                container.innerHTML = '';
+                const ticketIds = Object.keys(data);
+                
+                if (ticketIds.length === 0) {
+                    container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
+                    return;
+                }
+                
+                ticketIds.forEach(id => {
+                    const t = data[id];
+                    container.innerHTML += `
+                        <div onclick="openTicket('${id}')" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);">
+                            <p style="color: #fff; font-weight: 700;">Тикет #${id.slice(-4)}</p>
+                            <p style="color: #ffb7c5; font-size: 12px;">От: ${t.user_name}</p>
+                            <p style="color: #b3b3b3; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.messages[0].text}</p>
+                        </div>
+                    `;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                container.innerHTML = '<p style="color:#f87171;">Ошибка загрузки тикетов</p>';
+            });
+    } else {
+        // Юзер видит только свои тикеты (из памяти)
+        let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+        let list = tickets.filter(t => t.userId === currentUser.id);
+        
+        container.innerHTML = '';
+        if (list.length === 0) {
+            container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
+        } else {
+            list.forEach(t => {
+                container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
+                    <p style="color: #fff;">Тикет #${t.id.toString().slice(-4)} (${t.status})</p>
+                </div>`;
+            });
+        }
+    }
 }
 
 function openTicket(id) {
     currentTicketId = id;
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    const t = tickets.find(x => x.id === id);
-    if (!t) return;
-
     document.getElementById('ticket-title').innerText = `Тикет #${id.toString().slice(-4)}`;
-    const box = document.getElementById('ticket-chat-box');
-    box.innerHTML = `<div style="color: #fff; margin-bottom: 10px;">${t.text}</div>`;
+    document.getElementById('ticket-chat-box').innerHTML = ''; 
     
-    if (t.replies) {
-        t.replies.forEach(r => {
-            const senderName = r.from === 'Админ' ? 'Поддержка' : t.userName;
-            box.innerHTML += `<div style="color: #fff; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 5px;"><b>${senderName}:</b> ${r.text}</div>`;
-        });
-    }
+    // Подключаемся к комнате на сервере
+    socket.emit('join', { ticket_id: id });
 
     document.getElementById('btn-admin-delete-ticket').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('btn-user-close-ticket').style.display = isAdmin ? 'none' : 'block';
-    
     closeModal('notify-modal');
     openModal('ticket-modal');
 }
 
-function sendTicketMsg() {
-    const text = document.getElementById('ticket-chat-input').value;
-    if (!text) return;
+function renderSingleMessage(data) {
+    const box = document.getElementById('ticket-chat-box');
+    const isAdm = data.from === 'Админ';
+    const align = isAdm ? 'flex-end' : 'flex-start';
+    const bg = isAdm ? 'rgba(255,255,255,0.1)' : 'rgba(255, 20, 147, 0.15)';
+    const border = isAdm ? 'rgba(255,255,255,0.2)' : 'rgba(255, 20, 147, 0.3)';
     
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    const idx = tickets.findIndex(t => t.id === currentTicketId);
-    
-    if (idx !== -1) {
-        if (!tickets[idx].replies) tickets[idx].replies = [];
-        tickets[idx].replies.push({ from: isAdmin ? 'Админ' : 'Пользователь', text: text });
-        tickets[idx].status = isAdmin ? 'answered' : 'open';
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-        
-        document.getElementById('ticket-chat-input').value = '';
-        openTicket(currentTicketId); 
-    }
+    box.innerHTML += `
+        <div style="background: ${bg}; border: 1px solid ${border}; padding: 10px; border-radius: 10px; align-self: ${align}; max-width: 80%; margin-bottom: 8px;">
+            <span style="font-size: 10px; color: ${isAdm ? '#4ade80' : '#ffb7c5'};">${data.from}</span>
+            <p style="color: #fff; font-size: 13px; margin-top: 3px;">${data.text}</p>
+        </div>
+    `;
+    box.scrollTop = box.scrollHeight;
 }
 
-// ... (функции userCloseTicket, adminDeleteTicket) ...
-function userCloseTicket() {
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    const idx = tickets.findIndex(t => t.id === currentTicketId);
-    if (idx !== -1) {
-        tickets[idx].status = 'closed';
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-        alert('Тикет закрыт');
-        closeModal('ticket-modal');
-    }
+function sendTicketMsg() {
+    const input = document.getElementById('ticket-chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    socket.emit('send_msg', {
+        ticket_id: currentTicketId,
+        text: text,
+        from: isAdmin ? 'Админ' : 'Пользователь',
+        user_name: currentUser.first_name,
+        user_id: currentUser.id
+    });
+    
+    input.value = '';
 }
-function adminDeleteTicket() {
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-    tickets = tickets.filter(t => t.id !== currentTicketId);
-    localStorage.setItem('tickets', JSON.stringify(tickets));
-    alert('Удалено');
+
+function userCloseTicket() {
+    alert('Тикет закрыт');
     closeModal('ticket-modal');
 }
+
+function adminDeleteTicket() {
+    alert('Удалено');
+    closeModal('ticket-modal');
+        }
