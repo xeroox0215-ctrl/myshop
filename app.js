@@ -1,18 +1,26 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Получаем данные от Телеграм
+// --- ПРОВЕРКА ДАННЫХ ОТ ТЕЛЕГРАМА ---
+console.log("=== TELEGRAM DATA ===");
+console.log("initDataUnsafe:", tg.initDataUnsafe);
+console.log("User:", tg.initDataUnsafe?.user);
+
 const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013;
 
-// Если данных нет (или зашел не через бота), делаем "Гостя" с рандомным ID
-let currentUser = user || { id: Math.floor(Math.random() * 900000) + 100000, first_name: "Гость", username: "guest", photo_url: "" };
+// Если данные пришли, используем их. Если нет — "Гость"
+let currentUser = user || { id: 123456789, first_name: "Гость", username: "guest", photo_url: "" };
 const isAdmin = (currentUser.id === ADMIN_ID);
 
+// --- ПОДКЛЮЧЕНИЕ К СОКЕТАМ (RENDER) ---
+const socket = io("https://myshop-o4pl.onrender.com");
+let currentTicketId = null;
+
+// --- ПЕРЕМЕННЫЕ ---
 let orders = JSON.parse(localStorage.getItem('orders')) || [];
 let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
 let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
-let currentTicketId = null;
 let currentProduct = {};
 let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
@@ -46,9 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
     checkTickets();
     applyDiscountToPrices();
     
-    // Загружаем новости
+    // Новости
     const savedNews = localStorage.getItem('newsText');
     if (savedNews) document.getElementById('news-text').innerText = savedNews;
+
+    // Слушаем сообщения от сервера (Сокеты)
+    socket.on('receive_msg', (data) => {
+        // Если пришло сообщение в открытый тикет, добавляем его на экран
+        if (currentTicketId == data.ticket_id) {
+            renderSingleMessage(data);
+        }
+    });
 });
 
 // --- НАВИГАЦИЯ ---
@@ -98,7 +114,7 @@ function confirmOrder() {
     
     alert('Заказ отправлен администратору!');
     closeModal('confirm-modal');
-    renderProfileOrders(); // Обновляем профиль сразу
+    renderProfileOrders();
 }
 
 function renderProfileOrders() {
@@ -213,13 +229,13 @@ function applyDiscountToPrices() {
     }
 }
 
-// --- ТИКЕТЫ ---
+// --- ТИКЕТЫ (СОКЕТЫ) ---
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
     tickets.push({ id: Date.now(), userName: currentUser.first_name, userId: currentUser.id, text: text, status: 'open', replies: [] });
     localStorage.setItem('tickets', JSON.stringify(tickets));
-    alert('Отправлено! Зайдите в колокольчик.');
+    alert('Сообщение отправлено! Зайдите в колокольчик.');
     document.getElementById('support-message').value = '';
     closeModal('support-modal');
     checkTickets();
@@ -253,30 +269,65 @@ function openTicket(id) {
     currentTicketId = id;
     const t = tickets.find(x => x.id === id);
     document.getElementById('ticket-title').innerText = `Тикет #${id.toString().slice(-4)}`;
+    
+    // Подключаемся к комнате на сервере
+    socket.emit('join', { ticket_id: id });
+
+    // Очищаем и рендерим историю
     const box = document.getElementById('ticket-chat-box');
-    box.innerHTML = `<div style="color: #fff; margin-bottom: 10px;">${t.text}</div>`;
-    t.replies.forEach(r => {
-        const senderName = r.from === 'Админ' ? 'Поддержка' : t.userName;
-        box.innerHTML += `<div style="color: #fff; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 5px;"><b>${senderName}:</b> ${r.text}</div>`;
-    });
+    box.innerHTML = '';
+    renderSingleMessage({ text: t.text, from: t.userName, user_name: t.userName });
+    t.replies.forEach(r => renderSingleMessage({ text: r.text, from: r.from, user_name: t.userName }));
+
     document.getElementById('btn-admin-delete-ticket').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('btn-user-close-ticket').style.display = isAdmin ? 'none' : 'block';
     closeModal('notify-modal');
     openModal('ticket-modal');
 }
 
+function renderSingleMessage(data) {
+    const box = document.getElementById('ticket-chat-box');
+    const isAdm = data.from === 'Админ';
+    const align = isAdm ? 'flex-end' : 'flex-start';
+    const bg = isAdm ? 'rgba(255,255,255,0.1)' : 'rgba(255, 20, 147, 0.15)';
+    const border = isAdm ? 'rgba(255,255,255,0.2)' : 'rgba(255, 20, 147, 0.3)';
+    
+    box.innerHTML += `
+        <div style="background: ${bg}; border: 1px solid ${border}; padding: 10px; border-radius: 10px; align-self: ${align}; max-width: 80%; margin-bottom: 8px;">
+            <span style="font-size: 10px; color: ${isAdm ? '#4ade80' : '#ffb7c5'};">${data.from}</span>
+            <p style="color: #fff; font-size: 13px; margin-top: 3px;">${data.text}</p>
+        </div>
+    `;
+    box.scrollTop = box.scrollHeight;
+}
+
 function sendTicketMsg() {
-    const text = document.getElementById('ticket-chat-input').value;
+    const input = document.getElementById('ticket-chat-input');
+    const text = input.value.trim();
     if (!text) return;
+
+    const msgData = {
+        ticket_id: currentTicketId,
+        text: text,
+        from: isAdmin ? 'Админ' : 'Пользователь',
+        user_name: currentUser.first_name
+    };
+
+    // Отправляем через сокет на Render
+    socket.emit('send_msg', msgData);
+    
+    // Сохраняем в локальную память
     const idx = tickets.findIndex(t => t.id === currentTicketId);
     if (idx !== -1) {
-        tickets[idx].replies.push({ from: isAdmin ? 'Админ' : 'Пользователь', text: text });
+        tickets[idx].replies.push({ from: msgData.from, text: text });
         tickets[idx].status = isAdmin ? 'answered' : 'open';
         localStorage.setItem('tickets', JSON.stringify(tickets));
-        document.getElementById('ticket-chat-input').value = '';
-        openTicket(currentTicketId);
-        checkTickets();
     }
+
+    // Мгновенно отрисовываем
+    renderSingleMessage(msgData);
+    input.value = '';
+    checkTickets();
 }
 
 function userCloseTicket() {
@@ -315,4 +366,4 @@ function createDecor(containerId, count) {
         div.style.animationDelay = (Math.random() * 3) + 's'; 
         container.appendChild(div);
     }
-}
+    }
