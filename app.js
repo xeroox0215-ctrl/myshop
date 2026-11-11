@@ -26,11 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pAvatar.style.backgroundImage = `url(${user.photo_url})`;
             pAvatar.innerText = '';
         }
-
-        // ПРОВЕРКА НА АДМИНА
-        if (user.id === ADMIN_ID) {
-            document.getElementById('btn-admin-main').style.display = 'flex';
-        }
     }
 
     createDecor('bg-decor', 10);        
@@ -38,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startTopBanner();
 });
 
+// ... остальные функции (createDecor, switchTab, openModal, toggleFaq, startCarousel, startTopBanner, createPromoCode, applyPromo, adminAction, openBuyMenu, submitOrder) ...
+// Скопируй их из прошлого сообщения, они не менялись.
 function createDecor(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
