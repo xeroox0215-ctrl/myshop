@@ -1,11 +1,11 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Получаем данные от Telegram
+// Получаем данные от Телеграм
 const user = tg.initDataUnsafe?.user;
 const ADMIN_ID = 1494459013;
 
-// Если зашел через бота - берем данные ТГ. Если нет - делаем заглушку.
+// Если данных нет (или зашел не через бота), делаем "Гостя" с рандомным ID
 let currentUser = user || { id: Math.floor(Math.random() * 900000) + 100000, first_name: "Гость", username: "guest", photo_url: "" };
 const isAdmin = (currentUser.id === ADMIN_ID);
 
@@ -22,22 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('app-container').classList.add('visible'); 
     }, 1500);
 
-    // ЗАПОЛНЕНИЕ ПРОФИЛЯ
+    // Данные профиля
     document.getElementById('user-name').innerText = currentUser.first_name;
     document.getElementById('user-tag').innerText = currentUser.username ? '@' + currentUser.username : '';
     document.getElementById('profile-page-name').innerText = currentUser.first_name;
     document.getElementById('profile-page-id').innerText = `ID: ${currentUser.id}`;
     
     if (currentUser.photo_url) {
-        const avatar = document.getElementById('user-avatar');
-        avatar.style.backgroundImage = `url(${currentUser.photo_url})`;
-        avatar.innerText = ''; 
-        const pAvatar = document.getElementById('profile-page-avatar');
-        pAvatar.style.backgroundImage = `url(${currentUser.photo_url})`;
-        pAvatar.innerText = '';
+        document.getElementById('user-avatar').style.backgroundImage = `url(${currentUser.photo_url})`;
+        document.getElementById('user-avatar').innerText = '';
+        document.getElementById('profile-page-avatar').style.backgroundImage = `url(${currentUser.photo_url})`;
+        document.getElementById('profile-page-avatar').innerText = '';
     }
 
-    // ПОКАЗ АДМИНКИ (ТОЛЬКО ДЛЯ ТЕБЯ)
+    // Админка (только для тебя)
     if (isAdmin) {
         document.getElementById('btn-admin-main').style.display = 'flex';
     } else {
@@ -47,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProfileOrders();
     checkTickets();
     applyDiscountToPrices();
+    
+    // Загружаем новости
+    const savedNews = localStorage.getItem('newsText');
+    if (savedNews) document.getElementById('news-text').innerText = savedNews;
 });
 
 // --- НАВИГАЦИЯ ---
@@ -75,7 +77,10 @@ function openBuyMenu(name, price) {
     openModal('buy-modal');
 }
 
-function showConfirmModal() { closeModal('buy-modal'); openModal('confirm-modal'); }
+function showConfirmModal() {
+    closeModal('buy-modal');
+    openModal('confirm-modal');
+}
 
 function confirmOrder() {
     if (userDiscount > 0) {
@@ -83,18 +88,19 @@ function confirmOrder() {
         localStorage.removeItem('userDiscount');
         alert('Промокод сгорел, так как заказ был оформлен.');
     }
-    orders.push({
+
+    const newOrder = {
         id: Date.now(), userName: currentUser.first_name, userId: currentUser.id,
         item: currentProduct.name, price: currentProduct.price, status: 'Ожидает проверки', date: new Date().toLocaleString()
-    });
+    };
+    orders.push(newOrder);
     localStorage.setItem('orders', JSON.stringify(orders)); 
+    
     alert('Заказ отправлен администратору!');
     closeModal('confirm-modal');
-    renderProfileOrders();
-    location.reload(); 
+    renderProfileOrders(); // Обновляем профиль сразу
 }
 
-// --- ПРОФИЛЬ ---
 function renderProfileOrders() {
     const container = document.getElementById('profile-orders-list');
     if(!container) return;
@@ -102,7 +108,10 @@ function renderProfileOrders() {
     const myOrders = orders.filter(o => o.userId === currentUser.id);
     if (myOrders.length === 0) { container.innerHTML = '<p style="color:#b3b3b3;">Заказов нет.</p>'; return; }
     myOrders.forEach(o => {
-        container.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; color: #fff; margin-bottom:5px;">${o.item} - ${o.status}</div>`;
+        container.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; color: #fff; margin-bottom:5px; display:flex; justify-content:space-between;">
+            <span>${o.item}</span>
+            <span style="color:#fbbf24;">${o.status}</span>
+        </div>`;
     });
 }
 
@@ -204,13 +213,13 @@ function applyDiscountToPrices() {
     }
 }
 
-// --- ТИКЕТЫ (ТОЛЬКО СВОИ ИЛИ ВСЕ ДЛЯ АДМИНА) ---
+// --- ТИКЕТЫ ---
 function createTicket() {
     const text = document.getElementById('support-message').value;
     if (!text) return alert('Напишите текст!');
     tickets.push({ id: Date.now(), userName: currentUser.first_name, userId: currentUser.id, text: text, status: 'open', replies: [] });
     localStorage.setItem('tickets', JSON.stringify(tickets));
-    alert('Сообщение отправлено! Зайдите в колокольчик (уведомления) и там откроется чат.');
+    alert('Отправлено! Зайдите в колокольчик.');
     document.getElementById('support-message').value = '';
     closeModal('support-modal');
     checkTickets();
@@ -218,8 +227,6 @@ function createTicket() {
 
 function checkTickets() {
     const dot = document.getElementById('notify-dot');
-    // Если ты админ - показываем точку, если есть открытые тикеты
-    // Если юзер - показываем точку, если есть ответ на его тикет
     if (isAdmin) {
         if (tickets.filter(t => t.status === 'open').length > 0) dot.style.display = 'block';
         else dot.style.display = 'none';
@@ -232,9 +239,7 @@ function checkTickets() {
 function openNotificationsModal() {
     const container = document.getElementById('notifications-list');
     container.innerHTML = '';
-    // Ты видишь все, юзер только свои
     let list = isAdmin ? tickets : tickets.filter(t => t.userId === currentUser.id);
-    
     if (list.length === 0) container.innerHTML = '<p style="color:#b3b3b3;">Пусто</p>';
     list.forEach(t => {
         container.innerHTML += `<div onclick="openTicket(${t.id})" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; cursor: pointer;">
