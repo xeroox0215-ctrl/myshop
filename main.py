@@ -18,7 +18,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 application = Application.builder().token(TOKEN).updater(None).build()
 
-# Глобальное хранилище на сервере
+# Хранилище на сервере
 active_tickets = {}
 active_orders = []
 
@@ -33,7 +33,7 @@ def on_join(data):
 @socketio.on('join_admin')
 def on_join_admin():
     join_room('admins')
-    emit('all_orders', active_orders) # Отправляем все заказы при подключении
+    emit('all_orders', active_orders)
 
 @socketio.on('send_ticket_msg')
 def handle_ticket_msg(data):
@@ -59,8 +59,6 @@ def handle_ticket_msg(data):
 def handle_new_order(data):
     global active_orders
     active_orders.append(data)
-    
-    # Рассылаем админам
     emit('receive_order', data, room='admins')
     
     try:
@@ -79,6 +77,21 @@ def get_tickets():
 def get_orders():
     return jsonify(active_orders)
 
+# Эндпоинт для прямой отправки заказа (через fetch)
+@app.route('/add_order', methods=['POST'])
+def add_order():
+    data = request.json
+    active_orders.append(data)
+    try:
+        asyncio.run(application.bot.send_message(
+            chat_id=ADMIN_ID, 
+            text=f"🛒 Новый заказ от {data['userName']}\nТовар: {data['item']}\nКод: {data['txCode']}"
+        ))
+    except Exception as e:
+        print(f"Ошибка ТГ: {e}")
+    return jsonify({"status": "ok"})
+
+# --- БОТ ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
