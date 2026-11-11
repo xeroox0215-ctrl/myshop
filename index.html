@@ -73,7 +73,6 @@
                 <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div><img src="steve2.png" class="menu-png">
                 </button>
-
                 <button class="menu-card glass-panel" id="btn-admin-main" onclick="openAdminPanel()" style="display: none;">
                     <div class="menu-info"><h3 style="color: var(--neon-pink);">Админ-Панель</h3></div>
                     <img src="icon.png" class="menu-png" alt="Админка" style="height: 35px;">
@@ -84,8 +83,7 @@
         <!-- НОВОСТИ -->
         <main class="content-area tab-content" id="tab-news">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Новости</h2>
-            <!-- Баннер новостей (переливающийся) -->
-            <div class="news-banner animated-border" style="height: 150px; margin-bottom: 15px; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #ff1493, #4b0082); background-size: 300% 300%; animation: bgGlow 4s infinite;">
+            <div class="news-banner animated-border" style="height: 150px; margin-bottom: 15px; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #ff1493, #4b0082); background-size: 300% 300%;">
                 <h2 class="mc-text" style="color: #fff; text-shadow: 0 0 10px #000;">XERO SHOP</h2>
             </div>
             <div class="glass-panel" style="padding: 20px;">
@@ -149,7 +147,7 @@
             </div>
         </main>
 
-        <!-- НАВИГАЦИЯ (ДОБАВЛЕНЫ НОВОСТИ) -->
+        <!-- НАВИГАЦИЯ -->
         <nav class="bottom-nav glass-panel"> 
             <button class="nav-item active" onclick="switchTab('home', this)"><div class="nav-circle"><span class="nav-icon">🏠</span></div><span class="nav-text">Главная</span></button>
             <button class="nav-item" onclick="switchTab('news', this)"><div class="nav-circle"><span class="nav-icon">📰</span></div><span class="nav-text">Новости</span></button>
@@ -160,11 +158,10 @@
         </nav>
     </div>
 
-    <!-- АДМИНКА (создание новостей) -->
+    <!-- МОДАЛКИ -->
     <div class="modal-overlay" id="admin-modal">
         <div class="modal-content glass-panel animated-border" style="max-width: 450px; width: 95%;">
             <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
-            
             <div class="faq-item" onclick="toggleFaq(this)">
                 <button class="faq-question"><span>Создать промокод</span><span class="faq-icon">▼</span></button>
                 <div class="faq-answer">
@@ -174,8 +171,6 @@
                     <button class="send-btn" onclick="createPromoCode()">Создать</button>
                 </div>
             </div>
-
-            <!-- НОВОЕ: Создание новости -->
             <div class="faq-item" onclick="toggleFaq(this)" style="margin-top:10px;">
                 <button class="faq-question"><span>Создать новость</span><span class="faq-icon">▼</span></button>
                 <div class="faq-answer">
@@ -183,7 +178,6 @@
                     <button class="send-btn" onclick="createNews()">Отправить</button>
                 </div>
             </div>
-
             <div style="margin-top: 15px;">
                 <h3 class="mc-text-small" style="color:#fff; margin-bottom: 10px;">Новые заказы</h3>
                 <div id="admin-orders-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
@@ -192,7 +186,6 @@
         </div>
     </div>
 
-    <!-- ОСТАЛЬНЫЕ МОДАЛКИ -->
     <div class="modal-overlay" id="notify-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Уведомления</h2>
@@ -242,9 +235,7 @@
     <div class="modal-overlay" id="support-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка</h2>
-            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:10px;">
-                После отправки сообщения зайдите в колокольчик (уведомления) — там откроется чат с поддержкой.
-            </p>
+            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:10px;">После отправки зайдите в колокольчик.</p>
             <textarea id="support-message" placeholder="Ваш текст..." style="margin-bottom: 10px;"></textarea>
             <button class="send-btn" onclick="createTicket()">Отправить</button>
             <button class="close-btn" onclick="closeModal('support-modal')">Закрыть</button>
