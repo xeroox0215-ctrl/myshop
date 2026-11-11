@@ -240,3 +240,12 @@ textarea:focus { outline: none; border-color: var(--neon-pink); }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+.news-banner {
+    background-size: 300% 300% !important;
+    animation: bgGlow 4s linear infinite !important;
+}
+@keyframes bgGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
