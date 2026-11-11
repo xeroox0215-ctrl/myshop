@@ -44,27 +44,18 @@
             </div>
         </div>
 
-        <!-- ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
             <div class="carousel-container glass-panel" id="carousel">
                 <div class="carousel-track" id="carousel-track">
-                    <!-- 1 БАННЕР: ТГК -->
                     <div class="carousel-slide" onclick="window.open('https://t.me/xerooxbustkfg', '_blank')">
                         <img src="Sakyra1.png" class="slide-img">
                         <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <div class="capsule"><span class="mc-text">Официальный Telegram канал</span></div>
-                            <p class="sub-text mc-text-small">Жми, чтобы перейти</p>
-                        </div>
+                        <div class="slide-content"><div class="capsule"><span class="mc-text">Официальный Telegram канал</span></div><p class="sub-text mc-text-small">Жми, чтобы перейти</p></div>
                     </div>
-                    <!-- 2 БАННЕР: NEVER TIME -->
                     <div class="carousel-slide">
                         <img src="Sakyra2.png" class="slide-img">
                         <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <div class="capsule"><span class="mc-text">Never Time</span></div>
-                            <p class="sub-text mc-text-small">ip: mc.nevertime.su</p>
-                        </div>
+                        <div class="slide-content"><div class="capsule"><span class="mc-text">Never Time</span></div><p class="sub-text mc-text-small">ip: mc.nevertime.su</p></div>
                     </div>
                 </div>
                 <div class="carousel-dots" id="carousel-dots"><span class="dot active"></span><span class="dot"></span></div>
@@ -87,10 +78,8 @@
             </div>
         </main>
 
-        <!-- НОВОСТИ -->
         <main class="content-area tab-content" id="tab-news">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 15px;">Новости</h2>
-            <!-- Тонкий баннер -->
             <div class="news-banner animated-border" style="height: 80px; margin-bottom: 15px; border-radius: 16px; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #ff1493, #4b0082); background-size: 300% 300%;">
                 <h2 class="mc-text" style="color: #fff; text-shadow: 0 0 10px #000; font-size: 18px;">XERO SHOP NEWS</h2>
             </div>
@@ -99,7 +88,6 @@
             </div>
         </main>
 
-        <!-- РЕКЛАМА -->
         <main class="content-area tab-content" id="tab-ads">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Реклама</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -115,7 +103,6 @@
             </div>
         </main>
 
-        <!-- ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -130,7 +117,6 @@
             </div>
         </main>
 
-        <!-- ПРОМОКОД -->
         <main class="content-area tab-content" id="tab-promo">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Промокод</h2>
             <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
@@ -140,7 +126,6 @@
             </div>
         </main>
 
-        <!-- ПРОФИЛЬ -->
         <main class="content-area tab-content" id="tab-profile">
             <div class="profile-page glass-panel">
                 <div class="profile-page-header">
@@ -154,15 +139,32 @@
                 </div>
             </div>
         </main>
-
-        <!-- НАВИГАЦИЯ -->
+                <!-- НАВИГАЦИЯ С SVG ИКОНКАМИ -->
         <nav class="bottom-nav glass-panel"> 
-            <button class="nav-item active" onclick="switchTab('home', this)"><div class="nav-circle"><span class="nav-icon">🏠</span></div><span class="nav-text">Главная</span></button>
-            <button class="nav-item" onclick="switchTab('news', this)"><div class="nav-circle"><span class="nav-icon">📰</span></div><span class="nav-text">Новости</span></button>
-            <button class="nav-item" onclick="switchTab('ads', this)"><div class="nav-circle"><span class="nav-icon">📢</span></div><span class="nav-text">Реклама</span></button>
-            <button class="nav-item" onclick="switchTab('private', this)"><div class="nav-circle"><span class="nav-icon">🔒</span></div><span class="nav-text">Приватка</span></button>
-            <button class="nav-item" onclick="switchTab('promo', this)"><div class="nav-circle"><span class="nav-icon">🎁</span></div><span class="nav-text">Промокод</span></button>
-            <button class="nav-item" onclick="switchTab('profile', this)"><div class="nav-circle"><span class="nav-icon">👤</span></div><span class="nav-text">Профиль</span></button>
+            <button class="nav-item active" onclick="switchTab('home', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+                <span class="nav-text">Главная</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('news', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
+                <span class="nav-text">Новости</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('ads', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+                <span class="nav-text">Реклама</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('private', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+                <span class="nav-text">Приватка</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('promo', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg></div>
+                <span class="nav-text">Промокод</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile', this)">
+                <div class="nav-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                <span class="nav-text">Профиль</span>
+            </button>
         </nav>
     </div>
 
@@ -171,7 +173,6 @@
         <div class="modal-content glass-panel animated-border" style="max-width: 450px; width: 95%;">
             <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
             
-            <!-- СОЗДАНИЕ ПРОМОКОДА (ОТКРЫТО) -->
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <h3 class="mc-text-small" style="color:var(--neon-pink); margin-bottom: 10px;">Создать промокод</h3>
                 <input type="text" id="admin-promo-name" class="promo-input" placeholder="Промокод" style="margin-bottom:10px;">
@@ -180,7 +181,6 @@
                 <button class="send-btn" onclick="createPromoCode()">Создать</button>
             </div>
 
-            <!-- СОЗДАНИЕ НОВОСТИ (ОТКРЫТО) -->
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <h3 class="mc-text-small" style="color:var(--neon-pink); margin-bottom: 10px;">Создать новость</h3>
                 <textarea id="admin-news-text" placeholder="Текст новости..." style="margin-bottom:10px; width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; resize: none; height: 80px;"></textarea>
@@ -239,11 +239,10 @@
         </div>
     </div>
 
-    <!-- ПОДДЕРЖКА (С ВОПРОСАМИ) -->
+    <!-- ПОДДЕРЖКА -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title">Поддержка 24/7</h2>
-            
             <div class="faq-list" style="margin-bottom: 15px;">
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <button class="faq-question"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button>
@@ -251,15 +250,10 @@
                 </div>
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <button class="faq-question"><span>Сколько ждать заказ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Выдача происходит вручную. Обычно это занимает от 5 до 30 минут. Максимальное время ожидания — 24 часа. Статус заказа можно посмотреть в профиле.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <button class="faq-question"><span>Что делать, если товар не пришел?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Зайдите в профиль на сайте и проверьте статус заказа. Если там написано «Ожидается» — подождите. Если «Отказано» — напишите в этот чат с указанием причины.</div>
+                    <div class="faq-answer">Выдача происходит вручную. Обычно это занимает от 5 до 30 минут.</div>
                 </div>
             </div>
-
-            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:10px;">Опишите проблему ниже. После отправки зайдите в колокольчик, чтобы увидеть ответ.</p>
+            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:10px;">Опишите проблему ниже. После отправки зайдите в колокольчик.</p>
             <textarea id="support-message" placeholder="Ваш текст..." style="margin-bottom: 10px;"></textarea>
             <button class="send-btn" onclick="createTicket()">Отправить</button>
             <button class="close-btn" onclick="closeModal('support-modal')">Закрыть</button>
@@ -273,8 +267,7 @@
             <div class="text-content" style="display: flex; flex-direction: column; gap: 15px; color: #e0e0e0; font-size: 14px; line-height: 1.6;">
                 <p>Мы — команда <b>Xero Shop</b>, и мы ценим доверие каждого клиента.</p>
                 <p>В нашем магазине вы найдете только <b>качественные товары</b>. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро и точно в срок.</p>
-                <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
-                <p>Спасибо, что выбираете нас!</p>
+                <p>Наша поддержка работает <b>24/7</b>.</p>
             </div>
             <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
             <button class="close-btn" style="margin-top: 20px;" onclick="closeModal('about-modal')">Закрыть</button>
@@ -288,15 +281,14 @@
             <div class="text-content" style="display: flex; flex-direction: column; gap: 15px; color: #e0e0e0; font-size: 14px; line-height: 1.6;">
                 <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
                 <p>2. Все сделки проводятся <b>честно и прозрачно</b>.</p>
-                <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram и правилами самого бота.</p>
-                <p>4. Любые попытки мошенничества или спама строго <b>запрещены</b> и будут приводить к блокировке.</p>
-                <p>5. Уважайте друг друга и администрацию магазина.</p>
+                <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram.</p>
+                <p>4. Любые попытки мошенничества строго <b>запрещены</b>.</p>
             </div>
-         <img src="steve2.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
+            <img src="steve2.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
             <button class="close-btn" style="margin-top: 20px;" onclick="closeModal('rules-modal')">Закрыть</button>
         </div>
     </div>
 
     <script src="app.js"></script>
 </body>
-</html>  
+</html>
