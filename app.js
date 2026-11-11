@@ -5,7 +5,7 @@ const user = tg.initDataUnsafe?.user;
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
-    }, 3000);
+    }, 2500);
 
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
@@ -18,15 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
             profileAvatar.style.backgroundImage = `url(${user.photo_url})`;
             profileAvatar.innerText = '';
         }
-        document.getElementById('profile-page-name').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        document.getElementById('profile-page-name').innerText = user.first_name;
         document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
     }
 
-    createDecor('bg-decor', 8);        
+    createDecor('bg-decor', 10);        
     createDecor('banner-decor-1', 4);   
     createDecor('banner-decor-2', 4);   
     startCarousel();
-    startMiniCarousels();
+    startTopBanner();
 });
 
 function createDecor(containerId, count) {
@@ -79,6 +79,16 @@ function sendSupportMessage() {
     closeSupportModal();
 }
 
+// Верхний Баннер
+function startTopBanner() {
+    const track = document.getElementById('capsule-track');
+    let slide = 0;
+    setInterval(() => {
+        slide = (slide + 1) % 2;
+        track.style.transform = `translateX(-${slide * 50}%)`;
+    }, 4000);
+}
+
 // Карусель Главная
 let currentSlide = 0;
 let carouselInterval;
@@ -103,22 +113,5 @@ function startCarousel() {
         if (diff > 40) currentSlide = (currentSlide + 1) % totalSlides;
         else if (diff < -40) currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updateCarousel(); startCarousel();
-    });
-}
-
-// Мини-карусели в окнах
-function startMiniCarousels() {
-    const tracks = ['banner-track-notify', 'banner-track-ads', 'banner-track-support', 'banner-track-about', 'banner-track-rules'];
-    
-    tracks.forEach(trackId => {
-        const track = document.getElementById(trackId);
-        if (!track) return;
-        let miniSlide = 0;
-        
-        // Автопрокрутка для каждого баннера (раз в 3 секунды)
-        setInterval(() => {
-            miniSlide = (miniSlide + 1) % 2;
-            track.style.transform = `translateX(-${miniSlide * 50}%)`;
-        }, 3000);
     });
 }
