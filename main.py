@@ -18,11 +18,9 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 application = Application.builder().token(TOKEN).updater(None).build()
 
-# Хранилище на сервере
 active_tickets = {}
 active_orders = []
 
-# --- СОКЕТЫ ---
 @socketio.on('join')
 def on_join(data):
     ticket_id = str(data['ticket_id'])
@@ -38,7 +36,7 @@ def on_join_admin():
 @socketio.on('send_ticket_msg')
 def handle_ticket_msg(data):
     ticket_id = str(data['ticket_id'])
-    msg_obj = {'from': data['from'], 'text': data['text'], 'user_name': data['user_name']}
+    msg_obj = {'from': data['from'], 'text': data['text'], 'user_name': data['user_name'], 'ticket_id': ticket_id}
 
     if ticket_id not in active_tickets:
         active_tickets[ticket_id] = { "user_name": data['user_name'], "user_id": data.get('user_id'), "messages": [] }
@@ -77,21 +75,6 @@ def get_tickets():
 def get_orders():
     return jsonify(active_orders)
 
-# Эндпоинт для прямой отправки заказа (через fetch)
-@app.route('/add_order', methods=['POST'])
-def add_order():
-    data = request.json
-    active_orders.append(data)
-    try:
-        asyncio.run(application.bot.send_message(
-            chat_id=ADMIN_ID, 
-            text=f"🛒 Новый заказ от {data['userName']}\nТовар: {data['item']}\nКод: {data['txCode']}"
-        ))
-    except Exception as e:
-        print(f"Ошибка ТГ: {e}")
-    return jsonify({"status": "ok"})
-
-# --- БОТ ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton("🛒 Открыть магазин", web_app=WebAppInfo(url=WEBAPP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
