@@ -316,3 +316,23 @@ textarea:focus { outline: none; border-color: var(--neon-pink); }
 .menu-card:hover::after, .category-btn:hover::after {
     left: 100%;
 }
+/* Фикс слоев для модалок */
+.modal-overlay {
+    z-index: 1000 !important;
+    pointer-events: none; /* Не перехватывает клики, когда скрыта */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.modal-overlay.active {
+    pointer-events: auto; /* Перехватывает клики, когда открыта */
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Чтобы кнопки внутри модалок были кликабельны */
+.modal-content {
+    position: relative;
+    z-index: 1001 !important;
+}
