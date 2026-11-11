@@ -76,6 +76,12 @@
                 <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div><img src="steve2.png" class="menu-png">
                 </button>
+
+                <!-- КНОПКА АДМИНКИ ПОД ПРАВИЛАМИ (Скрыта по умолчанию) -->
+                <button class="menu-card glass-panel" id="btn-admin-main" onclick="openModal('admin-modal')" style="display: none;">
+                    <div class="menu-info"><h3 style="color: var(--neon-pink);">Админ-Панель</h3></div>
+                    <img src="icon.png" class="menu-png" alt="Админка" style="height: 35px;">
+                </button>
             </div>
         </main>
 
@@ -95,30 +101,17 @@
             </div>
         </main>
 
-        <!-- ЭКРАН: ПРИВАТКА (КРАСИВО) -->
+        <!-- ЭКРАН: ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
-            
             <div class="glass-panel" style="padding: 20px;">
-                <!-- Аккордеон с описанием -->
                 <div class="faq-item" onclick="toggleFaq(this)" style="margin-bottom: 20px;">
-                    <button class="faq-question">
-                        <span>Что такое Приватка?</span>
-                        <span class="faq-icon">▼</span>
-                    </button>
-                    <div class="faq-answer">
-                        Это закрытое комьюнити, где хранятся ресурс-паки (РП), которые нигде не найти в открытом доступе. Вы получаете доступ только после покупки. Копировать или скачивать файлы запрещено, чтобы приватка не слилась.
-                    </div>
+                    <button class="faq-question"><span>Что такое Приватка?</span><span class="faq-icon">▼</span></button>
+                    <div class="faq-answer">Это закрытое комьюнити, где хранятся ресурс-паки (РП), которые нигде не найти. Доступ после покупки.</div>
                 </div>
-
-                <!-- Цена и кнопка (стоят отдельно) -->
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <p style="color:#b3b3b3; font-size: 14px;">Стоимость доступа:</p>
                     <p style="color:var(--neon-pink); font-size: 28px; font-weight: 900; margin: 0;">199 ⭐</p>
-                    
-                    <button class="send-btn" style="width: 100%; font-size: 16px;" onclick="openBuyMenu('Приватка РП', 199)">
-                        Купить доступ
-                    </button>
+                    <button class="send-btn" style="width: 100%;" onclick="openBuyMenu('Приватка РП', 199)">Купить доступ</button>
                 </div>
             </div>
         </main>
@@ -127,7 +120,6 @@
         <main class="content-area tab-content" id="tab-promo">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Промокод</h2>
             <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-                <p style="text-align: center; color: #b3b3b3; font-size: 14px;">Введите промокод, чтобы получить скидку.</p>
                 <input type="text" id="promo-input" class="promo-input" placeholder="Введите промокод...">
                 <button class="send-btn" onclick="applyPromo()">Активировать</button>
                 <p id="promo-status" style="text-align: center; color: #4ade80; font-weight: bold; display: none;"></p>
@@ -152,35 +144,6 @@
             </div>
         </main>
 
-        <!-- ЭКРАН: АДМИН-ПАНЕЛЬ -->
-        <main class="content-area tab-content" id="tab-admin">
-            <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px; color: var(--neon-pink);">Админ-Панель</h2>
-            <div class="glass-panel" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <button class="faq-question"><span>Создать промокод</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">
-                        <input type="text" id="admin-promo-name" class="promo-input" placeholder="Промокод (напр. XERO)" style="margin-bottom:10px;">
-                        <input type="number" id="admin-promo-uses" class="promo-input" placeholder="Активаций (1-1000)" style="margin-bottom:10px;">
-                        <input type="number" id="admin-promo-discount" class="promo-input" placeholder="Скидка в % (1-100)" style="margin-bottom:10px;">
-                        <button class="send-btn" onclick="createPromoCode()">Создать</button>
-                    </div>
-                </div>
-
-                <div class="admin-order-card glass-panel">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <span style="color:#fff; font-weight:800;">Заказ #1001</span>
-                        <span style="color:var(--neon-pink); font-size:12px;">Ожидает</span>
-                    </div>
-                    <p style="color:#b3b3b3; font-size:12px;">Товар: Реклама 24ч</p>
-                    <div class="admin-actions">
-                        <button class="glass-action-btn btn-paid" onclick="adminAction('paid')">Оплачено</button>
-                        <button class="glass-action-btn btn-next" onclick="adminAction('next')">Дальше</button>
-                        <button class="glass-action-btn btn-reject" onclick="adminAction('reject')">Отказано</button>
-                    </div>
-                </div>
-            </div>
-        </main>
-
         <!-- НИЖНЯЯ НАВИГАЦИЯ -->
         <nav class="bottom-nav glass-panel"> 
             <button class="nav-item active" onclick="switchTab('home', this)"><div class="nav-circle"><span class="nav-icon">🏠</span></div><span class="nav-text">Главная</span></button>
@@ -188,90 +151,60 @@
             <button class="nav-item" onclick="switchTab('private', this)"><div class="nav-circle"><span class="nav-icon">🔒</span></div><span class="nav-text">Приватка</span></button>
             <button class="nav-item" onclick="switchTab('promo', this)"><div class="nav-circle"><span class="nav-icon">🎁</span></div><span class="nav-text">Промокод</span></button>
             <button class="nav-item" onclick="switchTab('profile', this)"><div class="nav-circle"><span class="nav-icon">👤</span></div><span class="nav-text">Профиль</span></button>
-            <button class="nav-item" id="nav-admin" onclick="switchTab('admin', this)" style="display: none;"><div class="nav-circle"><span class="nav-icon">⚙️</span></div><span class="nav-text">Админ</span></button>
         </nav>
 
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
+    <div class="modal-overlay" id="admin-modal">
+        <div class="modal-content glass-panel animated-border">
+            <h2 class="modal-title" style="color: var(--neon-pink);">Админ-Панель</h2>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <button class="faq-question"><span>Создать промокод</span><span class="faq-icon">▼</span></button>
+                <div class="faq-answer">
+                    <input type="text" id="admin-promo-name" class="promo-input" placeholder="Промокод" style="margin-bottom:10px;">
+                    <input type="number" id="admin-promo-uses" class="promo-input" placeholder="Активаций" style="margin-bottom:10px;">
+                    <input type="number" id="admin-promo-discount" class="promo-input" placeholder="Скидка (%)" style="margin-bottom:10px;">
+                    <button class="send-btn" onclick="createPromoCode()">Создать</button>
+                </div>
+            </div>
+
+            <div class="admin-order-card glass-panel" style="margin-top: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span style="color:#fff; font-weight:800;">Заказ #1001</span>
+                    <span style="color:var(--neon-pink); font-size:12px;">Ожидает</span>
+                </div>
+                <p style="color:#b3b3b3; font-size:12px;">Товар: Реклама 24ч</p>
+                <div class="admin-actions">
+                    <button class="glass-action-btn btn-paid" onclick="adminAction('paid')">Оплачено</button>
+                    <button class="glass-action-btn btn-next" onclick="adminAction('next')">Дальше</button>
+                    <button class="glass-action-btn btn-reject" onclick="adminAction('reject')">Отказано</button>
+                </div>
+            </div>
+
+            <button class="close-btn" onclick="closeModal('admin-modal')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА ПОКУПКИ, ПОДДЕРЖКИ И Т.Д. -->
     <div class="modal-overlay" id="buy-modal">
         <div class="modal-content glass-panel animated-border">
             <h2 class="modal-title" id="buy-title">Покупка</h2>
             <p style="color:#fff; text-align:center; margin-bottom:10px;">Переведите звёзды в профиль <b>@xeroox9</b>.</p>
-            <p style="color:#b3b3b3; text-align:center; font-size:12px; margin-bottom:15px;">После перевода прикрепите чек и нажмите «Я оплатил».</p>
-            
             <label for="file-upload" class="file-upload-label"><span>📎 Прикрепить фото чека</span></label>
             <input id="file-upload" type="file" accept="image/*" style="display: none;">
-            
-            <input type="text" id="tx-text" class="promo-input" placeholder="Комментарий (оплатил)..." style="margin-bottom:10px;">
-            
+            <input type="text" id="tx-text" class="promo-input" placeholder="Комментарий..." style="margin-bottom:10px;">
             <button class="send-btn" onclick="submitOrder()">Я оплатил</button>
             <button class="close-btn" style="background: #333;" onclick="closeModal('buy-modal')">Отмена</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="notify-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Уведомления</h2>
-            <div class="empty-state"><p class="mc-text-small" style="color: #b3b3b3;">Уведомлений нет</p></div>
-            <button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- ПОДДЕРЖКА (ВОПРОСЫ) -->
-    <div class="modal-overlay" id="support-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Поддержка</h2>
-            <div class="faq-list">
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <button class="faq-question"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Переведите нужную сумму звезд на аккаунт @xeroox9. После перевода прикрепите чек в окне покупки.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <button class="faq-question"><span>Сколько ждать заказ?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Выдача происходит вручную. Обычно это занимает от 5 до 30 минут. Максимальное время ожидания — 24 часа.</div>
-                </div>
-                <div class="faq-item" onclick="toggleFaq(this)">
-                    <button class="faq-question"><span>Что делать, если товар не пришел?</span><span class="faq-icon">▼</span></button>
-                    <div class="faq-answer">Зайдите в профиль на сайте и проверьте статус заказа. Если там написано «Ожидается» — подождите. Если «Отказано» — напишите в поддержку.</div>
-                </div>
-            </div>
-            <div class="support-form">
-                <p class="form-title mc-text-small">Не нашли ответ?</p>
-                <textarea id="support-message" placeholder="Опишите вашу проблему..."></textarea>
-                <button class="send-btn" onclick="sendSupportMessage()">Отправить</button>
-            </div>
-            <button class="close-btn" onclick="closeModal('support-modal')">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- О НАС -->
-    <div class="modal-overlay" id="about-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">О нас</h2>
-            <div class="text-content">
-                <p>Мы — команда <b>Xero Shop</b>, и мы ценим доверие каждого клиента.</p>
-                <p>В нашем магазине вы найдете только качественные товары. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро и точно в срок.</p>
-                <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
-            </div>
-            <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
-            <button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- ПРАВИЛА -->
-    <div class="modal-overlay" id="rules-modal">
-        <div class="modal-content glass-panel animated-border">
-            <h2 class="modal-title">Правила</h2>
-            <div class="text-content">
-                <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
-                <p>2. Все сделки проводятся честно и прозрачно.</p>
-                <p>3. Пользователи нашего бота могут делать всё, что не запрещено законами Telegram.</p>
-            </div>
-            <img src="steve2.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
-            <button class="close-btn" onclick="closeModal('rules-modal')">Закрыть</button>
-        </div>
-    </div>
+    <!-- ОСТАЛЬНЫЕ ОКНА -->
+    <div class="modal-overlay" id="notify-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">Уведомления</h2><p class="mc-text-small" style="color: #b3b3b3; text-align:center;">Уведомлений нет</p><button class="close-btn" onclick="closeModal('notify-modal')">Закрыть</button></div></div>
+    <div class="modal-overlay" id="support-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">Поддержка</h2><textarea id="support-message" placeholder="Напишите текст..."></textarea><button class="send-btn" onclick="sendSupportMessage()">Отправить</button><button class="close-btn" onclick="closeModal('support-modal')">Закрыть</button></div></div>
+    <div class="modal-overlay" id="about-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">О нас</h2><p style="color:#fff;">Мы никогда не обманываем.</p><button class="close-btn" onclick="closeModal('about-modal')">Закрыть</button></div></div>
+    <div class="modal-overlay" id="rules-modal"><div class="modal-content glass-panel animated-border"><h2 class="modal-title">Правила</h2><p style="color:#fff;">Соблюдаем правила Telegram.</p><button class="close-btn" onclick="closeModal('rules-modal')">Закрыть</button></div></div>
 
     <script src="app.js"></script>
 </body>
