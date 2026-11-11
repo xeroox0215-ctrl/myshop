@@ -49,6 +49,15 @@
 
         <!-- ЭКРАН: ГЛАВНАЯ -->
         <main class="content-area tab-content active" id="tab-home">
+            
+            <!-- НОВЫЙ БАННЕР-КАПСУЛА -->
+            <div class="top-capsule-banner animated-border">
+                <div class="capsule-track" id="capsule-track">
+                    <div class="capsule-slide" onclick="openSupportModal()">Поддержка 24/7</div>
+                    <div class="capsule-slide">tgk xeroox news</div>
+                </div>
+            </div>
+
             <div class="carousel-container glass-panel" id="carousel" style="border-radius: 20px; overflow: hidden;">
                 <div class="carousel-track" id="carousel-track">
                     <div class="carousel-slide">
@@ -89,12 +98,12 @@
 
                 <button class="menu-card glass-panel" onclick="openAboutModal()">
                     <div class="menu-info"><h3>О нас</h3></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/1581/1581652.png" class="menu-png" alt="О нас" style="filter: invert(1);">
+                    <img src="steve.png" class="menu-png" alt="О нас">
                 </button>
 
                 <button class="menu-card glass-panel" onclick="openRulesModal()">
                     <div class="menu-info"><h3>Правила</h3></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" class="menu-png" alt="Правила" style="filter: invert(1);">
+                    <img src="steve2.png" class="menu-png" alt="Правила">
                 </button>
             </div>
         </main>
@@ -108,7 +117,7 @@
             </button>
         </main>
 
-        <!-- НОВЫЙ ЭКРАН: ПРИВАТКА -->
+        <!-- ЭКРАН: ПРИВАТКА -->
         <main class="content-area tab-content" id="tab-private">
             <h2 class="tab-title mc-text" style="text-align: center; margin-bottom: 20px;">Приватка РП</h2>
             <div class="glass-panel" style="padding: 20px;">
@@ -167,16 +176,8 @@
     </div>
 
     <!-- МОДАЛЬНЫЕ ОКНА -->
-
-    <!-- Уведомления -->
     <div class="modal-overlay" id="notify-modal">
         <div class="modal-content glass-panel animated-border">
-            <div class="thin-banner-carousel" id="banner-carousel-notify">
-                <div class="thin-banner-track" id="banner-track-notify">
-                    <div class="thin-banner-slide" onclick="openSupportModal(); closeNotificationsModal();" style="background: linear-gradient(45deg, #ff1493, #4b0082);">Поддержка 24/7</div>
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #00bfff, #4b0082);">tgk xeroox news</div>
-                </div>
-            </div>
             <h2 class="modal-title">Уведомления</h2>
             <div class="empty-state">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom: 10px; color: #b3b3b3;">
@@ -188,15 +189,8 @@
         </div>
     </div>
 
-    <!-- Реклама -->
     <div class="modal-overlay" id="ads-modal">
         <div class="modal-content glass-panel animated-border">
-            <div class="thin-banner-carousel" id="banner-carousel-ads">
-                <div class="thin-banner-track" id="banner-track-ads">
-                    <div class="thin-banner-slide" onclick="openSupportModal(); closeAdsModal();" style="background: linear-gradient(45deg, #ff1493, #4b0082);">Поддержка 24/7</div>
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #00bfff, #4b0082);">tgk xeroox news</div>
-                </div>
-            </div>
             <h2 class="modal-title">Реклама</h2>
             <div class="faq-list">
                 <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>24 часа ТГК</span><span class="faq-icon">▼</span></button><div class="faq-answer">Размещение поста на 24 часа.<br><br><b>Стоимость:</b> 50 звёзд ⭐</div></div>
@@ -209,15 +203,8 @@
         </div>
     </div>
 
-    <!-- Поддержка -->
     <div class="modal-overlay" id="support-modal">
         <div class="modal-content glass-panel animated-border">
-            <div class="thin-banner-carousel" id="banner-carousel-support">
-                <div class="thin-banner-track" id="banner-track-support">
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #ff1493, #4b0082);">Поддержка 24/7</div>
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #00bfff, #4b0082);">tgk xeroox news</div>
-                </div>
-            </div>
             <h2 class="modal-title">Поддержка</h2>
             <div class="faq-list">
                 <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить заказ?</span><span class="faq-icon">▼</span></button><div class="faq-answer">Оплата происходит через Telegram Stars.</div></div>
@@ -233,36 +220,21 @@
         </div>
     </div>
 
-    <!-- О НАС -->
     <div class="modal-overlay" id="about-modal">
         <div class="modal-content glass-panel animated-border">
-             <div class="thin-banner-carousel" id="banner-carousel-about">
-                <div class="thin-banner-track" id="banner-track-about">
-                    <div class="thin-banner-slide" onclick="openSupportModal(); closeAboutModal();" style="background: linear-gradient(45deg, #ff1493, #4b0082);">Поддержка 24/7</div>
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #00bfff, #4b0082);">tgk xeroox news</div>
-                </div>
-            </div>
             <h2 class="modal-title">О нас</h2>
             <div class="text-content">
                 <p>Мы — команда <b>Xero Shop</b>, и мы ценим доверие каждого клиента.</p>
                 <p>В нашем магазине вы найдете только качественные товары. Мы <b>никогда не обманываем</b> и всегда выдаем всё быстро и точно в срок.</p>
                 <p>Наша поддержка работает <b>24/7</b>. Если у вас возникнут вопросы или проблемы, мы всегда на связи и готовы помочь.</p>
-                <p>Спасибо, что выбираете нас!</p>
             </div>
             <img src="steve.png" style="position: absolute; bottom: -10px; right: -10px; width: 80px; opacity: 0.8; pointer-events: none;">
             <button class="close-btn" onclick="closeAboutModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- ПРАВИЛА -->
     <div class="modal-overlay" id="rules-modal">
         <div class="modal-content glass-panel animated-border">
-             <div class="thin-banner-carousel" id="banner-carousel-rules">
-                <div class="thin-banner-track" id="banner-track-rules">
-                    <div class="thin-banner-slide" onclick="openSupportModal(); closeRulesModal();" style="background: linear-gradient(45deg, #ff1493, #4b0082);">Поддержка 24/7</div>
-                    <div class="thin-banner-slide" style="background: linear-gradient(45deg, #00bfff, #4b0082);">tgk xeroox news</div>
-                </div>
-            </div>
             <h2 class="modal-title">Правила</h2>
             <div class="text-content">
                 <p>1. Мы строго соблюдаем правила Telegram и не нарушаем их.</p>
