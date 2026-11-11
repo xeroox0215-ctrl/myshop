@@ -1,33 +1,35 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 const user = tg.initDataUnsafe?.user;
+const ADMIN_ID = 1494459013; 
+
+// Хранилище промокодов и скидки пользователя
+let promoCodes = JSON.parse(localStorage.getItem('promoCodes')) || [];
+let userDiscount = parseInt(localStorage.getItem('userDiscount')) || 0;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Логика Заставки и появления сайта
     setTimeout(() => {
         document.getElementById('splash-screen').classList.add('hidden');
-        document.getElementById('app-container').classList.add('visible'); // Плавно показываем сайт
-    }, 2500); // 2.5 секунды сканирования
+        document.getElementById('app-container').classList.add('visible'); 
+    }, 2000);
 
     if (user) {
         document.getElementById('user-name').innerText = user.first_name;
         document.getElementById('user-tag').innerText = user.username ? '@' + user.username : '';
-        if (user.photo_url) {
-            const avatar = document.getElementById('user-avatar');
-            avatar.style.backgroundImage = `url(${user.photo_url})`;
-            avatar.innerText = ''; 
-            const profileAvatar = document.getElementById('profile-page-avatar');
-            profileAvatar.style.backgroundImage = `url(${user.photo_url})`;
-            profileAvatar.innerText = '';
-        }
         document.getElementById('profile-page-name').innerText = user.first_name;
         document.getElementById('profile-page-id').innerText = `ID: ${user.id}`;
+        if (user.id === ADMIN_ID) document.getElementById('nav-admin').style.display = 'flex';
     }
 
     createDecor('bg-decor', 10);        
     startCarousel();
     startTopBanner();
+    
+    // Применяем скидку при загрузке, если она есть
+    updatePricesWithDiscount();
 });
+
+// ... стандартные функции createDecor, switchTab, openModal, toggleFaq, startCarousel, startTopBanner ...
 
 function createDecor(containerId, count) {
     const container = document.getElementById(containerId);
@@ -54,60 +56,132 @@ function switchTab(tabName, btnElement) {
     if(btnElement) btnElement.classList.add('active');
 }
 
-// Модалки (Общие)
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-function toggleFaq(button) {
-    const item = button.parentElement;
-    item.classList.toggle('active');
+function toggleFaq(element) {
+    let item = element.classList.contains('faq-item') ? element : element.closest('.faq-item');
+    if (item) item.classList.toggle('active');
 }
-
-// Специфичные функции
 function openNotificationsModal() { openModal('notify-modal'); }
 function openSupportModal() { openModal('support-modal'); }
 function openAboutModal() { openModal('about-modal'); }
 function openRulesModal() { openModal('rules-modal'); }
+function sendSupportMessage() { alert('Сообщение отправлено!'); closeModal('support-modal'); }
 
-function sendSupportMessage() {
-    const text = document.getElementById('support-message').value;
-    if (text.trim() === '') { alert('Напишите текст сообщения!'); return; }
-    alert('Сообщение отправлено в поддержку!');
-    document.getElementById('support-message').value = '';
-    closeModal('support-modal');
+// ЛОГИКА ПРОМОКОДОВ
+function createPromoCode() {
+    const name = document.getElementById('admin-promo-name').value.toUpperCase().trim();
+    const uses = parseInt(document.getElementById('admin-promo-uses').value);
+    const discount = parseInt(document.getElementById('admin-promo-discount').value);
+
+    if (!name || isNaN(uses) || isNaN(discount) || uses < 1 || uses > 1000 || discount < 1 || discount > 100) {
+        alert('Заполните все поля корректно (активации 1-1000, скидка 1-100%)!');
+        return;
+    }
+
+    promoCodes.push({ code: name, uses: uses, discount: discount });
+    localStorage.setItem('promoCodes', JSON.stringify(promoCodes));
+    
+    alert(`Промокод ${name} успешно создан!\nСкидка: ${discount}%\nАктиваций: ${uses}`);
+    
+    // Очистка
+    document.getElementById('admin-promo-name').value = '';
+    document.getElementById('admin-promo-uses').value = '';
+    document.getElementById('admin-promo-discount').value = '';
 }
 
-// Логика Покупки
+function applyPromo() {
+    const input = document.getElementById('promo-input').value.toUpperCase().trim();
+    const statusText = document.getElementById('promo-status');
+    
+    if (!input) return;
+
+    const promoIndex = promoCodes.findIndex(p => p.code === input);
+
+    if (promoIndex !== -1) {
+        const promo = promoCodes[promoIndex];
+        
+        if (promo.uses > 0) {
+            // Применяем скидку
+            userDiscount = promo.discount;
+            localStorage.setItem('userDiscount', userDiscount);
+            
+            // Уменьшаем кол-во активаций
+            promoCodes[promoIndex].uses -= 1;
+            localStorage.setItem('promoCodes', JSON.stringify(promoCodes));
+
+            statusText.style.display = 'block';
+            statusText.innerText = `Промокод активирован! Скидка ${promo.discount}% на все товары.`;
+            
+            updatePricesWithDiscount();
+            document.getElementById('promo-input').value = '';
+        } else {
+            alert('Этот промокод больше не действует (закончились активации).');
+        }
+    } else {
+        alert('Такого промокода не существует!');
+    }
+}
+
+// ОБНОВЛЕНИЕ ЦЕН НА САЙТЕ
+function updatePricesWithDiscount() {
+    if (userDiscount === 0) return;
+
+    // Функция для пересчета цены
+    function calcPrice(basePrice) {
+        return Math.floor(basePrice - (basePrice * (userDiscount / 100)));
+    }
+
+    // Реклама
+    document.querySelectorAll('.ads-price-item').forEach(item => {
+        const basePrice = parseInt(item.getAttribute('data-base-price'));
+        const priceText = item.querySelector('.price-text');
+        
+        if (basePrice && priceText) {
+            const finalPrice = calcPrice(basePrice);
+            priceText.innerHTML = `<span class="old-price">${basePrice} ⭐</span> <span class="new-price">${finalPrice} ⭐</span><span class="discount-badge">Скидка ${userDiscount}%</span>`;
+        }
+    });
+
+    // Приватка (упрощенно)
+    const privateItem = document.getElementById('private-price-item');
+    if (privateItem) {
+        const base = parseInt(privateItem.getAttribute('data-base-price'));
+        const finalPrice = calcPrice(base);
+        privateItem.querySelector('.price-text').innerHTML = `<span class="old-price">${base} ⭐</span> <span class="new-price">${finalPrice} ⭐</span><span class="discount-badge">Скидка ${userDiscount}%</span>`;
+    }
+}
+
+// Кнопки админа (демо)
+function adminAction(action) {
+    if (action === 'paid') alert('Оплачено! Клиент уведомлен.');
+    else if (action === 'next') alert('В архив.');
+    else if (action === 'reject') alert('Отклонено. Клиент уведомлен.');
+}
+
+// Покупка
 let currentProduct = {};
 function openBuyMenu(name, starsPrice, uahPrice) {
     currentProduct = { name: name, stars: starsPrice, uah: uahPrice };
     document.getElementById('buy-title').innerText = name;
     openModal('buy-modal');
 }
-
 function selectPayment(type) {
     closeModal('buy-modal');
-    if (type === 'stars') {
-        openModal('stars-modal');
-    } else if (type === 'uah') {
-        openModal('uah-modal');
-    }
+    if (type === 'stars') openModal('stars-modal');
+    else if (type === 'uah') openModal('uah-modal');
+}
+function submitOrder() {
+    alert('Заказ отправлен администратору!');
+    closeModal('stars-modal');
+    closeModal('uah-modal');
 }
 
-// Промокод
-function applyPromo() {
-    const val = document.getElementById('promo-input').value;
-    if (val.trim() === '') { alert('Введите промокод!'); return; }
-    alert('Промокод ' + val + ' активирован! (Заглушка)');
-    document.getElementById('promo-input').value = '';
-}
-
-// Карусель и Баннер
+// Карусель
 let currentSlide = 0;
 let carouselInterval;
 let startX = 0;
 let isDragging = false;
-
 function startCarousel() {
     const track = document.getElementById('carousel-track');
     const dots = document.querySelectorAll('.dot');
